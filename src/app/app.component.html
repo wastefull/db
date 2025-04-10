@@ -1,15 +1,14 @@
 <main class="main">
   <div class="content">
-    <div class="left-side">
+    <header class="left-side">
       <app-logo></app-logo>
       <h1>Be {{ title }}</h1>
       <p>Our nonprofit is building a wastefull world
         centered on recycling, regenerative
         agriculture, and citizen science.</p>
-    </div>
-    <! -- Search Bar will go here -->
+      </header>
     <div class="divider" role="separator" aria-label="Divider"></div>
-    <div class="right-side">
+    <nav class="right-side">
       <div class="pill-group">
         @for (item of [
           { title: 'Link 1', link: 'https://angular.dev' },
@@ -100,8 +99,11 @@
           </svg>
         </a>
       </div>
-    </div>
+    </nav>
   </div>
+  <section class="results">
+    <app-search></app-search>
+  </section>
 </main>
 
 <router-outlet />

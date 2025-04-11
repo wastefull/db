@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { Object } from './object';
 
 @Component({
   selector: 'app-object',
@@ -7,5 +8,5 @@ import { Component } from '@angular/core';
   styleUrl: './object.component.scss'
 })
 export class ObjectComponent {
-
+  @Input() object!: Object;
 }

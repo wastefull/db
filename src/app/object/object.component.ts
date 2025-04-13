@@ -8,5 +8,14 @@ import { Object } from './object';
   styleUrl: './object.component.scss'
 })
 export class ObjectComponent {
+public handleMissingImage($event: ErrorEvent) {
+  console.debug($event);
+  let target = $event.target as HTMLImageElement;
+  target.src = '';
+  let parent = target.parentElement;
+  if (parent && parent.classList.contains('object')) {
+    parent.hidden = true;
+  }
+}
   @Input() object!: Object;
 }

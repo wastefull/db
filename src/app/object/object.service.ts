@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Object } from './object';
-import { dummy_data } from './dummy/dummy';
+import { trunc_data } from './dummy/dummy';
 import { environment } from '../../environments/environment';
 import { connect } from 'http2';
 @Injectable({
@@ -14,7 +14,7 @@ export class ObjectService {
   }
 
   private loadGuides(): void {
-    const rows = dummy_data.split('\n').slice(1); // Split by rows and skip the header
+    const rows = trunc_data.split('\n').slice(1); // Split by rows and skip the header
     this.results = rows
       .filter((row) => row.trim() !== '') // Remove empty rows
       .map((row) => {
@@ -33,10 +33,10 @@ export class ObjectService {
         try {
           const response = await fetch(object.thumbnail, { method: 'HEAD', redirect: 'follow' });
           if (response.status !== 200) {
-            return "!200: " + object.id; // Return the ID of the object to be removed
+            return object.id; // Return the ID of the object to be removed
           }
         } catch (error) {
-          return "error: " + object.id; // Return the ID of the object to be removed
+          return object.id; // Return the ID of the object to be removed
         }
         return null; // Return null if the thumbnail is valid
       });

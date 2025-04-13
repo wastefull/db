@@ -3,7 +3,7 @@
       class="object-thumb"
       [src]="object.thumbnail"
       alt="Exterior photo of {{ object.name }}"
-      crossorigin
+      (error)="handleMissingImage($event)"
     />
     <h2 class="object-heading">{{ object.name }}</h2>
     <p class="object-meta">{{ object.tags }}</p>

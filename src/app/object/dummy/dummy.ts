@@ -444,3 +444,15 @@ export const dummy_data = `id,name,alt_names,thumbnail,tags,shortname
 8353,Sandbags,Dirtbag Sand bag,https://hq2.recyclist.co/wp-content/uploads/sites/2/2023/07/sandbags-100x100.jpg,Sandbags Dirtbag Sand bag,sandbags
 8354,Matches,matchstick,https://hq2.recyclist.co/wp-content/uploads/sites/2/2023/07/matches-100x100.jpg,Matches matchstick,matches
 8355,String &amp; Twine,Fishing Line Guitar String Hay bale twine Orchestral string Violin string wire,https://hq2.recyclist.co/wp-content/uploads/sites/2/2023/07/twine-100x100.jpg,,string-twine`;
+
+export const trunc_data = `id,name,alt_names,thumbnail,tags,shortname
+2,Plastic,,assets/thumbs/plastic.jpg,Plastic,plastic
+6,Put in Garbage,,https://hq2.recyclist.co/wp-content/uploads/sites/2/2015/11/categories-600x600-garbage1-150x150.jpg,Put in Garbage,garbage
+10,Tape &amp; Tape Dispensers,3M adhesive adhesive tape duct tape magic tape masking tape packing tape plastic tape Scotch Tape sellotape,https://hq2.recyclist.co/wp-content/uploads/sites/2/2015/02/tape-100x100.jpg,,tape-tape-dispensers
+13,Posters,banners signs Wall posters,https://hq2.recyclist.co/wp-content/uploads/sites/2/2015/02/poster-100x100.jpg,Posters banners signs Wall posters,posters
+14,Construction Paper,butcher paper,https://hq2.recyclist.co/wp-content/uploads/sites/2/2015/02/construction-paper-100x100.jpg,Construction Paper butcher paper,construction-paper
+17,Batteries,,https://hq2.recyclist.co/wp-content/uploads/sites/2/2021/07/categories-600x600-batteries-150x150.jpg,Batteries,bulbs-batteries
+18,Crayons,colored pencils colored wax,https://hq2.recyclist.co/wp-content/uploads/sites/2/2015/02/crayons-100x100.jpg,Crayons colored pencils colored wax,crayons
+24,Put in Green Waste Bin,,https://hq2.recyclist.co/wp-content/uploads/sites/2/2015/11/categories-600x600-green-waste1-150x150.jpg,Put in Green Waste Bin,green
+24,Engine Cleaner,Degreasers engine degreasers WD-40,https://hq2.recyclist.co/wp-content/uploads/sites/2/2015/02/engine-degreaser-100x100.jpg,Engine Cleaner Degreasers engine degreasers WD-40,engine-cleaner
+25,Fuels,butane charcoal lighter fluid ethanol flammable gas gasoline lighter fluid naphtha,https://hq2.recyclist.co/wp-content/uploads/sites/2/2015/02/gas-100x100.jpg,,fuels`

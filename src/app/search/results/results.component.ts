@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject, Inject } from '@angular/core';
 import { ObjectComponent } from '../../object/object.component';
 import { CommonModule } from '@angular/common';
+import { ObjectService } from  '../../object/object.service';
 import { Object } from '../../object/object';
 @Component({
   selector: 'app-results',
@@ -9,16 +10,9 @@ import { Object } from '../../object/object';
   styleUrl: './results.component.scss'
 })
 export class ResultsComponent {
-  object: Object = {
-    id: '0',
-    name: 'test',
-    altNames: ['test'],
-    thumbnail: '../assets/sample.png',
-    tags: ['test'],
+ results: Object[] = [];
+ objectService: ObjectService = inject(ObjectService);
+  constructor() {
+    this.results = this.objectService.getObjects();
   }
-
-  results: Object[] = [
-    this.object,
-  ]
-
 }

@@ -4,4 +4,5 @@ export interface Object {
     altNames: string[];
     thumbnail: string;
     tags: string[];
+    shortname: string;
 }

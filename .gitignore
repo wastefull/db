@@ -40,3 +40,9 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+.prettierrc
+
+# Dummy data
+src/app/assets/example_data/guides.csv
+src/app/assets/thumbs/*
+src/app/assets/guides.csv

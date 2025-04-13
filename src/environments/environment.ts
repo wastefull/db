@@ -2,6 +2,6 @@
 
 export const environment = {
     production: false,
-    api_url: 'https://dummyjson.com',
+    thumbs_api: 'https://glorious-fiesta-5gqvwxgw95r37wr6-4200.app.github.dev/assets/thumbs/',
     workspace: '/workspaces/waste'
   };

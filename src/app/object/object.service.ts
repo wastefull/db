@@ -22,10 +22,10 @@ export class ObjectService {
         if (!shortname || shortname.includes('http')) { shortname = name.trim().toLowerCase().replace(/ /g, '-'); } // Generate shortname if not provided
         return {
           id: id.trim(),
-          name: name.trim(),
+          name: name.trim().replace(/&amp;/g, '&'),
           altNames: altNames ? altNames.split('|').map((alt) => alt.trim()) : [], // Split altNames by '|'
           thumbnail: environment.thumbs_api + shortname.trim().replace(/-/g, '').trim() + '.jpg',
-          tags: tags ? tags.split('|').map((tag) => tag.trim()) : [], // Split tags by '|'
+          tags: tags ? tags.split('|').map((tag) => tag.trim().toLowerCase()) : [], // Split tags by '|'
           shortname: shortname.trim()
         } as Object;
       });

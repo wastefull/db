@@ -1,32 +1,40 @@
+@import url('https://fonts.googleapis.com/css2?family=Modak&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Atma:wght@300;400;500;600;700&display=swap');
+
 :host {
-    --accent-color: #F003;
-    --primary-color: #923434;
+  --accent-color: #F003;
+  --primary-color: #132c11;
 }
-.object {
-    background: var(--accent-color);
-    border-radius: 30px;
-    padding-bottom: 30px;
-    width: 30%;
-  }
-  .object-heading {
-    color: var(--primary-color);
-    padding: 10px 20px 0 20px;
-  }
-  .object-thumb {
-    height: 200px;
-    width: 100%;
-    object-fit: cover;
-    border-radius: 30px 30px 0 0;
-  }
-  .object-meta {
-    padding: 10px 20px 20px 20px;
-  }
+
+.object-heading {
+  color: var(--primary-color);
+  font-family: "Atma", system-ui;
+  font-weight: 500;
+  font-style: normal;
+  padding: 0 5px 0 5px;
+}
+.object-thumb {
+  object-fit: cover;
+  width: var(--card-width);
+  height: calc(0.5*var(--card-height));
+  align-content: stretch;
+  border-radius: 10px 10px 0 0;
+  padding-top: 0;
+  margin-top: 0;
+  float: top;
+}
+.object-meta {
+  text-align: center;
+  padding-top: 0;
+  margin-top: 0;
+  font-size: 0.6rem;
+}
 a {
-    padding-left: 20px;
-    text-decoration: none;
-    color: var(--primary-color);
-  }
+  padding-left: 20px;
+  text-decoration: none;
+  color: var(--primary-color);
+}
 a::after {
-    content: "\203A";
-    margin-left: 5px;
-  }
+  content: "\203A";
+  margin-left: 5px;
+}

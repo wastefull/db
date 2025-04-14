@@ -1,1 +1,12 @@
 /* You can add global styles to this file, and also import other style files */
+* {
+    --content-padding: 10px;
+    --content-padding-mobile: 5px;
+    --content-padding-tablet: 10px;
+    --content-padding-desktop: 20px;
+    --content-padding-large: 30px;
+    --content-padding-xlarge: 50px;
+    --content-padding-xxlarge: 100px;
+    --card-width: 200px;
+    --card-height: 200px;
+}

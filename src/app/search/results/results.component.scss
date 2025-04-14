@@ -1,0 +1,22 @@
+:host {
+    --accent-color: #F003;
+    --primary-color: #923434;
+}
+
+.object {
+    display: inline-grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 200px));
+    width: var(--card-width);
+    height: var(--card-height);
+    max-width: 2fr;
+    background: var(--accent-color);
+    grid-template-columns: 2fr;
+    border-radius: 10px;
+    padding: 0 0 50px 0;
+    margin: 10px;
+    column-gap: 5px;
+    row-gap: 5px;
+    justify-content: space-around;
+    overflow: hidden;
+
+}

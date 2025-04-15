@@ -13,10 +13,6 @@ export class ObjectComponent {
 public handleMissingImage($event: ErrorEvent) {
   let target = $event.target as HTMLImageElement;
   target.src = this.badImage();
-  // let parent = target.parentElement;
-  // if (parent) {
-  //   parent.hidden = true;
-  // }
 }
 
 public badImage(): string {

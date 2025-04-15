@@ -1,0 +1,45 @@
+:host {
+    --accent-color: #F003;
+    --primary-color: #923434;
+}
+
+article {
+    display: flex;
+    flex-direction: row;
+    margin: 10px;
+    column-gap: 1px;
+    overflow: visible;
+
+
+
+    aside {
+        width: var(--card-width);
+        background: var(--accent-color);
+        border-radius: 10px;
+        padding: 0 0 50px 0;
+        text-align: left;
+
+        > * {
+            padding: 0 0 0 5px;
+        }
+
+        img {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            object-fit: cover;
+            align-content: stretch;
+            border-radius: 10px 10px 0 0;
+            float: top;
+
+        }   
+        
+    }
+    content {
+        width: calc(85% - var(--card-width));
+        border-radius: 10px;
+        background-color: rgb(216, 193, 193);
+        padding: 15px;
+    }
+
+}

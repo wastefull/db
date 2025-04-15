@@ -52,9 +52,9 @@ export class ObjectService {
     return this.results;
   }
  
-  // getObjectById(id: string): Object | undefined {
-  //   return this.results.find((object) => object.id === id);
-  // }
+  getObjectById(id: string): Object | undefined {
+    return this.results.find((object) => object.id === id);
+  }
   // getObjectsByTag(tag: string): Object[] {
   //   return this.results.filter((object) => object.tags.includes(tag));
   // }

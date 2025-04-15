@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Object } from './object';
-import { trunc_data } from './dummy/dummy';
+import { better_data } from './dummy/dummy';
 import { environment } from '../../environments/environment';
 import { connect } from 'http2';
 @Injectable({
@@ -14,7 +14,7 @@ export class ObjectService {
   }
 
   private loadGuides(): void {
-    const rows = trunc_data.split('\n').slice(1); // Split by rows and skip the header
+    const rows = better_data.split('\n').slice(1); // Split by rows and skip the header
     this.results = rows
       .filter((row) => row.trim() !== '') // Remove empty rows
       .map((row) => {

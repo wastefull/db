@@ -1,11 +1,11 @@
 import { Component, Input } from '@angular/core';
 import { Object } from './object';
 import { environment } from '../../environments/environment';
-
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-object',
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './object.component.html',
   styleUrl: './object.component.scss'
 })

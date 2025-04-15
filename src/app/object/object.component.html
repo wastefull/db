@@ -1,8 +1,8 @@
-<img
+<a [routerLink]="['/object',object.id]"><img
   class="object-thumb"
   [src]="object.thumbnail"
   alt="Exterior photo of {{ object.name }}"
   (error)="handleMissingImage($event)"
 />
-<h2 class="object-heading">{{ object.name }}</h2>
+<h2 class="object-heading">{{ object.name }}</h2></a>
 <p class="object-meta">{{ object.tags }}</p>

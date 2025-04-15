@@ -86,7 +86,22 @@
     --pill-accent: var(--hot-red);
   }
 
-
+  a {
+    padding-left: 20px;
+    text-decoration: none;
+    color: var(--primary-color);
+  }
+  a::after {
+    content: "\203A";
+    margin-left: 5px;
+  }
+  a:hover::after {
+    content: "\2039";
+  }  
+  a:hover::before {
+    content: "\203A";
+    padding-right:5px;
+  }
   
 
 

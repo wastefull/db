@@ -29,12 +29,3 @@
   margin-top: 0;
   font-size: 0.6rem;
 }
-a {
-  padding-left: 20px;
-  text-decoration: none;
-  color: var(--primary-color);
-}
-a::after {
-  content: "\203A";
-  margin-left: 5px;
-}

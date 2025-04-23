@@ -1,7 +1,19 @@
 <section>
     <form>
-      <input type="text" placeholder="What are you wasting?" />
-      <button class="primary" type="button">Search</button>
+      <input
+        type="text" 
+        placeholder="Look up a thing" 
+        (keydown.enter)="onInputChange(query.value)"
+        (change)="onInputChange(query.value)"
+        (focus)="onInputChange(query.value)"
+        #query />
+      <button 
+        class="primary" 
+        type="button" 
+        (click)="onInputChange(query.value)"
+        (keydown.enter)="onInputChange(query.value)"
+      >Search</button>
     </form>
 </section>
-<app-results></app-results>
+<app-results [query]="query.value"></app-results>
+<p *ngIf="!query.value || query.value === ''">Please enter a search term.</p>

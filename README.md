@@ -13,16 +13,28 @@ ng serve
 
 Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
 
-## Planned DB structure
+## Connect to DB
+Run the following command to connect to the database:
+
+```bash
+psql -U wastefull -d material_data -h localhost
+```
+
+quit the PSQL shell with:
+```bash
+\q
+```
+
+## DB structure
 
 Tables:
-1. material
+1. materials
 2. alternate_names
 3. tags
 4. species_tags (join table)
 5. articles
 
-```
+```sql
 CREATE TABLE materials (
     id SERIAL PRIMARY KEY,
     name TEXT NOT NULL UNIQUE,
@@ -33,7 +45,7 @@ CREATE TABLE materials (
 
 CREATE TABLE alternate_names (
     id SERIAL PRIMARY KEY,
-    material_id INTEGER NOT NULL REFERENCES material(id) ON DELETE CASCADE,
+    material_id INTEGER NOT NULL REFERENCES materials(id) ON DELETE CASCADE,
     name TEXT NOT NULL
 );
 
@@ -50,13 +62,18 @@ CREATE TABLE materials_tags (
 
 CREATE TABLE articles (
     id SERIAL PRIMARY KEY,
-    material_id INTEGER NOT NULL REFERENCES material(id) ON DELETE CASCADE,
+    material_id INTEGER NOT NULL REFERENCES materials(id) ON DELETE CASCADE,
     type TEXT CHECK (type IN (‘recycle’, ‘compost’, ‘renew’, 'hazards')),
     content TEXT NOT NULL,  -- markdown content
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     UNIQUE (material_id, type)  -- ensures only one of each type per material
 );
 
+```
+
+### Test POST
+```bash
+curl -X POST http://localhost:8000/api/post/thing/Crimson%20Nightcrawler -d "A nocturnal gecko engineered for low-light environments"
 ```
 # Deployment
 ## Building

@@ -4,12 +4,16 @@ from urllib.parse import unquote
 # DB SERVER:
 import psycopg2
 
+# read in password from private.txt
+with open('private.txt', 'r') as f:
+    password = f.read()    
+
 class Database:
     def __init__(self):
         self.conn = psycopg2.connect(
             dbname="material_data",
             user="wastefull",
-            password="obfuscated",
+            password=password,
             host="localhost"
         )
         self.conn.autocommit = True

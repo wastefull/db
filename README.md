@@ -14,6 +14,13 @@ ng serve
 Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
 
 ## Connect to DB
+
+Start the database service with:
+
+```bash
+sudo service postgresql start
+```
+
 Run the following command to connect to the database:
 
 ```bash

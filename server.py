@@ -5,7 +5,7 @@ from urllib.parse import unquote
 import psycopg2
 
 # read in password from private.txt
-with open('private.txt', 'r') as f:
+with open('./private.txt', 'r') as f:
     password = f.read()    
 
 class Database:

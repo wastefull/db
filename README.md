@@ -1,5 +1,6 @@
 # App
-Wastefull is creating a tool to allow anyone in the world to look up a material or common consumer product and assess its potential for reuse, recycling, and compost potential. This tool will include state of the art techniques, experimental methods, as well as health and hazard concerns with the material and these methods. Limitations in being able to prevent the material from going to landfill will be outlined to better position future research to revisit and even overcome these limitations.  Data will be collected by volunteers and fact checked. Entries will be regularly reviewed for scientific currency and accuracy.  Biological techniques discussed include bioremediation through fungi and bacterial culturing, the use of selected invertebrate species, bioremediation horticulture, and genetic modification techniques. Regenerative soil science is the backbone of the wastefull philosophy, with the end goal for any compost or bioremediation technique to create healthy soil that can cycle and sequester carbon and other key resources.
+
+Wastefull is creating a tool to allow anyone in the world to look up a material or common consumer product and assess its potential for reuse, recycling, and compost potential. This tool will include state of the art techniques, experimental methods, as well as health and hazard concerns with the material and these methods. Limitations in being able to prevent the material from going to landfill will be outlined to better position future research to revisit and even overcome these limitations. Data will be collected by volunteers and fact checked. Entries will be regularly reviewed for scientific currency and accuracy. Biological techniques discussed include bioremediation through fungi and bacterial culturing, the use of selected invertebrate species, bioremediation horticulture, and genetic modification techniques. Regenerative soil science is the backbone of the wastefull philosophy, with the end goal for any compost or bioremediation technique to create healthy soil that can cycle and sequester carbon and other key resources.
 
 # Development
 
@@ -21,6 +22,12 @@ Start the database service with:
 sudo service postgresql start
 ```
 
+on Mac:
+
+```bash
+brew services start postgresql@14
+```
+
 Run the following command to connect to the database:
 
 ```bash
@@ -28,6 +35,7 @@ psql -U wastefull -d material_data -h localhost
 ```
 
 quit the PSQL shell with:
+
 ```bash
 \q
 ```
@@ -35,6 +43,7 @@ quit the PSQL shell with:
 ## DB structure
 
 Tables:
+
 1. materials
 2. alternate_names
 3. tags
@@ -79,10 +88,13 @@ CREATE TABLE articles (
 ```
 
 ### Test POST
+
 ```bash
 curl -X POST http://localhost:8000/api/post/thing/Crimson%20Nightcrawler -d "A nocturnal gecko engineered for low-light environments"
 ```
+
 # Deployment
+
 ## Building
 
 To build the project run:
@@ -112,24 +124,26 @@ ng e2e
 An end-to-end testing framework has to be chosen.
 
 # Mindset
+
 Our dataset has to be well-formatted in order for anyone, including ourselves, to make good use of it.
 
 To keep things consistent, we need to make sure that each entry has the same rows as any other. This can be messy when dealing with the real world, as there may be many linked considerations between any given material and all of its options for disposal, decomposition, reuse, controversy, etc., but it's critical that we keep to this format in order to provide a useful tool for households, businesses, and other scientists studying bioremediation-oriented waste management techniques.
 
-Columns
---
+## Columns
+
 The following are required fields for any entry in the database:
 
- 1. id (integer)
- 2. name (string)
- 3. alt_names (string list)
- 4. tags (string list)
- 5. composting_article (string/markdown)
- 6. recycling_article (string/markdown)
- 7. reuse_article (string/markdown)
- 8. health_risks_article (string/markdown)
+1.  id (integer)
+2.  name (string)
+3.  alt_names (string list)
+4.  tags (string list)
+5.  composting_article (string/markdown)
+6.  recycling_article (string/markdown)
+7.  reuse_article (string/markdown)
+8.  health_risks_article (string/markdown)
 
 ### Definitions:
+
 - `1` will be assigned sequentially as entries are made, starting with id 1.
 - `2` will be the common name for the material or product.
 - `3` will list any common alternative names, with the default value being equal to whatever `2` was.
@@ -137,10 +151,11 @@ The following are required fields for any entry in the database:
 - `5`-`8` are the entire text of the associated articles, in Markdown.
 
 ### Discussion Encouraged
+
 Shoving large bodies of text into individual rows isn't ideal, so suggestions as to how to better structure these data are highly welcome, especially earlier on when it is easiest to reformat existing data. For now we begin with the simplest solution that will let us get started.
 
-Wastefull Inc. researches new ways to think about and manage waste materials and common consumer goods by leveraging emerging methodologies in a diverse range of disciplines, with a heavy focus on integration of waste into soil remediation using fungi and other microbiota. 
+Wastefull Inc. researches new ways to think about and manage waste materials and common consumer goods by leveraging emerging methodologies in a diverse range of disciplines, with a heavy focus on integration of waste into soil remediation using fungi and other microbiota.
 
-Projects include a waste lifecycle database; community-accessible approaches to PFAS/PFOA and microplastics remediation; use and limitations of arthropods for household waste management; innovative textiles made from waste; and much more. 
+Projects include a waste lifecycle database; community-accessible approaches to PFAS/PFOA and microplastics remediation; use and limitations of arthropods for household waste management; innovative textiles made from waste; and much more.
 
 Wastefull encourages the participation of community members, from artists, to scientists, to creative children and their parents. Diversity is a foundational principle in both biology and complex systems, and diverse perspectives will be needed to work on the complex problem of how human communities leverage their waste to build a sustainable and robust society.

@@ -1,0 +1,26 @@
+{
+    "materials": [
+        "id SERIAL PRIMARY KEY",
+        "name TEXT NOT NULL",
+        "description TEXT"
+    ],
+    "alternate_names": [
+        "id SERIAL PRIMARY KEY",
+        "material_id INTEGER REFERENCES materials(id)",
+        "name TEXT NOT NULL"
+    ],
+    "tags": [
+        "id SERIAL PRIMARY KEY",
+        "name TEXT NOT NULL"
+    ],
+    "materials_tags": [
+        "material_id INTEGER REFERENCES materials(id)",
+        "tag_id INTEGER REFERENCES tags(id)"
+    ],
+    "articles": [
+        "id SERIAL PRIMARY KEY",
+        "material_id INTEGER REFERENCES materials(id)",
+        "type TEXT NOT NULL",
+        "content TEXT"
+    ]
+}

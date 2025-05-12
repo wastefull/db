@@ -1,26 +1,266 @@
 {
-    "materials": [
-        "id SERIAL PRIMARY KEY",
-        "name TEXT NOT NULL",
-        "description TEXT"
-    ],
-    "alternate_names": [
-        "id SERIAL PRIMARY KEY",
-        "material_id INTEGER REFERENCES materials(id)",
-        "name TEXT NOT NULL"
-    ],
-    "tags": [
-        "id SERIAL PRIMARY KEY",
-        "name TEXT NOT NULL"
-    ],
-    "materials_tags": [
-        "material_id INTEGER REFERENCES materials(id)",
-        "tag_id INTEGER REFERENCES tags(id)"
-    ],
-    "articles": [
-        "id SERIAL PRIMARY KEY",
-        "material_id INTEGER REFERENCES materials(id)",
-        "type TEXT NOT NULL",
-        "content TEXT"
-    ]
+    "schema": {
+        "name": "Materials",
+        "id": "tblMutY5hxcZ8oytl",
+        "primary_field_id": "fld9ijlwpdxGWoplH",
+        "description": null,
+        "fields": [
+            {
+                "name": "Name",
+                "type": "singleLineText",
+                "id": "fld9ijlwpdxGWoplH",
+                "description": null
+            },
+            {
+                "name": "Description",
+                "type": "multilineText",
+                "id": "fldueugV9vMSkMOvv",
+                "description": null
+            },
+            {
+                "name": "Created By",
+                "type": "createdBy",
+                "id": "fldaEb94CuxpsGNna",
+                "description": null
+            },
+            {
+                "name": "Status",
+                "type": "singleSelect",
+                "id": "fldy67vLVU6l5vOTG",
+                "description": null,
+                "options": {
+                    "choices": [
+                        {
+                            "name": "Needs Review",
+                            "id": "selj6AJjIQJuBICgh",
+                            "color": "redLight2"
+                        },
+                        {
+                            "name": "Needs Fixes",
+                            "id": "selbqelwO4Tsyv4Qp",
+                            "color": "yellowLight2"
+                        },
+                        {
+                            "name": "Approved",
+                            "id": "selCBNu5n8jDVS03v",
+                            "color": "greenLight2"
+                        }
+                    ]
+                }
+            },
+            {
+                "name": "Last Modified By",
+                "type": "lastModifiedBy",
+                "id": "fldUxtEfCxeAEQGAo",
+                "description": null
+            },
+            {
+                "name": "Image",
+                "type": "multipleAttachments",
+                "id": "fldpva9IWXEZXsXkh",
+                "description": null,
+                "options": {
+                    "is_reversed": false
+                }
+            },
+            {
+                "name": "Last Modified",
+                "type": "lastModifiedTime",
+                "id": "fldmsGeB2QZ5QbOGU",
+                "description": null,
+                "options": {
+                    "is_valid": true,
+                    "referenced_field_ids": [],
+                    "result": {
+                        "type": "dateTime",
+                        "options": {
+                            "time_zone": "client",
+                            "date_format": {
+                                "format": "M/D/YYYY",
+                                "name": "us"
+                            },
+                            "time_format": {
+                                "format": "h:mma",
+                                "name": "12hour"
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                "name": "Risks",
+                "type": "multipleRecordLinks",
+                "id": "fldzJXjoxePaDWZX4",
+                "description": null,
+                "options": {
+                    "is_reversed": false,
+                    "linked_table_id": "tblzm3GrJstzO9ys6",
+                    "prefers_single_record_link": false,
+                    "inverse_link_field_id": "fld8MgfgHn6xjzL2c",
+                    "view_id_for_record_selection": null
+                },
+                "linked_fields": [
+                    {
+                        "name": "Risk Types (from Risks)",
+                        "type": "multipleLookupValues",
+                        "id": "fldWdIWm7bcEMHMTt",
+                        "description": null,
+                        "options": {
+                            "is_valid": true,
+                            "field_id_in_linked_table": "fldxzrzXA692iWUnZ",
+                            "record_link_field_id": "fldzJXjoxePaDWZX4",
+                            "result": {
+                                "type": "multipleRecordLinks",
+                                "options": {
+                                    "isReversed": false,
+                                    "prefersSingleRecordLink": false
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "name": "Risk Factors (from Hazards) (from Risks)",
+                        "type": "multipleLookupValues",
+                        "id": "fldsUiIzhkm8TTZRW",
+                        "description": null,
+                        "options": {
+                            "is_valid": true,
+                            "field_id_in_linked_table": "fldmZE2rpQid6Oo9d",
+                            "record_link_field_id": "fldzJXjoxePaDWZX4",
+                            "result": {
+                                "type": "multipleRecordLinks",
+                                "options": {
+                                    "isReversed": false,
+                                    "prefersSingleRecordLink": false
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "name": "Hazards (from Risks)",
+                        "type": "multipleLookupValues",
+                        "id": "fld5o5rMWeYoLnafk",
+                        "description": null,
+                        "options": {
+                            "is_valid": true,
+                            "field_id_in_linked_table": "fldLNGSNIJWGfUxpp",
+                            "record_link_field_id": "fldzJXjoxePaDWZX4",
+                            "result": {
+                                "type": "multipleRecordLinks",
+                                "options": {
+                                    "isReversed": false,
+                                    "prefersSingleRecordLink": false
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "name": "Risk Categories (from Risks)",
+                        "type": "multipleLookupValues",
+                        "id": "fldKm3TD1nPOQPAqw",
+                        "description": null,
+                        "options": {
+                            "is_valid": true,
+                            "field_id_in_linked_table": "fld28yTpM5LIxLDmw",
+                            "record_link_field_id": "fldzJXjoxePaDWZX4",
+                            "result": {
+                                "type": "multipleRecordLinks",
+                                "options": {
+                                    "isReversed": false,
+                                    "prefersSingleRecordLink": false
+                                }
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                "name": "How to Compost",
+                "id": "fldr4Mt4LjMinqHk1",
+                "type": "multipleRecordLinks",
+                "description": null,
+                "options": {
+                    "is_reversed": false,
+                    "linked_table_id": "tblB4Ebn4OvXrvUK0",
+                    "prefers_single_record_link": false,
+                    "inverse_link_field_id": "fldSbL60wZF7EcA97",
+                    "view_id_for_record_selection": null
+                }
+            },
+            {
+                "name": "How to Recycle",
+                "id": "fldp2ySHbkK7XX0yF",
+                "type": "multipleRecordLinks",
+                "description": null,
+                "options": {
+                    "is_reversed": false,
+                    "linked_table_id": "tblz2qA0uPtM12dYE",
+                    "prefers_single_record_link": false,
+                    "inverse_link_field_id": "fldQ9xvDW0DWeJTnL",
+                    "view_id_for_record_selection": null
+                }
+            },
+            {
+                "name": "How to Upcycle",
+                "id": "fldzSqZ1YLcuuhg6L",
+                "type": "multipleRecordLinks",
+                "description": null,
+                "options": {
+                    "is_reversed": false,
+                    "linked_table_id": "tblJSiHkhgV9ymtwK",
+                    "prefers_single_record_link": false,
+                    "inverse_link_field_id": "fld0ZpCXJr5jL39VR",
+                    "view_id_for_record_selection": null
+                }
+            }
+        ],
+        "views": [
+            {
+                "id": "viwUfVWar0ZanoPwN",
+                "type": "grid",
+                "name": "Grid view",
+                "personal_for_user_id": null,
+                "visible_field_ids": [
+                    "fld9ijlwpdxGWoplH",
+                    "fldueugV9vMSkMOvv",
+                    "fldaEb94CuxpsGNna",
+                    "fldy67vLVU6l5vOTG",
+                    "fldUxtEfCxeAEQGAo",
+                    "fldzJXjoxePaDWZX4",
+                    "fldpva9IWXEZXsXkh",
+                    "fldmsGeB2QZ5QbOGU",
+                    "fldWdIWm7bcEMHMTt",
+                    "fldsUiIzhkm8TTZRW",
+                    "fld5o5rMWeYoLnafk",
+                    "fldKm3TD1nPOQPAqw",
+                    "fldr4Mt4LjMinqHk1",
+                    "fldp2ySHbkK7XX0yF",
+                    "fldzSqZ1YLcuuhg6L"
+                ]
+            },
+            {
+                "id": "viwV3oIwRCb305ynJ",
+                "type": "grid",
+                "name": "Published",
+                "personal_for_user_id": null,
+                "visible_field_ids": [
+                    "fld9ijlwpdxGWoplH",
+                    "fldueugV9vMSkMOvv",
+                    "fldaEb94CuxpsGNna",
+                    "fldy67vLVU6l5vOTG",
+                    "fldUxtEfCxeAEQGAo",
+                    "fldzJXjoxePaDWZX4",
+                    "fldKm3TD1nPOQPAqw",
+                    "fld5o5rMWeYoLnafk",
+                    "fldsUiIzhkm8TTZRW",
+                    "fldWdIWm7bcEMHMTt",
+                    "fldpva9IWXEZXsXkh",
+                    "fldmsGeB2QZ5QbOGU",
+                    "fldr4Mt4LjMinqHk1",
+                    "fldp2ySHbkK7XX0yF",
+                    "fldzSqZ1YLcuuhg6L"
+                ]
+            }
+        ]
+    }
 }

@@ -1,7 +1,41 @@
 import json
 import os
-from pyairtable import Api as air
 from types import MappingProxyType
+# Airtable API client
+from pyairtable import Api as air
+# Postgres API client
+import psycopg2
+
+# class Test:
+#     """
+#     A class to test the Search class.
+#     """
+#     def __init__(self, search):
+#         self.search = search
+#         return None
+#     def test_search(self):
+#         # Example usage
+#         name = "Dummy Data"
+#         self.search.print_results(name)
+#     def test_schema(self):
+#         # Example usage
+#         self.search.print_schema()
+#     def test_all_data(self):
+#         # Example usage
+#         self.search.print_all_data()
+#     def test_json_data(self):
+#         # Example usage
+#         self.search.get_json_data()
+def gl(l, n):
+    """
+    Read a specific line from the file.
+    :param l: The list of lines from the file.
+    :param n: The line number to read.
+    :return: The line at the specified index.
+    """
+    if n < 0 or n >= len(l):
+        raise IndexError("Line number out of range.")
+    return l[n].strip()
 
 class Search:
     """
@@ -100,12 +134,18 @@ class Search:
         else:
             print("No records found.")
 
-    def get_json_data(self):
+    def get_json_data(self, use_cache=False):
         """
         Retrieve all records from the Airtable table and save them to data_sample.json,
         overwriting the file if it exists.
         :return: A JSON string of all records in the table.
         """
+        if use_cache:
+            # Check if the file exists
+            if os.path.exists("data_sample.json"):
+                with open("data_sample.json", "r") as f:
+                    payload = f.read()
+                return json.loads(payload)
         try:
             # Ensure the table exists
             if not self.table:
@@ -154,35 +194,219 @@ class Search:
         except Exception as e:
             print(f"Error retrieving schema: {e}")
 
-class Test:
+
+class Data:
     """
-    A class to test the Search class.
+    A class to handle material data operations.
     """
-    def __init__(self, search):
-        self.search = search
+    def __init__(self):
         return None
-    def test_search(self):
-        # Example usage
-        name = "Dummy Data"
-        self.search.print_results(name)
-    def test_schema(self):
-        # Example usage
-        self.search.print_schema()
-    def test_all_data(self):
-        # Example usage
-        self.search.print_all_data()
-    def test_json_data(self):
-        # Example usage
-        self.search.get_json_data()
 
+class NeonConnect:
+    """
+    A class to handle connections to the Neon database.
+    """
+    def __init__(self, file_path):
+        """
+        Initialize the NeonConnect class.
+        :param file_path: The path to the file containing the connection details.
+        """
+        # Check if the file exists
+        if not os.path.exists(file_path):
+            raise FileNotFoundError(file_path + " not found.")
+        else:
+            self.file_path = file_path
+            # Read the connection details from the file
+            try:
+                deets = self.fetch_deets()
+            except Exception as e:
+                print(f"Error reading connection details: {e}")
+                return None
+            # Test the connection
+            if(self.test_connection(deets)):
+                print("Connection successful. Ready to use.")
+            else:
+                print("Connection failed. Please check the connection details.")
+        return None
 
+    def fetch_deets(self):
+        """
+        Fetch the connection details from the file.
+        :return: A dictionary containing the connection details.
+        """
+        # Read the connection details from the file
+        # Assuming the file contains the following lines:
+        # key: <API_KEY>
+        # id: <BASE_ID>
+        # table: <TABLE_NAME>
+        # dbname: <DB_NAME>
+        # user: <USER>
+        # password: <PASSWORD>
+        # host: <HOST>
+        # port: <PORT>
+        # sslmode: <SSL_MODE>
+        with open(self.file_path, "r") as f:
+            lines = f.readlines()[9:16]
+            keys = ["dbname", "user", "password", "host", "port", "sslmode"]
+            # Read the connection details from the file
+            deets = {key: gl(lines, i).split("\n")[0] for i, key in enumerate(keys)}
+            return deets
+    def connect(self):
+        """
+        Connect to the Neon database using the connection details.
+        :return: A connection object.
+        """
+        deets = self.fetch_deets()
+        try:
+            conn = psycopg2.connect(**deets)
+            print("Connection successful")
+            return conn
+        except Exception as e:
+            print(f"Error connecting to the database: {e}")
+            return None
+    def get_cursor(self, conn):
+        """
+        Get a cursor object from the connection.
+        :param conn: The connection object.
+        :return: A cursor object.
+        """
+        if conn:
+            cursor = conn.cursor()
+            return cursor
+        else:
+            print("No connection to get cursor from.")
+            return None
+    def execute_query(self, conn, query):
+        """
+        Execute a query on the Neon database.
+        :param conn: The connection object.
+        :param query: The SQL query to execute.
+        :return: None
+        """
+        if conn:
+            cursor = self.get_cursor(conn)
+            if cursor:
+                try:
+                    cursor.execute(query)
+                    conn.commit()
+                    print("Query executed successfully")
+                except Exception as e:
+                    print(f"Error executing query: {e}")
+            else:
+                print("No cursor to execute the query.")
+        else:
+            print("No connection to execute the query.")
+    def update_neon_data(self, cursor, data):
+        """
+        Update the Neon database with the provided data.
+        :param cursor: The cursor object.
+        :param data: The data to update.
+        :return: None
+        """
+        if cursor:
+            try:
+                # Assuming data is a dictionary with keys as column names and values as the new values
+                # for key, value in data.items():
+                #     query = f"UPDATE table_name SET {key} = '{value}' WHERE condition"
+                #     cursor.execute(query)
+                # Assume json_object is your Python dictionary and id_value is its unique identifier
+                insert_query = """
+                INSERT INTO materials (id, data)
+                VALUES (%s, %s)
+                ON CONFLICT (id) DO UPDATE
+                SET data = EXCLUDED.data
+                """
+                for o in data:
+                    id_value = o["id"]
+                    json_object = self.digest_data(o)
+                    # Execute the insert query
+                    print("Inserting data with id:", id_value)
+                    cursor.execute(insert_query, (id_value, json_object))
+                    print("Data updated successfully")
+            except Exception as e:
+                print(f"Error updating data: {e}")
+        else:
+            print("No cursor to update the data.")
+    
+    def digest_data(self, data):
+        """
+        Convert the data to a JSON string and clean it up.
+        :param data: The data to convert.
+        :return: A JSON string of the data.
+        """
+        try:
+            # Convert the data to a JSON string
+            json_data = json.dumps(data)
+            return json_data
+        except Exception as e:
+            print(f"Error converting data to JSON: {e}")
+            return None
+
+            
+    def close_connection(self, conn):
+        """
+        Close the connection to the Neon database.
+        :param conn: The connection object to close.
+        :return: None
+        """
+        if conn:
+            conn.close()
+            print("Connection closed")
+        else:
+            print("No connection to close.")
+    def get_connection(self):
+        """
+        Get the connection to the Neon database.
+        :return: A connection object.
+        """
+        deets = self.fetch_deets()
+        conn = self.connect()
+        if conn:
+            return conn
+        else:
+            print("Failed to connect to the database.")
+            return None
+    def test_connection(self, deets):
+        """
+        Test the connection to the Neon database using the connection details.
+        :param deets: The connection details.
+        :return: True if the connection is successful, False otherwise.
+        """
+        conn = None
+        # Check if the connection details are provided
+        if not deets:
+            raise ValueError("Connection details are missing.")
+        try:
+            conn = psycopg2.connect(**deets)
+            print("Connection successful")
+        except Exception as e:
+            print(f"Error connecting to the database: {e}")
+        finally:
+            if conn:
+                return True
+                conn.close()    
+        return False
     
 if __name__ == "__main__":
+    creds = "private.txt"
     # Initialize the Airtable table
-    search = Search("private.txt")
-    # Test the Search class
-    # print(search.table.schema())
-    test = Test(search)
-    test.test_json_data()
+    search = Search(creds, ignore_cache=False)
+    # Convert data to JSON
+    data = search.get_json_data(use_cache=True)
 
+    n = NeonConnect(creds)
+    if n:
+        conn = n.get_connection()
+        cursor = n.get_cursor(conn)
+        if cursor:
+            n.update_neon_data(cursor, data)
+            # Commit the changes
+            conn.commit()
+            print("Changes committed successfully")
+            # Close the cursor
+            cursor.close()
+            # Close the connection
+            n.close_connection(conn)
+    else:
+        print("Failed to connect to the Neon database.")
     

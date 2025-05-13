@@ -1,31 +1,21 @@
-import json
-import os
-from types import MappingProxyType
-# Airtable API client
+import json, os
+from types import MappingProxyType as FakeImmutable
 from pyairtable import Api as air
-# Postgres API client
-import psycopg2
+import psycopg2 as postgres
 
-# class Test:
-#     """
-#     A class to test the Search class.
-#     """
-#     def __init__(self, search):
-#         self.search = search
-#         return None
-#     def test_search(self):
-#         # Example usage
-#         name = "Dummy Data"
-#         self.search.print_results(name)
-#     def test_schema(self):
-#         # Example usage
-#         self.search.print_schema()
-#     def test_all_data(self):
-#         # Example usage
-#         self.search.print_all_data()
-#     def test_json_data(self):
-#         # Example usage
-#         self.search.get_json_data()
+"""
+This module provides a class to handle searching and retrieving data from the Airtable table,
+as well as a class to handle connections to the Neon database, which will serve as a cached backend for the app.
+This module will also provide a basic API server to handle requests from the app.
+
+
+TLDR:
+NEXT STEPS ARE
+SERVE IT
+INJEST IT
+"""
+
+# Helpers
 def gl(l, n):
     """
     Read a specific line from the file.
@@ -36,6 +26,28 @@ def gl(l, n):
     if n < 0 or n >= len(l):
         raise IndexError("Line number out of range.")
     return l[n].strip()
+def gf(f, d):
+    """
+    Get the value of a field from a dictionary, or return None if the field is not present.
+    :param f: The field name to get.
+    :param d: The dictionary to get the field from.
+    :return: The value of the field, or None if the field is not present.
+    """
+    return d.get(f, None)
+def any_missing(required, provided):
+    """
+    Check if any required keys are missing from the provided dictionary.
+    :param required: A list of required keys.
+    :param provided: A dictionary of provided keys.
+    :return: True if any required keys are missing, False otherwise.
+    """
+    result = not all(key in provided for key in required)
+    if result:
+        print("Missing required keys in the provided dictionary:")
+        for key in required:
+            if key not in provided:
+                print(f"Missing key: {key}")
+    return result
 
 class Search:
     """
@@ -56,7 +68,7 @@ class Search:
             # Read the API key, base ID, and table name from the file
             with open(file_path, "r") as f:
                 lines = f.readlines()
-                PRIVATE = MappingProxyType({
+                PRIVATE = FakeImmutable({
                     "key": lines[1].strip(),
                     "id": lines[7].strip(),
                     "table": lines[8].strip()
@@ -194,14 +206,6 @@ class Search:
         except Exception as e:
             print(f"Error retrieving schema: {e}")
 
-
-class Data:
-    """
-    A class to handle material data operations.
-    """
-    def __init__(self):
-        return None
-
 class NeonConnect:
     """
     A class to handle connections to the Neon database.
@@ -258,7 +262,7 @@ class NeonConnect:
         """
         deets = self.fetch_deets()
         try:
-            conn = psycopg2.connect(**deets)
+            conn = postgres.connect(**deets)
             print("Connection successful")
             return conn
         except Exception as e:
@@ -304,6 +308,7 @@ class NeonConnect:
         :return: None
         """
         if cursor:
+            skipped = 0
             try:
                 # Assuming data is a dictionary with keys as column names and values as the new values
                 # for key, value in data.items():
@@ -319,12 +324,20 @@ class NeonConnect:
                 for o in data:
                     id_value = o["id"]
                     json_object = self.digest_data(o)
+                    # Check if the json_object is None
+                    if json_object is None:
+                        # print(f"Skipping record with id {id_value} due to invalid data.")
+                        skipped += 1
+                        continue
                     # Execute the insert query
                     print("Inserting data with id:", id_value)
                     cursor.execute(insert_query, (id_value, json_object))
-                    print("Data updated successfully")
             except Exception as e:
                 print(f"Error updating data: {e}")
+                # Optionally raise an exception
+                raise e
+            finally:
+                print(f"Data updated successfully. {skipped} records skipped.")
         else:
             print("No cursor to update the data.")
     
@@ -333,14 +346,109 @@ class NeonConnect:
         Convert the data to a JSON string and clean it up.
         :param data: The data to convert.
         :return: A JSON string of the data.
+
+        Note: We only want the data with Status = "Approved"
+
+        Data format is going to look like:
+            id
+            meta
+                name
+                description
+                *tags (not implemented yet)
+                *alt_names (not implemented yet)
+            image
+                url
+                thumbnail_url
+            risk
+                types
+                factors
+                hazards
+            updated
+                datetime
+                user_id
+            articles
+                compost
+                recycle
+                upcycle
         """
-        try:
-            # Convert the data to a JSON string
-            json_data = json.dumps(data)
-            return json_data
-        except Exception as e:
-            print(f"Error converting data to JSON: {e}")
-            return None
+        # Check if the data is a dictionary
+        if not isinstance(data, dict):
+            raise TypeError("Data must be a dictionary.")
+        
+        # Check if the required keys are present in the data
+        required_keys = ["id", "fields"]
+        if any_missing(required_keys, data):
+            raise KeyError("Missing required keys in the data.")
+        elif not isinstance(data["fields"], dict):
+            # Check if the fields key is a dictionary
+            raise TypeError("Fields must be a dictionary.")
+        else:
+            fields = data["fields"]
+                        # Check if the status is "Approved"
+            if fields["Status"] != "Approved":
+                return None
+
+        # Check if the required keys are present in the fields dictionary
+        required_fields = ["Description", "Status", "Name", "Last Modified By", "Risks", "Image", "Last Modified"]
+        if any_missing(required_fields, fields):
+            raise KeyError("Missing required keys in the fields dictionary. required fields are: " + str(required_fields) + " and provided fields are: " + str(fields.keys()))
+        else:
+            id = data["id"]
+            fields = data["fields"]
+            # meta fields
+            name = gf("Name", fields)
+            description = gf("Description", fields)
+            # image fields
+            image = gf("Image", fields)[0] if gf("Image", fields) else None
+            image_url = gf("url", image) if image else None
+            thumb = gf("thumbnails", image)["small"] if image else None
+            thumbnail_url = gf("url", thumb) if thumb else None
+            # risk fields
+            risk_types = gf("Risk Types (from Risks)", fields)
+            risk_factors = gf("Risk Factors (from Hazards) (from Risks)", fields)
+            risk_hazards = gf("Hazards (from Risks)", fields)
+            # updated fields
+            updated_datetime = fields["Last Modified"]
+            last_modified_by = fields["Last Modified By"]["id"]
+            # articles fields
+            compost = gf("How to Compost", fields)
+            recycle = gf("How to Recycle", fields)
+            upcycle = gf("How to Upcycle", fields)
+
+            # Create a new dictionary with the required keys and values
+            next_row = {
+                "id": id,
+                "meta": {
+                    "name": name,
+                    "description": description
+                },
+                "image": {
+                    "url": image_url,
+                    "thumbnail_url": thumbnail_url
+                },
+                "risk": {
+                    "types": risk_types,
+                    "factors": risk_factors,
+                    "hazards": risk_hazards
+                },
+                "updated": {
+                    "datetime": updated_datetime,
+                    "user_id": last_modified_by
+                },
+                "articles": {
+                    "compost": compost,
+                    "recycle": recycle,
+                    "upcycle": upcycle
+                }
+            }
+            try:
+                # Convert the data to a JSON string
+                json_data = json.dumps(data)
+                return json_data
+            except Exception as e:
+                print(f"Error converting data to JSON: {e}")
+                raise e
+                return None
 
             
     def close_connection(self, conn):
@@ -377,10 +485,11 @@ class NeonConnect:
         if not deets:
             raise ValueError("Connection details are missing.")
         try:
-            conn = psycopg2.connect(**deets)
+            conn = postgres.connect(**deets)
             print("Connection successful")
         except Exception as e:
             print(f"Error connecting to the database: {e}")
+            raise e
         finally:
             if conn:
                 return True
@@ -389,10 +498,11 @@ class NeonConnect:
     
 if __name__ == "__main__":
     creds = "private.txt"
+    refresh = False
     # Initialize the Airtable table
-    search = Search(creds, ignore_cache=False)
+    search = Search(creds, ignore_cache=refresh)
     # Convert data to JSON
-    data = search.get_json_data(use_cache=True)
+    data = search.get_json_data(use_cache=not refresh)
 
     n = NeonConnect(creds)
     if n:

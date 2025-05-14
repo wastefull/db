@@ -1,5 +1,7 @@
+from http.server import BaseHTTPRequestHandler
 import json, os
 from types import MappingProxyType as FakeImmutable
+from typing import Optional
 from pyairtable import Api as air
 import psycopg2 as postgres
 
@@ -50,6 +52,7 @@ def any_missing(required, provided):
     return result
 
 class Search:
+    ignore_cache = False
     """
     A class to handle searching and retrieving data from an Airtable table.
     """
@@ -92,33 +95,6 @@ class Search:
         # Finally initialize the Airtable client and return the correct table
         client = air(key)
         self.table = client.base(id, force=self.ignore_cache).table(table, force=self.ignore_cache)
-    
-    def search_data_by_name(self, name=None):
-        """
-        Search for records in the Airtable table by name.
-        :param name: The name to search for.
-        :return: A list of records that match the search criteria.
-        """
-        try:
-            # Check if the name is provided
-            if not name:
-                return self.get_all_data()
-            
-            # Ensure the name is a string
-            elif not isinstance(name, str):
-                raise TypeError("Name must be a string.")
-            
-            # Ensure the table exists
-            elif not self.table:
-                raise ValueError("Table does not exist or is not initialized.")
-        
-            # Search for records where the 'Name' field matches the provided name
-            else:
-                records = self.table.all(formula=f"{{Name}} = '{name}'")
-                return records
-        except Exception as e:
-            print(f"Error searching data by name: {e}")
-            return []
     
     def get_all_data(self):
         """
@@ -177,7 +153,7 @@ class Search:
         except Exception as e:
             print(f"Error saving JSON data to file: {e}")
             return None
-        return payload
+        return json.loads(payload)
         
 
     def print_results(self, name):
@@ -210,6 +186,7 @@ class NeonConnect:
     """
     A class to handle connections to the Neon database.
     """
+    # connection: Optional[postgres.extensions.connection] = None
     def __init__(self, file_path):
         """
         Initialize the NeonConnect class.
@@ -227,13 +204,11 @@ class NeonConnect:
                 print(f"Error reading connection details: {e}")
                 return None
             # Test the connection
-            if(self.test_connection(deets)):
-                print("Connection successful. Ready to use.")
-            else:
-                print("Connection failed. Please check the connection details.")
+            if not self.test_connection(deets):
+                raise ConnectionError("Connection to Neon database failed.")
         return None
 
-    def fetch_deets(self):
+    def fetch_deets(self) -> dict[str,str]:
         """
         Fetch the connection details from the file.
         :return: A dictionary containing the connection details.
@@ -249,57 +224,51 @@ class NeonConnect:
         # host: <HOST>
         # port: <PORT>
         # sslmode: <SSL_MODE>
+
+        # Check if the file exists
+        if not os.path.exists(self.file_path):
+            raise FileNotFoundError(self.file_path + " not found.")
         with open(self.file_path, "r") as f:
             lines = f.readlines()[9:16]
             keys = ["dbname", "user", "password", "host", "port", "sslmode"]
             # Read the connection details from the file
             deets = {key: gl(lines, i).split("\n")[0] for i, key in enumerate(keys)}
+            if not deets:
+                raise ValueError("Connection details are missing in the file.")
             return deets
-    def connect(self):
+
+    def connect(self) -> postgres.extensions.connection:
         """
         Connect to the Neon database using the connection details.
-        :return: A connection object.
+        :return: A connection object or None if connection fails.
         """
-        deets = self.fetch_deets()
-        try:
-            conn = postgres.connect(**deets)
-            print("Connection successful")
-            return conn
-        except Exception as e:
-            print(f"Error connecting to the database: {e}")
-            return None
-    def get_cursor(self, conn):
+        return postgres.connect(**self.fetch_deets())
+
+    def get_cursor(self, conn: postgres.extensions.connection) -> postgres.extensions.cursor:
         """
         Get a cursor object from the connection.
         :param conn: The connection object.
         :return: A cursor object.
         """
-        if conn:
-            cursor = conn.cursor()
-            return cursor
-        else:
-            print("No connection to get cursor from.")
-            return None
-    def execute_query(self, conn, query):
+        if conn is None:
+            raise ValueError("No connection to get cursor from.")
+        return conn.cursor()
+    def execute_query(self, conn, query) -> None:
         """
         Execute a query on the Neon database.
         :param conn: The connection object.
         :param query: The SQL query to execute.
         :return: None
         """
-        if conn:
-            cursor = self.get_cursor(conn)
-            if cursor:
-                try:
-                    cursor.execute(query)
-                    conn.commit()
-                    print("Query executed successfully")
-                except Exception as e:
-                    print(f"Error executing query: {e}")
-            else:
-                print("No cursor to execute the query.")
-        else:
-            print("No connection to execute the query.")
+        if conn is None:
+            raise ValueError("No connection to execute the query on.")
+        if query is None:
+            raise ValueError("No query to execute.") 
+        cursor = self.get_cursor(conn)
+        cursor.execute(query)
+        conn.commit()
+        print("The query has been executed and committed.")
+        return None
     def update_neon_data(self, cursor, data):
         """
         Update the Neon database with the provided data.
@@ -307,74 +276,53 @@ class NeonConnect:
         :param data: The data to update.
         :return: None
         """
-        if cursor:
-            skipped = 0
-            try:
-                # Assuming data is a dictionary with keys as column names and values as the new values
-                # for key, value in data.items():
-                #     query = f"UPDATE table_name SET {key} = '{value}' WHERE condition"
-                #     cursor.execute(query)
-                # Assume json_object is your Python dictionary and id_value is its unique identifier
-                insert_query = """
-                INSERT INTO materials (id, data)
-                VALUES (%s, %s)
-                ON CONFLICT (id) DO UPDATE
-                SET data = EXCLUDED.data
-                """
-                for o in data:
-                    id_value = o["id"]
-                    json_object = self.digest_data(o)
-                    # Check if the json_object is None
-                    if json_object is None:
-                        # print(f"Skipping record with id {id_value} due to invalid data.")
-                        skipped += 1
-                        continue
-                    # Execute the insert query
-                    print("Inserting data with id:", id_value)
-                    cursor.execute(insert_query, (id_value, json_object))
-            except Exception as e:
-                print(f"Error updating data: {e}")
-                # Optionally raise an exception
-                raise e
-            finally:
-                print(f"Data updated successfully. {skipped} records skipped.")
-        else:
-            print("No cursor to update the data.")
+        if cursor is None:
+            raise ValueError("No cursor to update the data.")
+        if data is None:
+            raise ValueError("No data to update.")
     
-    def digest_data(self, data):
+        skipped = 0 # skip records that are not "Approved"
+        try:
+            insert_query = """
+            INSERT INTO materials (id, data)
+            VALUES (%s, %s)
+            ON CONFLICT (id) DO UPDATE
+            SET data = EXCLUDED.data
+            """
+            for o in data:
+                id_value = o["id"]
+                json_object = self.digest_data(o)
+                # Check if the json_object is None
+                if json_object is None:
+                    # print(f"Skipping record with id {id_value} due to invalid data.")
+                    skipped += 1
+                    continue
+                # Execute the insert query
+                print("Inserting data with id:", id_value)
+                cursor.execute(insert_query, (id_value, json_object))
+        except Exception as e:
+            print(f"Error updating data: {e}")
+            raise e
+        finally:
+            print(f"Data updated successfully. {skipped} records skipped.")
+        # Optionally close the cursor
+        cursor.close()
+        return None
+    def digest_data(self, data: dict) -> Optional[str]:
         """
         Convert the data to a JSON string and clean it up.
         :param data: The data to convert.
-        :return: A JSON string of the data.
-
-        Note: We only want the data with Status = "Approved"
-
+        :return: A JSON string of the data or None if the data is not Approved.
+        -----
         Data format is going to look like:
-            id
-            meta
-                name
-                description
-                *tags (not implemented yet)
-                *alt_names (not implemented yet)
-            image
-                url
-                thumbnail_url
-            risk
-                types
-                factors
-                hazards
-            updated
-                datetime
-                user_id
-            articles
-                compost
-                recycle
-                upcycle
+            - id
+            - meta: name, description, *tags (not implemented yet), *alt_names (not implemented yet)
+            - image: url, thumbnail_url
+            - risk: types, factors, hazards
+            - updated: datetime, user_id
+            - articles: compost, recycle, upcycle
+        Note: We only want the data with Status = "Approved"
         """
-        # Check if the data is a dictionary
-        if not isinstance(data, dict):
-            raise TypeError("Data must be a dictionary.")
-        
         # Check if the required keys are present in the data
         required_keys = ["id", "fields"]
         if any_missing(required_keys, data):
@@ -382,11 +330,11 @@ class NeonConnect:
         elif not isinstance(data["fields"], dict):
             # Check if the fields key is a dictionary
             raise TypeError("Fields must be a dictionary.")
-        else:
-            fields = data["fields"]
-                        # Check if the status is "Approved"
-            if fields["Status"] != "Approved":
-                return None
+        
+        fields = data["fields"]
+        # Check if the status is "Approved"
+        if fields["Status"] != "Approved":
+            return None
 
         # Check if the required keys are present in the fields dictionary
         required_fields = ["Description", "Status", "Name", "Last Modified By", "Risks", "Image", "Last Modified"]
@@ -448,9 +396,42 @@ class NeonConnect:
             except Exception as e:
                 print(f"Error converting data to JSON: {e}")
                 raise e
-                return None
-
-            
+    def get_all_data(self, conn: postgres.extensions.connection) -> list[tuple[str, ...]]:
+        """
+        Retrieve all records from the Neon table.
+        :param conn: The connection object.
+        :return: A list of all records in the table.
+        """
+        if not conn:
+            raise ConnectionError("No connection to retrieve data from.")
+        cursor = self.get_cursor(conn)
+        if not cursor:
+            raise ValueError("No cursor to retrieve data from.")
+        cursor.execute("SELECT * FROM materials")
+        records = cursor.fetchall()
+        return records
+    def get_data_by_id(self, conn: postgres.extensions.connection, id: str) -> tuple[str, ...]:
+        """
+        Retrieve a record from the Neon table by ID.
+        :param conn: The connection object.
+        :param id: The ID of the record to retrieve.
+        :return: A tuple containing the record data.
+        """
+        cursor = self.get_cursor(conn)
+        cursor.execute("SELECT * FROM materials WHERE id = %s", (id,))
+        record = cursor.fetchone()
+        return record
+    def search_data_by_name(self, name: str) -> list[tuple[str, ...]]:
+        """
+        Search for records in the Neon table by name.
+        :param name: The name to search for.
+        :return: A list of records matching the name.
+        """
+        conn = self.connect()
+        cursor = self.get_cursor(conn)
+        cursor.execute("SELECT * FROM materials WHERE data->>'name' = %s", (name,))
+        records = cursor.fetchall()
+        return records       
     def close_connection(self, conn):
         """
         Close the connection to the Neon database.
@@ -482,7 +463,7 @@ class NeonConnect:
         """
         conn = None
         # Check if the connection details are provided
-        if not deets:
+        if not deets or not isinstance(deets, dict):
             raise ValueError("Connection details are missing.")
         try:
             conn = postgres.connect(**deets)
@@ -495,15 +476,15 @@ class NeonConnect:
                 return True
                 conn.close()    
         return False
-    
+
+
 if __name__ == "__main__":
     creds = "private.txt"
-    refresh = False
+    refresh = True
     # Initialize the Airtable table
     search = Search(creds, ignore_cache=refresh)
     # Convert data to JSON
     data = search.get_json_data(use_cache=not refresh)
-
     n = NeonConnect(creds)
     if n:
         conn = n.get_connection()
@@ -513,6 +494,11 @@ if __name__ == "__main__":
             # Commit the changes
             conn.commit()
             print("Changes committed successfully")
+            # Fetch all data from the Neon table
+            all_data = n.get_all_data(conn)
+            print("All data from the Neon table:")
+            for row in all_data:
+                print(row)
             # Close the cursor
             cursor.close()
             # Close the connection

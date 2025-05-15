@@ -6,7 +6,7 @@ Wastefull is creating a tool to allow anyone in the world to look up a material 
 
 ## Development server
 
-To start a local development server, run:
+To start a local development server, run the following from /app:
 
 ```bash
 ng serve

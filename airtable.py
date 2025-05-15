@@ -1,7 +1,7 @@
 import json
 import os
 from types import MappingProxyType as FakeImmutable
-from pyairtable import Api as air
+from pyairtable import Api as air  # type: ignore
 from helpers import read_json, save_json
 
 

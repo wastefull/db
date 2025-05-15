@@ -1,5 +1,5 @@
 import os
-import psycopg2 as postgres
+import psycopg2 as postgres  # type: ignore
 from typing import Optional
 from helpers import gf, gl
 

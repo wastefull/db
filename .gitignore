@@ -41,6 +41,7 @@ testem.log
 .DS_Store
 Thumbs.db
 .prettierrc
+__pycache__/*
 
 # Dummy data
 src/app/assets/thumbs/*
@@ -48,3 +49,4 @@ src/app/assets/guides.csv
 src/app/assets/example_data/*
 private.txt
 data_sample.json
+all_data.json

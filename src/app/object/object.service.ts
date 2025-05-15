@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Object } from './object';
-import { better_data } from './dummy/dummy';
+import { dummy_data } from './dummy/dummy_json';
 import { environment } from '../../environments/environment';
 import { connect } from 'http2';
 @Injectable({
@@ -14,24 +14,40 @@ export class ObjectService {
   }
 
   private loadGuides(): void {
-    const rows = better_data.split('\n').slice(1); // Split by rows and skip the header
-    this.results = rows
-      .filter((row) => row.trim() !== '') // Remove empty rows
-      .map((row) => {
-        let [id, name, altNames, thumbnail, tags, shortname] = row.split(','); // Split by commas
-        if (!shortname || shortname.includes('http')) { shortname = name.trim().toLowerCase().replace(/ /g, '-'); } // Generate shortname if not provided
-        return {
-          id: id.trim(),
-          name: name.trim().replace(/&amp;/g, '&'),
-          altNames: altNames ? altNames.split('|').map((alt) => alt.trim()) : [], // Split altNames by '|'
-          thumbnail: environment.thumbs_api + shortname.trim().replace(/-/g, '').trim() + '.jpg',
-          tags: tags ? tags.split('|').map((tag) => tag.trim().toLowerCase()) : [], // Split tags by '|'
-          shortname: shortname.trim()
-        } as Object;
-      });
+    const rows = dummy_data;
+    this.results = rows.map((row) => {
+      const object: Object = {
+        id: row.id,
+        meta: {
+          name: row.meta.name,
+          description: row.meta.description
+        },
+        image: {
+          url: row.image.url,
+          thumbnail: row.image.thumbnail_url
+        },
+        risk: {
+          types: row.risk.types || [],
+          factors: row.risk.factors || [],
+          hazards: row.risk.hazards || []
+        },
+        updated: {
+          datetime: row.updated.datetime,
+          user_id: row.updated.user_id
+        },
+        articles: {
+          compost: row.articles.compost || [],
+          recycle: row.articles.recycle || [],
+          upcycle: row.articles.upcycle || []
+        }
+      };
+      return object;
+    });
+
       const fetchPromises = this.results.map(async (object) => {
         try {
-          const response = await fetch(object.thumbnail, { method: 'HEAD', redirect: 'follow' });
+          // Remove objects with invalid thumbnail URLs
+          const response = await fetch(object.image.thumbnail, { method: 'HEAD', redirect: 'follow' });
           if (response.status !== 200) {
             return object.id; // Return the ID of the object to be removed
           }
@@ -55,14 +71,5 @@ export class ObjectService {
   getObjectById(id: string): Object | undefined {
     return this.results.find((object) => object.id === id);
   }
-  // getObjectsByTag(tag: string): Object[] {
-  //   return this.results.filter((object) => object.tags.includes(tag));
-  // }
-  // getObjectsByName(name: string): Object[] {
-  //   return this.results.filter((object) => object.name.includes(name));
-  // }
-  // getObjectsByAltName(altName: string): Object[] {  
-  //   return this.results.filter((object) => object.altNames.includes(altName));
-  // }
 
 }

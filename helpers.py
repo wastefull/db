@@ -1,6 +1,7 @@
 import os
 import json
 
+
 def gl(l, n):
     """
     Get a line from a list of lines.
@@ -12,6 +13,7 @@ def gl(l, n):
         raise IndexError("Line number out of range.")
     return l[n].strip()
 
+
 def gf(f, d):
     """
     Get a field from a dictionary.
@@ -20,6 +22,7 @@ def gf(f, d):
     :return: The value of the field in the dictionary.
     """
     return d.get(f, None)
+
 
 def any_missing(required, provided):
     """
@@ -36,6 +39,7 @@ def any_missing(required, provided):
                 print(f"Missing key: {key}")
     return result
 
+
 def read_json(file_path: str) -> dict:
     """
     Read a JSON file and return its contents as a dictionary.
@@ -47,6 +51,7 @@ def read_json(file_path: str) -> dict:
     with open(file_path, "r") as f:
         payload = f.read()
         return json.loads(payload)
+
 
 def save_json(data, file_path):
     try:

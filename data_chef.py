@@ -1,4 +1,6 @@
 from helpers import gl, gf, any_missing, read_json, save_json
+
+
 def remove_nulls(raw: list) -> list:
     """
     Remove null values from the raw data.
@@ -10,6 +12,7 @@ def remove_nulls(raw: list) -> list:
         if o is None:
             raw.remove(o)
     return raw
+
 
 def cook_data(raw: list) -> list:
     """
@@ -25,12 +28,13 @@ def cook_data(raw: list) -> list:
             cooked.append(new)
     return cooked
 
+
 def format_row(data: dict):
     """
     Convert the data to a JSON string and clean it up.
     :param data: The data to convert.
     :return: A JSON string of the data or None if the data is not Approved.
-    
+
     Data format is going to look like:
         - id
         - meta: name, description, *tags (not implemented yet), *alt_names (not implemented yet)
@@ -43,20 +47,22 @@ def format_row(data: dict):
     # Check if the required keys are present in the data
     required_keys = ["id", "fields"]
     if any_missing(required_keys, data):
-        raise KeyError("Missing required keys in the data.")
+        raise KeyError(f"A row is missing columns: {required_keys}")
     elif not isinstance(data["fields"], dict):
         # Check if the fields key is a dictionary
         raise TypeError("Fields must be a dictionary.")
-    
+
     fields = data["fields"]
     # Check if the status is "Approved"
     if fields["Status"] != "Approved":
         return None
 
     # Check if the required keys are present in the fields dictionary
-    required_fields = ["Description", "Status", "Name", "Last Modified By", "Risks", "Image", "Last Modified"]
+    required_fields = ["Description", "Status", "Name",
+                       "Last Modified By", "Risks", "Image", "Last Modified"]
     if any_missing(required_fields, fields):
-        raise KeyError("Missing required keys in the fields dictionary. required fields are: " + str(required_fields) + " and provided fields are: " + str(fields.keys()))
+        raise KeyError("Missing required keys in the fields dictionary. required fields are: " +
+                       str(required_fields) + " and provided fields are: " + str(fields.keys()))
     else:
         id = data["id"]
         fields = data["fields"]

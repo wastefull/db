@@ -3,12 +3,14 @@ import psycopg2 as postgres
 from typing import Optional
 from helpers import gf, gl
 
+
 class NeonConnect:
     """
     A class to handle connections to the Neon database.
     """
     c: Optional[postgres.extensions.connection] = None
     cr: Optional[postgres.extensions.cursor] = None
+
     def __init__(self, file_path):
         """
         Initialize the NeonConnect class.
@@ -30,7 +32,7 @@ class NeonConnect:
                 raise ConnectionError("Connection to Neon database failed.")
         return None
 
-    def fetch_deets(self) -> dict[str,str]:
+    def fetch_deets(self) -> dict[str, str]:
         """
         Fetch the connection details from the file.
         :return: A dictionary containing the connection details.
@@ -54,7 +56,8 @@ class NeonConnect:
             lines = f.readlines()[9:16]
             keys = ["dbname", "user", "password", "host", "port", "sslmode"]
             # Read the connection details from the file
-            deets = {key: gl(lines, i).split("\n")[0] for i, key in enumerate(keys)}
+            deets = {key: gl(lines, i).split("\n")[0]
+                     for i, key in enumerate(keys)}
             if not deets:
                 raise ValueError("Connection details are missing in the file.")
             return deets
@@ -66,7 +69,7 @@ class NeonConnect:
         """
         self.c = postgres.connect(**self.fetch_deets())
         return self.c
-    
+
     def execute_query(self, query) -> None:
         """
         Execute a query on the Neon database.
@@ -77,7 +80,7 @@ class NeonConnect:
         if self.c is None:
             raise ValueError("No connection to execute the query on.")
         if query is None:
-            raise ValueError("No query to execute.") 
+            raise ValueError("No query to execute.")
         cursor = self.get_cursor(self.c)
         cursor.execute(query)
         self.c.commit()
@@ -95,8 +98,8 @@ class NeonConnect:
             raise ValueError("No cursor to update the data.")
         if data is None:
             raise ValueError("No data to update.")
-    
-        skipped = 0 # skip records that are not "Approved"
+
+        skipped = 0  # skip records that are not "Approved"
         try:
             insert_query = """
             INSERT INTO materials (id, data)
@@ -137,12 +140,12 @@ class NeonConnect:
             raise ValueError("No cursor to retrieve data from.")
         self.cr.execute("SELECT * FROM materials")
         records = self.cr.fetchall()
-        # Data comes in as a list of tuples with the first element 
+        # Data comes in as a list of tuples with the first element
         # being the id and the second element being the JSON data, which
         # also contains the id, so we can go ahead and remove the first element
         records = [record[1:][0] for record in records]
         return records
-    
+
     def search_data_by_name(self, name: str) -> list[tuple[str, ...]]:
         """
         Search for records in the Neon table by name.
@@ -153,9 +156,10 @@ class NeonConnect:
             raise ValueError("No cursor to search data from.")
         if not name:
             raise ValueError("No name to search for.")
-        self.cr.execute("SELECT * FROM materials WHERE data->>'name' = %s", (name,))
+        self.cr.execute(
+            "SELECT * FROM materials WHERE data->>'name' = %s", (name,))
         records = self.cr.fetchall()
-        return records       
+        return records
 
     def close_connection(self):
         """
@@ -203,7 +207,7 @@ class NeonConnect:
         finally:
             if conn:
                 return True
-                conn.close()    
+                conn.close()
         return False
 
     def cook_and_update_neon(self, raw: list, recipe) -> None:
@@ -219,13 +223,13 @@ class NeonConnect:
 
         if self.cr is None:
             raise ValueError("No cursor to cook and update data.")
-        
+
         cooked = recipe(raw)
         self.update_neon_data(cooked)
         self.c.commit()
         print("Changes committed successfully")
         return None
-    
+
     def close_all(self):
         """
         Close the connection and cursor to the Neon database.

@@ -1,8 +1,9 @@
+import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-article',
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './article.component.html',
   styleUrl: './article.component.scss',
 })
@@ -13,5 +14,24 @@ export class ArticleComponent {
     ecological role, and a showcase of examples of its creative reuse.`;
   @Input() material!: string;
   @Input() article!: string;
-  @Input() type!: string;
+  @Input() articleType!: string;
+  public setHeading() {
+    // Set the heading based on the type
+    switch (this.articleType) {
+      case 'compost':
+        return 'How to Compost ' + this.material;
+      case 'recycle':
+        return 'How to Recycle ' + this.material;
+      case 'upcycle':
+        return 'How to Upcycle ' + this.material;
+      case 'types':
+        return 'Risk Type';
+      case 'factors':
+        return 'Risk Factor';
+      case 'hazards':
+        return 'Hazard';
+      default:
+        return 'How to ' + this.articleType + ' ' + this.material;
+    }
+  }
 }

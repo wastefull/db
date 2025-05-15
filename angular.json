@@ -93,7 +93,6 @@
             "inlineStyleLanguage": "scss",
             "assets": [
               "app/src/assets/*",
-              "src/public/favicon.ico",
               {
                 "glob": "**/*",
                 "input": "app/src/assets",

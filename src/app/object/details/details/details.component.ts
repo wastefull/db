@@ -18,13 +18,10 @@ export class DetailsComponent {
   objectService: ObjectService = inject(ObjectService);
   object: Object;
   public articles: { type: string; material: string; article: string }[] = [];
-
+  public groupedArticles: ArticleGroup[] = [];
   public handleMissingImage($event: ErrorEvent) {
     let target = $event.target as HTMLImageElement;
-    target.src = this.badImage();
-  }
-  public badImage(): string {
-    return environment.thumbs_api + 'sample.png';
+    target.src = defaultObject.image.url;
   }
 
   constructor() {
@@ -33,33 +30,20 @@ export class DetailsComponent {
     if (!this.object) {
       this.object = defaultObject;
       this.object.id = objectId;
-      this.object.image.thumbnail = this.badImage();
-      this.object.image.url = this.badImage();
+      this.object.image.thumbnail = defaultObject.image.url;
+      this.object.image.url = defaultObject.image.url;
       return;
     }
-    const types = ['compost', 'recycle', 'upcycle'];
-    if (
-      types.some(
-        (key) =>
-          Array.isArray((this.object.articles as any)[key]) &&
-          ((this.object.articles as any)[key] as any[]).length > 0
-      )
-    ) {
-      // Flatten articles into an array with type, material, and article text
-      this.articles = [];
-      types.forEach((type) => {
-        const articleTexts =
-          this.object!.articles[type as keyof typeof this.object.articles] ||
-          [];
-        articleTexts.forEach((text: string) => {
-          this.articles.push({
-            type,
-            material: this.object!.meta.name,
-            article: text,
-          });
-        });
-      });
-    } else {
+    const articleTypes = ['compost', 'recycle', 'upcycle'];
+    const riskTypes = ['types', 'factors', 'hazards'];
+    this.articles = [];
+
+    // Populate articles from the object
+    this.populateFromSource(this.object!.articles, articleTypes);
+    this.populateFromSource(this.object!.risk, riskTypes);
+
+    // If still empty, show the default message
+    if (this.articles.length === 0) {
       this.articles = [
         {
           type: 'contribute to our knowledge of ',
@@ -75,5 +59,73 @@ export class DetailsComponent {
         },
       ];
     }
+
+    const allTypes = [
+      ...articleTypes.map((type) => ({
+        type,
+        heading: this.getHeading(type),
+        items:
+          this.object!.articles[type as keyof typeof this.object.articles] ||
+          [],
+      })),
+      ...riskTypes.map((type) => ({
+        type,
+        heading: this.getHeading(type),
+        items: this.object!.risk[type as keyof typeof this.object.risk] || [],
+      })),
+    ];
+
+    this.groupedArticles = allTypes
+      .filter((group) => group.items.length > 0)
+      .map((group) => ({
+        type: group.type,
+        heading: group.heading,
+        articles: group.items.map((id: string) => ({
+          id,
+          material: this.object!.meta.name,
+          article: id, // For now, just the ID; later, fetch the article text/title by ID
+        })),
+      }));
+  }
+
+  private populateFromSource(
+    source: Record<string, string[]>,
+    types: string[]
+  ) {
+    types.forEach((type) => {
+      const texts = source[type] || [];
+      texts.forEach((text: string) => {
+        this.articles.push({
+          type,
+          material: this.object!.meta.name,
+          article: text,
+        });
+      });
+    });
+  }
+
+  private getHeading(type: string): string {
+    switch (type) {
+      case 'compost':
+        return 'How to Compost';
+      case 'recycle':
+        return 'How to Recycle';
+      case 'upcycle':
+        return 'How to Upcycle';
+      case 'types':
+        return 'Risk Types';
+      case 'factors':
+        return 'Risk Factors';
+      case 'hazards':
+        return 'Hazards';
+      default:
+        return type;
+    }
   }
 }
+
+type ArticleGroup = {
+  type: string;
+  heading: string;
+  articles: { id: string; material: string; article: string }[];
+};

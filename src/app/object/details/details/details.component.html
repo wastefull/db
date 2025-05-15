@@ -4,16 +4,19 @@
         <img class="object-photo" [src]="object.image.thumbnail" [height]="200" [width]="200"
             alt="Example of {{ object.meta.name }}" (error)="handleMissingImage($event)" crossorigin />
         <h4>Details</h4>
-        <p class="details">I'll put details here like what it's made out of, where it is typically made, etc.</p>
+        <p class="details">{{ object.meta.description }}</p>
         <h4>AKA</h4>
         <p class="object-meta">placeholder for alt names</p>
         <h4>Tags</h4>
         <p class="object-meta">placeholder for tags</p>
     </aside>
     <content>
-        <h2 class="object-heading">{{ object.meta.name }}</h2>
-        <div *ngFor="let art of articles">
-            <app-article [type]="art.type" [material]="art.material" [article]="art.article"></app-article>
-        </div>
+        <h2 class="object-heading">{{ object.meta.name | titlecase }}</h2>
+        <ng-container *ngFor="let group of groupedArticles">
+            <h3>{{ group.heading }}</h3>
+            <div *ngFor="let art of group.articles">
+                <app-article [articleType]="group.type" [material]="art.material" [article]="art.article"></app-article>
+            </div>
+        </ng-container>
     </content>
 </article>

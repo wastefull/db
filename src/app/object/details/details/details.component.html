@@ -1,26 +1,19 @@
 <a [routerLink]="['/']">↩️</a>
 <article>
-<aside>
-    <img 
-        class="object-photo" 
-        [src]="object?.thumbnail" 
-        [height]="200" 
-        [width]="200"
-        alt="Example of {{ object?.name }}"
-        (error)="handleMissingImage($event)" 
-        crossorigin />
-    <h4>Details</h4>
-    <p class="details">I'll put details here like what it's made out of, where it is typically made, etc.</p>
-    <h4>AKA</h4>
-    <p class="object-meta">{{ object?.shortname }}, {{ object?.altNames }}</p>
-    <h4>Tags</h4>
-    <p class="object-meta">{{ object?.tags }}</p>
-</aside>
-<content>
-    <h2 class="object-heading">{{ object?.name }}</h2>
-    <p class="article-text">
-        Articles will cover the uses of the object, as well as potential issues
-        its decomposition (or lack thereof) can create. Below will be cards for
-        the object's compostability, recyclability, reuseability, possible hazards,
-        ecological role, and a showcase of examples of its creative reuse.</p>
-</content></article>
+    <aside>
+        <img class="object-photo" [src]="object.image.thumbnail" [height]="200" [width]="200"
+            alt="Example of {{ object.meta.name }}" (error)="handleMissingImage($event)" crossorigin />
+        <h4>Details</h4>
+        <p class="details">I'll put details here like what it's made out of, where it is typically made, etc.</p>
+        <h4>AKA</h4>
+        <p class="object-meta">placeholder for alt names</p>
+        <h4>Tags</h4>
+        <p class="object-meta">placeholder for tags</p>
+    </aside>
+    <content>
+        <h2 class="object-heading">{{ object.meta.name }}</h2>
+        <div *ngFor="let art of articles">
+            <app-article [type]="art.type" [material]="art.material" [article]="art.article"></app-article>
+        </div>
+    </content>
+</article>

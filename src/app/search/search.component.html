@@ -1,19 +1,8 @@
 <section>
-    <form>
-      <input
-        type="text" 
-        placeholder="Look up a thing" 
-        (keydown.enter)="onInputChange(query.value)"
-        (change)="onInputChange(query.value)"
-        (focus)="onInputChange(query.value)"
-        #query />
-      <button 
-        class="primary" 
-        type="button" 
-        (click)="onInputChange(query.value)"
-        (keydown.enter)="onInputChange(query.value)"
-      >Search</button>
-    </form>
+  <form (submit)="$event.preventDefault()">
+    <input type="text" placeholder="Look up a thing" [(ngModel)]="query" name="query" />
+    <button class="primary" type="button" (click)="onInputChange(query)">Search</button>
+  </form>
 </section>
-<app-results [query]="query.value"></app-results>
-<p *ngIf="!query.value || query.value === ''">Please enter a search term.</p>
+<app-results [query]="query"></app-results>
+<p *ngIf="!query">Please enter a search term.</p>

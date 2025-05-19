@@ -60,7 +60,6 @@
               "sourceMap": true
             },
             "static": {
-              "outputPath": "dist/app/browser",
               "index": "src/index.html",
               "browser": "src/main.ts",
               "polyfills": [

@@ -1,9 +1,8 @@
+import logging
 import json
 import logging
-import re
+import os
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from time import sleep
-from urllib.parse import unquote
 from air_server import fetch
 from helpers import read_json
 
@@ -48,10 +47,11 @@ class HTTPRequestHandler(BaseHTTPRequestHandler):
 
 
 if __name__ == '__main__':
+    port = int(os.environ.get('PORT', 8000))  # Use PORT env var if set
     logging.basicConfig(level=logging.INFO)
-    server_address = ('', 8000)
+    server_address = ('', port)
     httpd = HTTPServer(server_address, HTTPRequestHandler)
-    logging.info('Starting server on port 8000...')
+    logging.info(f'Starting server on port {port}...')
     try:
         httpd.serve_forever()
     except KeyboardInterrupt:

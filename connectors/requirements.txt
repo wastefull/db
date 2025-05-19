@@ -1,0 +1,4 @@
+# Don't include standard libraries like 'os', 'sys', 'json', etc.
+requests
+pyairtable
+psycopg2-binary

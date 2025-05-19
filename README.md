@@ -4,6 +4,14 @@ Wastefull is creating a tool to allow anyone in the world to look up a material 
 
 # Development
 
+## First time setup
+
+Install npm packages
+
+```bash
+npm install
+```
+
 ## Development server
 
 To start a local development server, run the following from /app:

@@ -48,70 +48,22 @@ quit the PSQL shell with:
 \q
 ```
 
-## DB structure
-
-Tables:
-
-1. materials
-2. alternate_names
-3. tags
-4. species_tags (join table)
-5. articles
-
-```sql
-CREATE TABLE materials (
-    id SERIAL PRIMARY KEY,
-    name TEXT NOT NULL UNIQUE,
-    description TEXT,  -- optional longform markdown summary, if needed
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE alternate_names (
-    id SERIAL PRIMARY KEY,
-    material_id INTEGER NOT NULL REFERENCES materials(id) ON DELETE CASCADE,
-    name TEXT NOT NULL
-);
-
-CREATE TABLE tags (
-    id SERIAL PRIMARY KEY,
-    name TEXT NOT NULL UNIQUE
-);
-
-CREATE TABLE materials_tags (
-    material_id INTEGER NOT NULL REFERENCES materials(id) ON DELETE CASCADE,
-    tag_id INTEGER NOT NULL REFERENCES tags(id) ON DELETE CASCADE,
-    PRIMARY KEY (material_id, tag_id)
-);
-
-CREATE TABLE articles (
-    id SERIAL PRIMARY KEY,
-    material_id INTEGER NOT NULL REFERENCES materials(id) ON DELETE CASCADE,
-    type TEXT CHECK (type IN (‘recycle’, ‘compost’, ‘renew’, 'hazards')),
-    content TEXT NOT NULL,  -- markdown content
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    UNIQUE (material_id, type)  -- ensures only one of each type per material
-);
-
-```
-
-### Test POST
-
-```bash
-curl -X POST http://localhost:8000/api/post/thing/Crimson%20Nightcrawler -d "A nocturnal gecko engineered for low-light environments"
-```
-
 # Deployment
 
 ## Building
 
-To build the project run:
+To build the project run the following while authenticated and in the /connectors directory:
 
 ```bash
-ng build
+gcloud run deploy wdb-middleware \
+    --image us-docker.pkg.dev/wastefull-db/my-repo/wdb-middleware \
+    --platform managed \
+    --region us-central1 \
+    --allow-unauthenticated \
+    --update-secrets AIRTABLE_API_KEY=projects/251769284793/secrets/AIRTABLE_API_KEY:latest \
+    --set-env-vars AIRTABLE_BASE_ID=app35YvKXrBhupoeN,AIRTABLE_TABLE=Materials \
+    --update-secrets POSTGRES_URI=projects/251769284793/secrets/POSTGRES_URI:latest
 ```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
 
 ## Running unit tests
 

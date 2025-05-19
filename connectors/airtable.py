@@ -1,4 +1,3 @@
-import json
 import os
 from types import MappingProxyType as FakeImmutable
 from pyairtable import Api as air  # type: ignore
@@ -11,26 +10,27 @@ class Search:
     A class to handle searching and retrieving data from an Airtable table.
     """
 
-    def __init__(self, file_path, ignore_cache=False):
+    def __init__(self, ignore_cache=False):
         self.ignore_cache = ignore_cache
         """
         Initialize the Airtable API client and table.
-        Reads the API key, base ID, and table name from a private file.
+        Reads the API key, base ID, and table name from environment variables.
+        :param ignore_cache: If True, ignore the cache and fetch data from Airtable.
+        :type ignore_cache: bool
         :return: The initialized Airtable table object.
         """
-        # Check if the file exists
-        if not os.path.exists(file_path):
-            raise FileNotFoundError(file_path + " not found.")
+        # Prefer environment variables if present
+        key = os.environ.get("AIRTABLE_API_KEY")
+        base_id = os.environ.get("AIRTABLE_BASE_ID")
+        table = os.environ.get("AIRTABLE_TABLE")
 
-        else:
-            # Read the API key, base ID, and table name from the file
-            with open(file_path, "r") as f:
-                lines = f.readlines()
-                PRIVATE = FakeImmutable({
-                    "key": lines[1].strip(),
-                    "id": lines[7].strip(),
-                    "table": lines[8].strip()
-                })
+        if key and base_id and table:
+            PRIVATE = FakeImmutable({
+                "key": key,
+                "id": base_id,
+                "table": table
+            })
+
             # Initialize the Airtable API client and table
             self.initialize(PRIVATE["key"], PRIVATE["id"], PRIVATE["table"])
 

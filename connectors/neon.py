@@ -34,33 +34,31 @@ class NeonConnect:
 
     def fetch_deets(self) -> dict[str, str]:
         """
-        Fetch the connection details from the file.
+        Fetch the connection details from the environment variables.
         :return: A dictionary containing the connection details.
         """
-        # Read the connection details from the file
-        # Assuming the file contains the following lines:
-        # key: <API_KEY>
-        # id: <BASE_ID>
-        # table: <TABLE_NAME>
-        # dbname: <DB_NAME>
-        # user: <USER>
-        # password: <PASSWORD>
-        # host: <HOST>
-        # port: <PORT>
-        # sslmode: <SSL_MODE>
+        # Extract the connection details from the connection string
+        # Assuming the connection string is in the format:
+        # postgres://<user>:<password>@<host>:<port>/<dbname>?sslmode=<sslmode>
 
-        # Check if the file exists
-        if not os.path.exists(self.file_path):
-            raise FileNotFoundError(self.file_path + " not found.")
-        with open(self.file_path, "r") as f:
-            lines = f.readlines()[9:16]
-            keys = ["dbname", "user", "password", "host", "port", "sslmode"]
-            # Read the connection details from the file
-            deets = {key: gl(lines, i).split("\n")[0]
-                     for i, key in enumerate(keys)}
-            if not deets:
-                raise ValueError("Connection details are missing in the file.")
-            return deets
+        postgres_uri = os.environ.get("POSTGRES_URI") or ""
+        if not postgres_uri or postgres_uri == "":
+            raise ValueError("Connection string is missing.")
+        user = postgres_uri.split(":")[1].split("@")[0]
+        password = postgres_uri.split(":")[2].split("@")[0]
+        host = postgres_uri.split("@")[1].split(":")[0]
+        port = postgres_uri.split(":")[1].split("/")[0]
+        dbname = postgres_uri.split("/")[-1].split("?")[0]
+        sslmode = postgres_uri.split("?")[-1].split("=")[-1]
+
+        return {
+            "dbname": dbname,
+            "user": user,
+            "password": password,
+            "host": host,
+            "port": port,
+            "sslmode": sslmode
+        }
 
     def connect(self) -> None:
         """

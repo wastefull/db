@@ -1,7 +1,7 @@
 on:
   push:
     branches:
-      - "main" # change to the branch you wish to deploy from
+      - "main"
 
 permissions:
   contents: read
@@ -12,8 +12,15 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - id: build-publish
-        uses: bitovi/github-actions-angular-to-github-pages@v1.0.0
+      - uses: actions/checkout@v4 # check out files
+      - uses: actions/setup-node@v4 # set up node
+        with:
+          node-version: 20 # not latest but safer for Angular
+      - run: npm ci # dependencies
+      - run: rm -rf dist # cleanup
+      - run: npm run build -- --base-href=/db/ # force static build
+      - run: cp dist/app/browser/index.html dist/app/browser/404.html # fallback 404
+      - uses: actions/upload-pages-artifact@v3 # upload artifact to pages
         with:
           path: dist/app/browser
-          build_command: ng build --base-href=/db/ && cp dist/app/browser/index.html dist/app/browser/404.html
+      - uses: actions/deploy-pages@v4 # deploy

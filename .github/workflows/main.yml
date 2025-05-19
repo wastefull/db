@@ -12,7 +12,9 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-    - id: build-publish
-      uses: bitovi/github-actions-angular-to-github-pages@v1.0.0
-      with:
-        path: dist/app
+      - id: build-publish
+        uses: bitovi/github-actions-angular-to-github-pages@v1.0.0
+        with:
+          path: dist/app/browser
+      - name: Copy index.html to 404.html
+        run: cp dist/app/browser/index.html dist/app/browser/404.html

@@ -52,6 +52,48 @@ class HTTPRequestHandler(BaseHTTPRequestHandler):
                 self.send_response(500)
                 self.end_headers()
                 self.wfile.write(json.dumps({"error": str(e)}).encode())
+            return
+        if self.path.startswith("/material/") and self.path.endswith("/articles"):
+            # /material/{name}/articles
+            material_name = self.path[len(
+                "/material/"):-len("/articles")].strip("/").lower()
+            neon = NeonConnect()
+            materials = neon.fetch_all_materials()
+            material = next(
+                (m for m in materials if material_name in m.get(
+                    "meta", {}).get("name", "").lower()),
+                None
+            )
+            if material and "id" in material:
+                articles = neon.fetch_articles_by_material_id(material["id"])
+                self.send_response(200)
+                self.send_header("Content-type", "application/json")
+                self.end_headers()
+                self.wfile.write(json.dumps(articles).encode())
+            else:
+                self.send_response(404)
+                self.end_headers()
+                self.wfile.write(b'{"error": "Material not found"}')
+            return
+        if self.path.startswith("/material/"):
+            material_name = self.path[len("/material/"):].lower()
+            neon = NeonConnect()
+            materials = neon.fetch_all_materials()
+            result = next(
+                (m for m in materials if material_name in m.get(
+                    "meta", {}).get("name", "").lower()),
+                None
+            )
+            if result:
+                self.send_response(200)
+                self.send_header("Content-type", "application/json")
+                self.end_headers()
+                self.wfile.write(json.dumps(result).encode())
+            else:
+                self.send_response(404)
+                self.end_headers()
+                self.wfile.write(b'{"error": "Material not found"}')
+            return
         else:
             self.send_response(404)
             self.end_headers()

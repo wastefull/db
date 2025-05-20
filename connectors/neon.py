@@ -312,3 +312,21 @@ class NeonConnect:
                 continue
             self.cr.execute(q, (o["id"], json.dumps(o)))
         print(f"Articles upserted: {len(data)}")
+
+    def fetch_articles_by_material_id(self, material_id: str):
+        """
+        Fetch all articles whose 'targets' array contains the given material_id.
+        """
+        conn = self.connect()
+        cur = conn.cursor()
+        # Query: data->'targets' @> '["material_id"]'
+        query = """
+            SELECT data FROM articles
+            WHERE data->'targets' @> %s
+        """
+        cur.execute(query, (json.dumps([material_id]),))
+        rows = cur.fetchall()
+        cur.close()
+        conn.close()
+        # Return list of article dicts
+        return [json.loads(row[0]) if isinstance(row[0], str) else row[0] for row in rows]

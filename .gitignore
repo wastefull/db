@@ -53,3 +53,4 @@ data_sample.json
 all_data.json
 safekeeping_ignore.py
 connectors/safekeeping.txt
+connectors/.env

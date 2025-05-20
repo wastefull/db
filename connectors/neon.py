@@ -1,7 +1,7 @@
-import os
 import psycopg2 as postgres  # type: ignore
 from typing import Optional
-from helpers import gf, gl
+from helpers import gf, get_secret
+import json
 
 
 class NeonConnect:
@@ -11,61 +11,32 @@ class NeonConnect:
     c: Optional[postgres.extensions.connection] = None
     cr: Optional[postgres.extensions.cursor] = None
 
-    def __init__(self, file_path):
+    def __init__(self):
         """
         Initialize the NeonConnect class.
-        :param file_path: The path to the file containing the connection details.
         """
-        # Check if the file exists
-        if not os.path.exists(file_path):
-            raise FileNotFoundError(file_path + " not found.")
-        else:
-            self.file_path = file_path
-            # Read the connection details from the file
-            try:
-                deets = self.fetch_deets()
-            except Exception as e:
-                print(f"Error reading connection details: {e}")
-                return None
-            # Test the connection
-            if not self.test_connection(deets):
-                raise ConnectionError("Connection to Neon database failed.")
-        return None
+        postgres_uri = self.fetch_deets()
+        # Test the connection
+        if not self.test_connection(postgres_uri):
+            raise ConnectionError("Connection to Neon database failed.")
 
-    def fetch_deets(self) -> dict[str, str]:
+    def fetch_deets(self) -> str:
         """
-        Fetch the connection details from the environment variables.
-        :return: A dictionary containing the connection details.
+        Fetch the connection string from the environment or private.txt.
+        :return: The full connection string.
         """
-        # Extract the connection details from the connection string
-        # Assuming the connection string is in the format:
-        # postgres://<user>:<password>@<host>:<port>/<dbname>?sslmode=<sslmode>
-
-        postgres_uri = os.environ.get("POSTGRES_URI") or ""
+        postgres_uri = get_secret("POSTGRES_URI", fallback_line=6)
         if not postgres_uri or postgres_uri == "":
             raise ValueError("Connection string is missing.")
-        user = postgres_uri.split(":")[1].split("@")[0]
-        password = postgres_uri.split(":")[2].split("@")[0]
-        host = postgres_uri.split("@")[1].split(":")[0]
-        port = postgres_uri.split(":")[1].split("/")[0]
-        dbname = postgres_uri.split("/")[-1].split("?")[0]
-        sslmode = postgres_uri.split("?")[-1].split("=")[-1]
+        return postgres_uri
 
-        return {
-            "dbname": dbname,
-            "user": user,
-            "password": password,
-            "host": host,
-            "port": port,
-            "sslmode": sslmode
-        }
-
-    def connect(self) -> None:
+    def connect(self) -> postgres.extensions.connection:
         """
-        Connect to the Neon database using the connection details.
+        Connect to the Neon database using the connection string.
         :return: A connection object or None if connection fails.
         """
-        self.c = postgres.connect(**self.fetch_deets())
+        postgres_uri = get_secret("POSTGRES_URI", fallback_line=6)
+        self.c = postgres.connect(postgres_uri)
         return self.c
 
     def execute_query(self, query) -> None:
@@ -79,53 +50,75 @@ class NeonConnect:
             raise ValueError("No connection to execute the query on.")
         if query is None:
             raise ValueError("No query to execute.")
-        cursor = self.get_cursor(self.c)
+        cursor = self.get_cursor()
         cursor.execute(query)
         self.c.commit()
         print("The query has been executed and committed.")
         return None
 
-    def update_neon_data(self, data: str) -> None:
+    def cook_and_update_neon(self, raw: list, recipe) -> None:
+        """
+        Cook the raw data and update the Neon database.
+        :param raw: The raw data to cook and update.
+        :param recipe: The function to cook the data (should return a list of dicts).
+        """
+        self.c = self.connect()
+        self.cr = self.c.cursor()
+
+        if self.cr is None:
+            raise ValueError("No cursor to cook and update data.")
+
+        cooked = recipe(raw)
+        self.update_neon_data(cooked)
+        self.c.commit()
+        print("Changes committed successfully")
+        return None
+
+    def update_neon_data(self, data: list) -> None:
         """
         Update the Neon database with the provided data.
-        :param cursor: The cursor object.
-        :param data: The data to update.
-        :return: None
+        :param data: The cooked data to update (list of dicts).
         """
         if self.cr is None:
             raise ValueError("No cursor to update the data.")
         if data is None:
             raise ValueError("No data to update.")
 
-        skipped = 0  # skip records that are not "Approved"
+        skipped = 0
+        inserted = 0
         try:
-            insert_query = """
-            INSERT INTO materials (id, data)
-            VALUES (%s, %s)
-            ON CONFLICT (id) DO UPDATE
-            SET data = EXCLUDED.data
-            """
+            insert_query = self.create_upsert_query(
+                "materials", ["id", "data"])
             for o in data:
-                id_value = gf("id", o)
                 if o is None:
-                    print(f"What is going on with data? {data}")
-                else:
-                    raise ValueError(f"Data {data} and object is {o}.")
-                json_object = self.format_row(o)
-                # Check if the json_object is None
-                if json_object is None:
-                    # print(f"Skipping record with id {id_value} due to invalid data.")
                     skipped += 1
                     continue
-                # Execute the insert query
-                print("Inserting data with id:", id_value)
+                id_value = o.get("id")
+                if not id_value:
+                    print(f"Skipping record with missing id: {o}")
+                    skipped += 1
+                    continue
+                # Store the whole dict as JSONB
+                json_object = json.dumps(o)
                 self.cr.execute(insert_query, (id_value, json_object))
+                inserted += 1
         except Exception as e:
             print(f"Error updating data: {e}")
             raise e
         finally:
-            print(f"Data updated successfully. {skipped} records skipped.")
+            print(
+                f"Data updated successfully. {inserted} records inserted/updated, {skipped} records skipped.")
         return None
+
+    def create_upsert_query(self, table, fields):
+        fields_str = ", ".join(fields)
+        primary = fields[0]
+        return f"""
+            INSERT INTO {table} ({fields_str})
+            VALUES (%s, %s)
+            ON CONFLICT ({primary}) DO UPDATE
+            SET data = EXCLUDED.data
+            """
 
     def get_all_data(self, cursor: postgres.extensions.cursor) -> list[tuple[str, ...]]:
         """
@@ -136,13 +129,45 @@ class NeonConnect:
         self.cr = cursor
         if not self.cr:
             raise ValueError("No cursor to retrieve data from.")
-        self.cr.execute("SELECT * FROM materials")
+        self.cr.execute(self.create_select_all_query("materials"))
         records = self.cr.fetchall()
         # Data comes in as a list of tuples with the first element
         # being the id and the second element being the JSON data, which
         # also contains the id, so we can go ahead and remove the first element
         records = [record[1:][0] for record in records]
         return records
+
+    def create_select_all_query(self, table):
+        return f"SELECT * FROM {table}"
+
+    def build_select_query(self, columns, table, condition):
+        return f"SELECT {columns} FROM {table} WHERE {condition}"
+
+    def fetch_all_materials(self):
+        """
+        Connects to Neon, fetches all materials, and returns as a list of dicts.
+        """
+        conn = self.connect()
+        cur = conn.cursor()
+        cur.execute("SELECT * FROM materials")
+        rows = cur.fetchall()
+        columns = [desc[0]
+                   for desc in cur.description] if cur.description is not None else []
+        # Each row: (id, data), where data is likely a dict or JSON string
+        result = []
+        for row in rows:
+            # If 'data' is a JSON string, parse it
+            data = row[1]
+            if isinstance(data, str):
+                try:
+                    import json
+                    data = json.loads(data)
+                except Exception:
+                    pass
+            result.append(data)
+        cur.close()
+        conn.close()
+        return result
 
     def search_data_by_name(self, name: str) -> list[tuple[str, ...]]:
         """
@@ -185,48 +210,49 @@ class NeonConnect:
         """
         if self.c is None:
             raise ValueError("No connection to get cursor from.")
+        if self.cr is None:
+            self.cr = self.c.cursor()
         return self.cr
 
-    def test_connection(self, deets):
+    def test_connection(self, postgres_uri: str):
         """
-        Test the connection to the Neon database using the connection details.
-        :param deets: The connection details.
+        Test the connection to the Neon database using the connection string.
+        :param postgres_uri: The connection string.
         :return: True if the connection is successful, False otherwise.
         """
-        # Check if the connection details are provided
-        if not deets or not isinstance(deets, dict):
-            raise ValueError("Connection details are missing.")
+        conn = None
         try:
-            conn = postgres.connect(**deets)
+            conn = postgres.connect(postgres_uri)
             print("Connection successful")
         except Exception as e:
             print(f"Error connecting to the database: {e}")
             raise e
         finally:
             if conn:
-                return True
                 conn.close()
+                return True
         return False
 
-    def cook_and_update_neon(self, raw: list, recipe) -> None:
+    def format_row(self, row):
         """
-        Cook the raw data and update the Neon database.
-        :param conn: The connection object.
-        :param raw: The raw data to cook and update.
-        :param recipe: The function to cook the data.
-        :return: None
+        Format a row object into a JSON-serializable object or string.
+        :param row: The row object to format.
+        :return: A JSON string or dict, or None if formatting fails.
         """
-        self.c = self.connect()
-        self.cr = self.c.cursor()
-
-        if self.cr is None:
-            raise ValueError("No cursor to cook and update data.")
-
-        cooked = recipe(raw)
-        self.update_neon_data(cooked)
-        self.c.commit()
-        print("Changes committed successfully")
-        return None
+        import json
+        try:
+            # If row is already a dict or JSON-serializable, return as is or dump to string
+            if isinstance(row, dict):
+                return json.dumps(row)
+            # If row is a string, try to load and dump to ensure valid JSON
+            if isinstance(row, str):
+                json.loads(row)  # will raise if not valid JSON
+                return row
+            # Otherwise, try to convert to dict then dump
+            return json.dumps(dict(row))
+        except Exception as e:
+            print(f"Error formatting row: {e}")
+            return None
 
     def close_all(self):
         """
@@ -240,3 +266,49 @@ class NeonConnect:
             self.c.close()
             print("Connection closed")
         return None
+
+    def fetch_article_by_id(self, article_id: str):
+        conn = self.connect()
+        cur = conn.cursor()
+        q: str = self.build_select_query("data", "articles", "id = %s")
+        v: tuple[str] = (article_id,)
+        cur.execute(q, v)
+        row = cur.fetchone()
+        cur.close()
+        conn.close()
+        if row:
+            data = row[0]
+            if isinstance(data, str):
+                import json
+                data = json.loads(data)
+            return data
+        return None
+
+    def cook_and_update_articles(self, cooked: list, recipe) -> None:
+        """
+        Upsert cooked articles into the Neon articles table.
+        """
+        self.c = self.connect()
+        self.cr = self.c.cursor()
+        articles = recipe(cooked)
+        self.update_articles_data(articles)
+        self.c.commit()
+        print("Articles committed successfully")
+        return None
+
+    def update_articles_data(self, data: list) -> None:
+        """
+        Upsert articles into the articles table.
+        """
+        if self.cr is None:
+            raise ValueError("No cursor to update the data.")
+        if data is None:
+            raise ValueError("No data to update.")
+
+        q = self.create_upsert_query(
+            "articles", ["id", "data"])
+        for o in data:
+            if o is None or "id" not in o:
+                continue
+            self.cr.execute(q, (o["id"], json.dumps(o)))
+        print(f"Articles upserted: {len(data)}")

@@ -1,5 +1,5 @@
+from typing import Optional
 import os
-import json
 
 
 def gl(l, n):
@@ -40,24 +40,23 @@ def any_missing(required, provided):
     return result
 
 
-def read_json(file_path: str) -> dict:
+def get_secret(name: str, fallback_line: Optional[int] = None, file_path: str = "../private.txt"):
     """
-    Read a JSON file and return its contents as a dictionary.
-    :param file_path: The path to the JSON file.
-    :return: A dictionary containing the JSON data.
+    Try to get a secret from the environment, otherwise from a line in private.txt.
+    :param name: The environment variable name.
+    :param fallback_line: The line number (0-based) in private.txt to use if env var is not set.
+    :param file_path: Path to private.txt.
+    :return: The secret value as a string.
     """
-    if not os.path.exists(file_path):
-        raise FileNotFoundError(f"{file_path} not found.")
-    with open(file_path, "r") as f:
-        payload = f.read()
-        return json.loads(payload)
-
-
-def save_json(data, file_path):
-    try:
-        with open(file_path, "w") as f:
-            json.dump(data, f, indent=2)
-    except Exception as e:
-        raise MemoryError(f"Error saving JSON data to file: {e}")
-    print(f"Data saved to {file_path}")
-    return data
+    value = os.environ.get(name)
+    if value:
+        return value
+    if fallback_line is not None:
+        try:
+            with open(file_path) as f:
+                lines = [line.strip() for line in f.readlines()]
+                return lines[fallback_line]
+        except Exception as e:
+            raise RuntimeError(
+                f"Could not read {name} from env or {file_path}: {e}")
+    raise RuntimeError(f"Secret {name} not found in env or {file_path}")

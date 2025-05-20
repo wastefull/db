@@ -42,6 +42,7 @@ testem.log
 Thumbs.db
 .prettierrc
 __pycache__/*
+connectors/__pycache__/*
 
 # Dummy data
 src/app/assets/thumbs/*
@@ -51,3 +52,4 @@ private.txt
 data_sample.json
 all_data.json
 safekeeping_ignore.py
+connectors/safekeeping.txt

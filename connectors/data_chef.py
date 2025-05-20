@@ -1,4 +1,4 @@
-from helpers import gl, gf, any_missing, read_json, save_json
+from helpers import gl, gf, any_missing
 
 
 def remove_nulls(raw: list) -> list:
@@ -70,7 +70,8 @@ def format_row(data: dict):
         name = gf("Name", fields)
         description = gf("Description", fields)
         # image fields
-        image = gf("Image", fields)[0] if gf("Image", fields) else None
+        images = gf("Image", fields)
+        image = images[0] if isinstance(images, list) and images else None
         image_url = gf("url", image) if image else None
         thumb = gf("thumbnails", image)["small"] if image else None
         thumbnail_url = gf("url", thumb) if thumb else None
@@ -113,9 +114,46 @@ def format_row(data: dict):
             }
         }
         try:
-            # Convert the data to a JSON string
-            # json_data = json.dumps(next_row, indent=4)
+
             return next_row
         except Exception as e:
             print(f"Error converting data to JSON: {e}")
             raise e
+
+
+def cook_articles(raw: list) -> list:
+    """
+    Normalize raw Airtable article records for Neon.
+    Handles Composting, Recycling, and Upcycling tables.
+    Only includes articles with Status == "Approved".
+    """
+    cooked = []
+    for record in raw:
+        if not record or "id" not in record:
+            continue
+        fields = record.get("fields", {})
+        # Only include approved articles
+        if fields.get("Status") != "Approved":
+            continue
+        cooked.append({
+            "id": record["id"],
+            "title": fields.get("Article ID"),
+            "body": fields.get("Article Body"),
+            "author": fields.get("Created By", {}).get("id"),
+            "created": fields.get("Created"),
+            "updated": fields.get("Last Modified"),
+            # targets and names for linking:
+            "targets": (
+                fields.get("Compost Target") or
+                fields.get("Recycling Target") or
+                fields.get("Upcycling Target")
+            ),
+            "target_names": (
+                fields.get("Name (from Compost Target)") or
+                fields.get("Name (from Recycling Target)") or
+                fields.get("Name (from Upcycling Target)")
+            ),
+            # source table for linking:
+            "source_table": record.get("source_table")
+        })
+    return cooked

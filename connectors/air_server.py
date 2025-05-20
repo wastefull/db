@@ -1,25 +1,48 @@
-from airtable import Search as ac
+from airtable import AirtableConnector as ac
 from neon import NeonConnect as nc
-from helpers import save_json
 import data_chef as dc
 
 
-def fetch(*, creds="private.txt", refresh=False):
-    data = None
-    # Initialize the Neon database connection
-    n = nc(creds)
+def fetch(*, refresh=False):
+    n = nc()
     if refresh:
-        # Initialize the Airtable connection
-        at_connect = ac(creds, refresh)
-        raw = at_connect.get_json_data(refresh)
-        data = dc.cook_data(raw)
+        # --- Material sync ---
+        at_connect = ac(refresh)
+        # Gather all article IDs from materials
+        raw_materials = at_connect.get_all_data()
+        cooked_materials = dc.cook_data(raw_materials)
+        n.cook_and_update_neon(cooked_materials, lambda x: x)
+        article_ids = set()
+        for mat in raw_materials:
+            articles = mat.get("fields", {}).get("articles", {})
+            for key in ["compost", "recycle", "upcycle"]:
+                ids = articles.get(key)
+                if isinstance(ids, list):
+                    article_ids.update(ids)
+                elif isinstance(ids, str):
+                    article_ids.add(ids)
+        # Fetch articles from all three article tables
+        article_tables = ["Composting", "Recycling", "Upcycling"]
+        articles_raw = []
+        for table_name in article_tables:
+            table = at_connect.get_table(table_name)
+            try:
+                records = table.all()
+                # Add source_table info to each record
+                for rec in records:
+                    rec["source_table"] = table_name
+                articles_raw.extend(records)
+            except Exception as e:
+                print(f"Error fetching from {table_name}: {e}")
+        # Cook and upsert all articles
+        cooked_articles = dc.cook_articles(articles_raw)
+        n.cook_and_update_articles(cooked_articles, lambda x: x)
     else:
         n.connect()
+        if n.c is None:
+            raise RuntimeError("Database connection not established.")
         c = n.c.cursor()
         data_list = n.get_all_data(c)
-        # testing the cooking function
-        data = dc.cook_data(data_list)
 
-    save_json(data, "data.json")
     n.close_all()
     return None

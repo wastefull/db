@@ -1,10 +1,11 @@
+import json
 import os
 from types import MappingProxyType as FakeImmutable
-from pyairtable import Api as air  # type: ignore
-from helpers import read_json, save_json
+from pyairtable import Api  # type: ignore
+from helpers import get_secret
 
 
-class Search:
+class AirtableConnector:
     ignore_cache = False
     """
     A class to handle searching and retrieving data from an Airtable table.
@@ -20,9 +21,9 @@ class Search:
         :return: The initialized Airtable table object.
         """
         # Prefer environment variables if present
-        key = os.environ.get("AIRTABLE_API_KEY")
-        base_id = os.environ.get("AIRTABLE_BASE_ID")
-        table = os.environ.get("AIRTABLE_TABLE")
+        key = get_secret("AIRTABLE_API_KEY", fallback_line=1)
+        base_id = get_secret("AIRTABLE_BASE_ID", fallback_line=7)
+        table = get_secret("AIRTABLE_TABLE", fallback_line=8)
 
         if key and base_id and table:
             PRIVATE = FakeImmutable({
@@ -32,25 +33,10 @@ class Search:
             })
 
             # Initialize the Airtable API client and table
-            self.initialize(PRIVATE["key"], PRIVATE["id"], PRIVATE["table"])
-
-    def initialize(self, key, id, table):
-        """
-        Initialize the Airtable API client and table.
-        :param key: The Airtable API key.
-        :param id: The Airtable base ID.
-        :param table: The Airtable table name.
-        :return: The initialized Airtable table object.
-        """
-        # Check if the API key, base ID, and table name are provided
-        if not key or not id or not table:
-            raise ValueError(
-                "Airtable API key, base ID, and/or table name is/are missing in the file.")
-
-        # Finally initialize the Airtable client and return the correct table
-        client = air(key)
-        self.table = client.base(id, force=self.ignore_cache).table(
-            table, force=self.ignore_cache)
+            self.api = Api(PRIVATE["key"])
+            self.base_id = PRIVATE["id"]
+            self.table_name = PRIVATE["table"]
+            self.table = self.api.base(self.base_id).table(self.table_name)
 
     def get_all_data(self):
         """
@@ -64,13 +50,10 @@ class Search:
         # Retrieve all records from the table
         return self.table.all()
 
-    def get_json_data(self, ignore_cache=False) -> dict:
+    def get_table(self, table_name):
         """
-        Retrieve all records from the Airtable table and save them to data_sample.json,
-        overwriting the file if it exists.
-        :return: A JSON string of all records in the table.
+        Retrieve a specific table from the Airtable base.
+        :param table_name: The name of the table to retrieve.
+        :return: The Airtable table object.
         """
-        if ignore_cache:
-            return save_json(self.get_all_data(), "data.json")
-        payload = read_json("data.json")
-        return payload
+        return self.api.base(self.base_id).table(table_name)

@@ -5,7 +5,7 @@ import { ObjectService } from '../../object.service';
 import { defaultObject, Object } from '../../object';
 import { ArticleComponent } from '../article/article.component';
 import { CommonModule } from '@angular/common';
-import { Article } from '../article/article';
+import { Article, defaultArticle } from '../article/article';
 @Component({
   selector: 'app-details',
   imports: [RouterLink, ArticleComponent, CommonModule],
@@ -15,6 +15,7 @@ import { Article } from '../article/article';
 export class DetailsComponent implements OnInit {
   route: ActivatedRoute = inject(ActivatedRoute);
   objectService: ObjectService = inject(ObjectService);
+  public defaultArticle: string = defaultArticle;
   object: Object = defaultObject;
   public articles: Article[] = [];
   public handleMissingImage($event: ErrorEvent) {
@@ -82,24 +83,5 @@ export class DetailsComponent implements OnInit {
             );
           });
       });
-  }
-
-  private getHeading(type: string): string {
-    switch (type) {
-      case 'compost':
-        return 'How to Compost';
-      case 'recycle':
-        return 'How to Recycle';
-      case 'upcycle':
-        return 'How to Upcycle';
-      case 'types':
-        return 'Risk Types';
-      case 'factors':
-        return 'Risk Factors';
-      case 'hazards':
-        return 'Hazards';
-      default:
-        return type;
-    }
   }
 }

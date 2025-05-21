@@ -5,27 +5,33 @@
             alt="Example of {{ object.meta.name }}" (error)="handleMissingImage($event)" crossorigin />
         <h4>Details</h4>
         <p class="details">{{ object.meta.description }}</p>
-        <h4>AKA</h4>
-        <p class="object-meta">placeholder for alt names</p>
-        <h4>Tags</h4>
-        <p class="object-meta">placeholder for tags</p>
+        <h4 hidden>AKA</h4>
+        <p class="object-meta" hidden>placeholder for alt names</p>
+        <h4 hidden>Tags</h4>
+        <p class="object-meta" hidden>placeholder for tags</p>
     </aside>
     <content>
         <h2 class="object-heading">{{ object.meta.name | titlecase }}</h2>
         <!-- Compost Articles -->
-        <div *ngIf="object.articles.compost.length">
-            <h3>How to Compost</h3>
-            <app-article *ngFor="let art of object.articles.compost" [article]="art"></app-article>
-        </div>
-        <!-- Recycle Articles -->
-        <div *ngIf="object.articles.recycle.length">
-            <h3>How to Recycle</h3>
-            <app-article *ngFor="let art of object.articles.recycle" [article]="art"></app-article>
-        </div>
-        <!-- Upcycle Articles -->
-        <div *ngIf="object.articles.upcycle.length">
-            <h3>How to Upcycle</h3>
-            <app-article *ngFor="let art of object.articles.upcycle" [article]="art"></app-article>
-        </div>
+        <main *ngIf="object.articles.ids && object.articles.ids.length > 0">
+            <div *ngIf="object.articles.compost?.length">
+                <h3>How to Compost</h3>
+                <app-article *ngFor="let art of object.articles.compost" [article]="art"></app-article>
+            </div>
+            <!-- Recycle Articles -->
+            <div *ngIf="object.articles.recycle?.length">
+                <h3>How to Recycle</h3>
+                <app-article *ngFor="let art of object.articles.recycle" [article]="art"></app-article>
+            </div>
+            <!-- Upcycle Articles -->
+            <div *ngIf="object.articles.upcycle?.length">
+                <h3>How to Upcycle</h3>
+                <app-article *ngFor="let art of object.articles.upcycle" [article]="art"></app-article>
+            </div>
+        </main>
+        <main *ngIf="!object.articles.ids || object.articles.ids.length <= 0">
+            <h3>Compost, Recycling, and Upcycling {{ object.meta.name | titlecase }}</h3>
+            <p class="article-text" [innerHTML]="defaultArticle"></p>
+        </main>
     </content>
 </article>

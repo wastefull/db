@@ -1,5 +1,5 @@
 <a [routerLink]="['/']">↩️</a>
-<article>
+<article *ngIf="object">
     <aside>
         <img class="object-photo" [src]="object.image.thumbnail" [height]="200" [width]="200"
             alt="Example of {{ object.meta.name }}" (error)="handleMissingImage($event)" crossorigin />
@@ -12,11 +12,20 @@
     </aside>
     <content>
         <h2 class="object-heading">{{ object.meta.name | titlecase }}</h2>
-        <ng-container *ngFor="let group of groupedArticles">
-            <h3>{{ group.heading }}</h3>
-            <div *ngFor="let art of group.articles">
-                <app-article [articleType]="group.type" [material]="art.material" [article]="art.article"></app-article>
-            </div>
-        </ng-container>
+        <!-- Compost Articles -->
+        <div *ngIf="object.articles.compost.length">
+            <h3>How to Compost</h3>
+            <app-article *ngFor="let art of object.articles.compost" [article]="art"></app-article>
+        </div>
+        <!-- Recycle Articles -->
+        <div *ngIf="object.articles.recycle.length">
+            <h3>How to Recycle</h3>
+            <app-article *ngFor="let art of object.articles.recycle" [article]="art"></app-article>
+        </div>
+        <!-- Upcycle Articles -->
+        <div *ngIf="object.articles.upcycle.length">
+            <h3>How to Upcycle</h3>
+            <app-article *ngFor="let art of object.articles.upcycle" [article]="art"></app-article>
+        </div>
     </content>
 </article>

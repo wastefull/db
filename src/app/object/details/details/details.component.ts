@@ -1,107 +1,87 @@
-import { Component, Input, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 import { ObjectService } from '../../object.service';
 import { defaultObject, Object } from '../../object';
-import { environment } from '../../../../environments/environment';
 import { ArticleComponent } from '../article/article.component';
 import { CommonModule } from '@angular/common';
-
+import { Article } from '../article/article';
 @Component({
   selector: 'app-details',
   imports: [RouterLink, ArticleComponent, CommonModule],
   templateUrl: './details.component.html',
   styleUrl: './details.component.scss',
 })
-export class DetailsComponent {
+export class DetailsComponent implements OnInit {
   route: ActivatedRoute = inject(ActivatedRoute);
   objectService: ObjectService = inject(ObjectService);
-  object: Object;
-  public articles: { type: string; material: string; article: string }[] = [];
-  public groupedArticles: ArticleGroup[] = [];
+  object: Object = defaultObject;
+  public articles: Article[] = [];
   public handleMissingImage($event: ErrorEvent) {
     let target = $event.target as HTMLImageElement;
     target.src = defaultObject.image.url;
   }
 
-  constructor() {
-    const objectId = this.route.snapshot.params['id'];
-    this.object = this.objectService.getObjectById(objectId);
-    if (!this.object) {
-      this.object = defaultObject;
-      this.object.id = objectId;
-      this.object.image.thumbnail = defaultObject.image.url;
-      this.object.image.url = defaultObject.image.url;
-      return;
-    }
-    const articleTypes = ['compost', 'recycle', 'upcycle'];
-    const riskTypes = ['types', 'factors', 'hazards'];
-    this.articles = [];
+  constructor() {}
 
-    // Populate articles from the object
-    this.populateFromSource(this.object!.articles, articleTypes);
-    this.populateFromSource(this.object!.risk, riskTypes);
+  ngOnInit() {
+    const objectName = this.route.snapshot.params['id'];
+    this.objectService
+      .getMaterialByName(objectName)
+      .subscribe((material: any) => {
+        // Normalize: if material.fields exists, convert to Object interface
+        if (material.fields) {
+          this.object = {
+            id: material.id,
+            meta: {
+              name: material.fields.Name || '',
+              description: material.fields.Description || '',
+            },
+            image: {
+              url: material.fields.Image?.[0]?.url || '/assets/placeholder.png',
+              thumbnail:
+                material.fields.Image?.[0]?.thumbnails?.small?.url ||
+                '/assets/placeholder.png',
+            },
+            risk: {
+              types: material.fields['Risk Types (from Risks)'] || [],
+              factors:
+                material.fields['Risk Factors (from Hazards) (from Risks)'] ||
+                [],
+              hazards: material.fields['Hazards (from Risks)'] || [],
+            },
+            updated: {
+              datetime: material.fields['Last Modified'] || '',
+              user_id: material.fields['Last Modified By']?.id || '',
+            },
+            articles: {
+              ids: material.fields.articles || {},
+              compost: [],
+              recycle: [],
+              upcycle: [],
+            },
+          };
+        } else {
+          // Already normalized
+          this.object = material;
+        }
 
-    // If still empty, show the default message
-    if (this.articles.length === 0) {
-      this.articles = [
-        {
-          type: 'contribute to our knowledge of ',
-          material: this.object!.meta.name,
-          article: `<p>Articles will cover the uses of the object, as well as potential issues
-        its decomposition (or lack thereof) can create. Below will be cards for
-        the object's compostability, recyclability, reuseability, possible hazards,
-        ecological role, and a showcase of examples of its creative reuse.
-        This object is not yet in our database, and we are working to add it.</p>
-        <p>If you have any information on this object, please let us know! We are
-        looking for articles, images, and any other information you may have.</p>
-        <p>Please submit any articles you may have on this object to help us and share your ideas!</p>`,
-        },
-      ];
-    }
-
-    const allTypes = [
-      ...articleTypes.map((type) => ({
-        type,
-        heading: this.getHeading(type),
-        items:
-          this.object!.articles[type as keyof typeof this.object.articles] ||
-          [],
-      })),
-      ...riskTypes.map((type) => ({
-        type,
-        heading: this.getHeading(type),
-        items: this.object!.risk[type as keyof typeof this.object.risk] || [],
-      })),
-    ];
-
-    this.groupedArticles = allTypes
-      .filter((group) => group.items.length > 0)
-      .map((group) => ({
-        type: group.type,
-        heading: group.heading,
-        articles: group.items.map((id: string) => ({
-          id,
-          material: this.object!.meta.name,
-          article: id, // For now, just the ID; later, fetch the article text/title by ID
-        })),
-      }));
-  }
-
-  private populateFromSource(
-    source: Record<string, string[]>,
-    types: string[]
-  ) {
-    types.forEach((type) => {
-      const texts = source[type] || [];
-      texts.forEach((text: string) => {
-        this.articles.push({
-          type,
-          material: this.object!.meta.name,
-          article: text,
-        });
+        // Now fetch and assign articles
+        this.objectService
+          .getArticlesForMaterial(objectName)
+          .subscribe((articles: Article[]) => {
+            // Group articles by source_table
+            this.object.articles.compost = articles.filter((a) =>
+              (a.source_table || '').toLowerCase().includes('compost')
+            );
+            this.object.articles.recycle = articles.filter((a) =>
+              (a.source_table || '').toLowerCase().includes('recycle')
+            );
+            this.object.articles.upcycle = articles.filter((a) =>
+              (a.source_table || '').toLowerCase().includes('upcycle')
+            );
+          });
       });
-    });
   }
 
   private getHeading(type: string): string {
@@ -123,9 +103,3 @@ export class DetailsComponent {
     }
   }
 }
-
-type ArticleGroup = {
-  type: string;
-  heading: string;
-  articles: { id: string; material: string; article: string }[];
-};

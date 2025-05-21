@@ -1,3 +1,4 @@
+import { Article } from './details/article/article';
 export interface Object {
   id: string;
   meta: {
@@ -18,9 +19,10 @@ export interface Object {
     user_id: string;
   };
   articles: {
-    compost: string[];
-    recycle: string[];
-    upcycle: string[];
+    ids: string[];
+    compost: Article[];
+    recycle: Article[];
+    upcycle: Article[];
   };
 }
 
@@ -45,6 +47,7 @@ export const defaultObject: Object = {
     user_id: 'Unknown',
   },
   articles: {
+    ids: [],
     compost: [],
     recycle: [],
     upcycle: [],

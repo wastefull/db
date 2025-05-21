@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
+import { Article } from './article';
 
 @Component({
   selector: 'app-article',
@@ -13,7 +14,7 @@ export class ArticleComponent {
     the object's compostability, recyclability, reuseability, possible hazards,
     ecological role, and a showcase of examples of its creative reuse.`;
   @Input() material!: string;
-  @Input() article!: string;
+  @Input() article!: Article;
   @Input() articleType!: string;
   public setHeading() {
     // Set the heading based on the type

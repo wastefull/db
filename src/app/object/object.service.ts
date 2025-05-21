@@ -1,16 +1,26 @@
-import { Injectable } from '@angular/core';
-import { defaultObject, Object } from './object';
-import { dummy_data } from './dummy/dummy_json';
-import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
-@Injectable({
-  providedIn: 'root',
-})
+import { Injectable } from '@angular/core';
+import { environment } from '../../environments/environment';
+import { Observable } from 'rxjs';
+
+@Injectable({ providedIn: 'root' })
 export class ObjectService {
-  protected results: Object[] = [];
+  private apiBase = environment.apiBaseUrl;
 
   constructor(private http: HttpClient) {}
-  getObjects() {
-    return this.http.get(`${environment.apiBaseUrl}/api/airtable`);
+
+  getObjects(): Observable<any> {
+    return this.http.get(`${this.apiBase}/materials`);
+  }
+  getMaterialByName(name: string) {
+    return this.http.get(
+      `${this.apiBase}/material/${encodeURIComponent(name)}`
+    );
+  }
+
+  getArticlesForMaterial(name: string): Observable<any> {
+    return this.http.get(
+      `${this.apiBase}/material/${encodeURIComponent(name)}/articles`
+    );
   }
 }

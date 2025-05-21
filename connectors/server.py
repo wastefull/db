@@ -18,14 +18,18 @@ class HTTPRequestHandler(BaseHTTPRequestHandler):
     request_id = None
     content = None
 
-    def respond(self):
-        self.send_response(self.response)
-        self.send_header('Content-Type', self.content_type)
+    def _set_cors_headers(self, json_response=False):
+        self.send_header('Access-Control-Allow-Origin',
+                         'http://localhost:4200')
+        if json_response:
+            self.send_header('Content-Type', 'application/json')
+        self.send_header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
+        self.send_header('Access-Control-Allow-Headers', 'Content-Type')
+
+    def do_OPTIONS(self):
+        self.send_response(200)
+        self._set_cors_headers()
         self.end_headers()
-        if self.content is not None:
-            print(f"Response: {self.response}")
-            print(f"Content: {self.content}")
-            self.wfile.write(json.dumps(self.content).encode('utf-8'))
 
     def do_GET(self):
         if self.path.startswith("/article/"):
@@ -34,11 +38,12 @@ class HTTPRequestHandler(BaseHTTPRequestHandler):
             article = neon.fetch_article_by_id(article_id)
             if article:
                 self.send_response(200)
-                self.send_header("Content-type", "application/json")
+                self._set_cors_headers(json_response=True)
                 self.end_headers()
                 self.wfile.write(json.dumps(article).encode())
             else:
                 self.send_response(404)
+                self._set_cors_headers()
                 self.end_headers()
                 self.wfile.write(b'{"error": "Article not found"}')
             return
@@ -47,11 +52,12 @@ class HTTPRequestHandler(BaseHTTPRequestHandler):
                 neon = NeonConnect()
                 data = neon.fetch_all_materials()
                 self.send_response(200)
-                self.send_header("Content-type", "application/json")
+                self._set_cors_headers(json_response=True)
                 self.end_headers()
                 self.wfile.write(json.dumps(data).encode())
             except Exception as e:
                 self.send_response(500)
+                self._set_cors_headers()
                 self.end_headers()
                 self.wfile.write(json.dumps({"error": str(e)}).encode())
             return
@@ -69,11 +75,12 @@ class HTTPRequestHandler(BaseHTTPRequestHandler):
             if material and "id" in material:
                 articles = neon.fetch_articles_by_material_id(material["id"])
                 self.send_response(200)
-                self.send_header("Content-type", "application/json")
+                self._set_cors_headers(json_response=True)
                 self.end_headers()
                 self.wfile.write(json.dumps(articles).encode())
             else:
                 self.send_response(404)
+                self._set_cors_headers()
                 self.end_headers()
                 self.wfile.write(b'{"error": "Material not found"}')
             return
@@ -88,16 +95,18 @@ class HTTPRequestHandler(BaseHTTPRequestHandler):
             )
             if result:
                 self.send_response(200)
-                self.send_header("Content-type", "application/json")
+                self._set_cors_headers(json_response=True)
                 self.end_headers()
                 self.wfile.write(json.dumps(result).encode())
             else:
                 self.send_response(404)
+                self._set_cors_headers()
                 self.end_headers()
                 self.wfile.write(b'{"error": "Material not found"}')
             return
         else:
             self.send_response(404)
+            self._set_cors_headers()
             self.end_headers()
 
 

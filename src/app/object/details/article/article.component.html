@@ -1,5 +1,6 @@
 <article>
-    <h1>{{setHeading() | titlecase }}</h1>
-    <p class="article-text" [innerHTML]="article || defaultArticle"></p>
+    <h1>{{ article.title }}</h1>
+    <p class="article-text" [innerHTML]="article.body || defaultArticle"></p>
+    <div *ngIf="article?.author">By: {{ article.author }}</div>
 </article>
 <hr />

@@ -7,6 +7,8 @@ import time
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from air_server import fetch
 from neon import NeonConnect
+from dotenv import load_dotenv  # type: ignore
+load_dotenv()  # Load environment variables from .env file if present
 
 
 class HTTPRequestHandler(BaseHTTPRequestHandler):

@@ -2,3 +2,4 @@
 requests
 pyairtable
 psycopg2-binary
+load_dotenv

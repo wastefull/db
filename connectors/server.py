@@ -19,8 +19,10 @@ class HTTPRequestHandler(BaseHTTPRequestHandler):
     content = None
 
     def _set_cors_headers(self, json_response=False):
-        self.send_header('Access-Control-Allow-Origin',
-                         'http://localhost:4200')
+        origin = self.headers.get('Origin')
+        allowed = ['https://db.wastefull.org', 'http://localhost:8000']
+        if origin in allowed:
+            self.send_header('Access-Control-Allow-Origin', origin)
         if json_response:
             self.send_header('Content-Type', 'application/json')
         self.send_header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')

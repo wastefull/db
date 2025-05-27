@@ -18,7 +18,7 @@ jobs:
           node-version: 20 # not latest but safer for Angular
       - run: npm ci # dependencies
       - run: rm -rf dist # cleanup
-      - run: npx ng build app --configuration=static --base-href=/db/
+      - run: npx ng build app --configuration=production,static --base-href=/
       - run: ls -l dist/app/browser
       - run: cp dist/app/browser/index.html dist/app/browser/404.html # fallback 404
       - uses: actions/upload-pages-artifact@v3 # upload artifact to pages

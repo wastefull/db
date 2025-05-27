@@ -8,20 +8,21 @@
 
 # Local testing
 
-Populate secrets in the .env file by running populate_env.sh.
-`docker run --env-file .env -p 8000:8000 us-docker.pkg.dev/wastefull-db/my-repo/wdb-middleware`
+Populate secrets in your local .env file by running populate_env.sh in /connectors.
 
-- Dev URI localhost:8000
-
-# Prod URI (requires auth)
-
-https://wdb-middleware-251769284793.us-central1.run.app/
-Can only be accessed with gcloud auth or by the wastefull.org domain.
+```bash
+docker run --env-file .env -p 8000:8000 us-docker.pkg.dev/wastefull-db/my-repo/wdb-middleware
+```
 
 ## Building
 
 To build the project in the cloud run the following while authenticated and in the /connectors directory:
-`gcloud builds submit --tag us-docker.pkg.dev/wastefull-db/my-repo/wdb-middleware`
+
+```bash
+gcloud auth login
+cd connectors
+gcloud builds submit --tag us-docker.pkg.dev/wastefull-db/my-repo/wdb-middleware
+```
 
 ## Deploying
 

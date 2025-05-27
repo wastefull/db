@@ -3,5 +3,5 @@
 export const environment = {
   production: true,
   workspace: '/workspaces/waste',
-  apiBaseUrl: 'https://wdb-middleware-251769284793.us-central1.run.app',
+  apiBaseUrl: 'https://api.wastefull.org',
 };

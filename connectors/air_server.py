@@ -12,6 +12,19 @@ def fetch(*, refresh=False):
         raw_materials = at_connect.get_all_data()
         cooked_materials = dc.cook_data(raw_materials)
         n.cook_and_update_neon(cooked_materials, lambda x: x)
+
+        # --- Deletion logic ---
+        # Get all IDs from Airtable
+        airtable_ids = {m["id"] for m in raw_materials if "id" in m}
+        # Get all IDs currently in Neon
+        neon_ids = {m["id"] for m in n.fetch_all_materials() if "id" in m}
+        # Find IDs to delete
+        ids_to_delete = neon_ids - airtable_ids
+        if ids_to_delete:
+            print(
+                f"Deleting {len(ids_to_delete)} records from Neon: {ids_to_delete}")
+            n.delete_materials_by_ids(list(ids_to_delete))
+
         article_ids = set()
         for mat in raw_materials:
             articles = mat.get("fields", {}).get("articles", {})

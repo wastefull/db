@@ -330,3 +330,15 @@ class NeonConnect:
         conn.close()
         # Return list of article dicts
         return [json.loads(row[0]) if isinstance(row[0], str) else row[0] for row in rows]
+
+    def delete_materials_by_ids(self, ids: list):
+        if not ids:
+            return
+        conn = self.connect()
+        cur = conn.cursor()
+        query = "DELETE FROM materials WHERE id = ANY(%s)"
+        cur.execute(query, (ids,))
+        conn.commit()
+        cur.close()
+        conn.close()
+        print(f"Deleted {len(ids)} materials from Neon.")

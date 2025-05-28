@@ -1,6 +1,10 @@
 <a *ngIf="object && object.meta" [routerLink]="['/object', object.id]">
-  <img class="object-thumb" [src]="object.image.thumbnail" alt="Exterior photo of {{ object.meta.name }}"
+  <img class="object-thumb" [src]="object.image.url" alt="Exterior photo of {{ object.meta.name }}"
     (error)="handleMissingImage($event)" />
-  <h2 class="object-heading">{{ object.meta.name }}</h2>
+  <div class="info">
+    <h2 class="object-heading">{{ object.meta.name }}</h2>
+    <small *ngIf="object && object.image.photographer">Image credit <a
+        [href]="object.image.photographer.profile_url">{{object.image.photographer.username}}</a></small>
+  </div>
 </a>
 <p class="object-meta" hidden>placeholder for tags</p>

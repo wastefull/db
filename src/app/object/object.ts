@@ -1,5 +1,5 @@
 import { Article } from './details/article/article';
-export interface Object {
+export interface Material {
   id: string;
   meta: {
     name: string;
@@ -8,6 +8,10 @@ export interface Object {
   image: {
     url: string;
     thumbnail: string;
+    photographer?: {
+      username: string;
+      profile_url: string;
+    };
   };
   risk: {
     types: string[];
@@ -27,7 +31,7 @@ export interface Object {
 }
 
 // Default object
-export const defaultObject: Object = {
+export const defaultMaterial: Material = {
   id: '0',
   meta: {
     name: 'Object not found',
@@ -36,6 +40,10 @@ export const defaultObject: Object = {
   image: {
     url: '/assets/placeholder.png',
     thumbnail: '/assets/placeholder.png',
+    photographer: {
+      username: 'No image found.',
+      profile_url: '',
+    },
   },
   risk: {
     types: [],

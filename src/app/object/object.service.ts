@@ -4,7 +4,7 @@ import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
-export class ObjectService {
+export class MaterialService {
   private apiBase = environment.apiBaseUrl;
 
   constructor(private http: HttpClient) {}
@@ -12,7 +12,7 @@ export class ObjectService {
   getObjects(): Observable<any> {
     return this.http.get(`${this.apiBase}/materials`);
   }
-  getMaterialByName(name: string) {
+  getMaterialByName(name: string): Observable<any> {
     return this.http.get(
       `${this.apiBase}/material/${encodeURIComponent(name)}`
     );

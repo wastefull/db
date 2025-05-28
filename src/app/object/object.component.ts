@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { defaultObject, Object } from './object';
+import { defaultMaterial, Material } from './object';
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
@@ -11,8 +11,9 @@ import { CommonModule } from '@angular/common';
 })
 export class ObjectComponent {
   public handleMissingImage($event: ErrorEvent) {
+    console.log($event.target);
     let target = $event.target as HTMLImageElement;
-    target.src = defaultObject.image.url;
+    target.src = defaultMaterial.image.url;
   }
-  @Input() object!: Object;
+  @Input() object!: Material;
 }

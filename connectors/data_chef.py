@@ -59,7 +59,7 @@ def format_row(data: dict):
 
     # Check if the required keys are present in the fields dictionary
     required_fields = ["Description", "Status", "Name",
-                       "Last Modified By", "Risks", "Image", "Last Modified"]
+                       "Last Modified By", "Image", "Last Modified"]
     if any_missing(required_fields, fields):
         raise KeyError("Missing required keys in the fields dictionary. required fields are: " +
                        str(required_fields) + " and provided fields are: " + str(fields.keys()))

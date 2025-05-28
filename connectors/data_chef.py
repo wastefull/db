@@ -1,4 +1,6 @@
+import os
 from helpers import gl, gf, any_missing
+from helpers import Unsplash
 
 
 def remove_nulls(raw: list) -> list:
@@ -14,17 +16,26 @@ def remove_nulls(raw: list) -> list:
     return raw
 
 
-def cook_data(raw: list) -> list:
+def cook_data(raw: list, unsplash=False) -> list:
     """
     Cook the raw data and return it.
     :param conn: The connection object.
     :param raw: The raw data to cook.
     :return: The cooked data.
     """
+    imgapi = Unsplash()
     cooked = []
     for o in raw:
         new = format_row(o)
         if new is not None:
+            # use unsplash to get a random image if the image is not set
+            if unsplash and "image" in new and not new["image"].get("photographer"):
+                img = imgapi.get_random_image(
+                    query=new["meta"]["name"])
+                if img and "url" in img:
+                    new["image"] = img
+                    print(img)
+
             cooked.append(new)
     return cooked
 
@@ -59,7 +70,7 @@ def format_row(data: dict):
 
     # Check if the required keys are present in the fields dictionary
     required_fields = ["Description", "Status", "Name",
-                       "Last Modified By", "Image", "Last Modified"]
+                       "Last Modified By", "Last Modified"]
     if any_missing(required_fields, fields):
         raise KeyError("Missing required keys in the fields dictionary. required fields are: " +
                        str(required_fields) + " and provided fields are: " + str(fields.keys()))
@@ -73,7 +84,8 @@ def format_row(data: dict):
         images = gf("Image", fields)
         image = images[0] if isinstance(images, list) and images else None
         image_url = gf("url", image) if image else None
-        thumb = gf("thumbnails", image)["small"] if image else None
+        thumb = image.get("thumbnails", {}).get(
+            "small") if isinstance(image, dict) else None
         thumbnail_url = gf("url", thumb) if thumb else None
         # risk fields
         risk_types = gf("Risk Types (from Risks)", fields)

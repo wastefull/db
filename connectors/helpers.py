@@ -1,5 +1,6 @@
 from typing import Optional
 import os
+import requests
 
 
 def gl(l, n):
@@ -14,7 +15,7 @@ def gl(l, n):
     return l[n].strip()
 
 
-def gf(f, d):
+def gf(f, d) -> str:
     """
     Get a field from a dictionary.
     :param f: The field to retrieve.
@@ -47,6 +48,7 @@ def get_secret(name: str, fallback_line: Optional[int] = None, file_path: str = 
     :param fallback_line: The line number (0-based) in private.txt to use if env var is not set.
     :param file_path: Path to private.txt.
     :return: The secret value as a string.
+    TODO: Replace private.txt fallback with /connectors/.env
     """
     value = os.environ.get(name)
     if value:
@@ -60,3 +62,48 @@ def get_secret(name: str, fallback_line: Optional[int] = None, file_path: str = 
             raise RuntimeError(
                 f"Could not read {name} from env or {file_path}: {e}")
     raise RuntimeError(f"Secret {name} not found in env or {file_path}")
+
+
+class Unsplash:
+    """
+    A class to interact with the Unsplash API.
+    """
+
+    def __init__(self):
+        self.access_key = get_secret("UNSPLASH_AK")
+        self.headers = {
+            "Accept-Version": "v1",
+            "Accept": "application/json"
+        }
+
+    def get_random_image(self, query: str) -> dict:
+        """
+        Get a random image URL from Unsplash based on a query.
+        :param query: The search query for the image.
+        :return: A URL of a random image.
+        """
+        where = "https://api.unsplash.com"
+        what = "photos/random"
+        description = f"query={query}"
+        pick_one = "count=1"
+        auth = f"client_id={self.access_key}"
+        orientation = "orientation=squarish"
+
+        url = f"{where}/{what}?{description}&{pick_one}&{orientation}&{auth}"
+
+        response = requests.get(url, headers=self.headers)
+        if response.status_code == 200:
+            image = response.json()[0]
+            # the fields we want are user.username, user.links.self, urls.small, urls.thumb
+            return {
+                "url": image["urls"]["small"] or image["urls"]["regular"],
+                "thumbnail_url": image["urls"]["thumb"],
+                "photographer": {
+                    "username": image["user"]["username"],
+                    "profile_url": image["user"]["links"]["self"]
+                }
+            }
+
+        else:
+            raise RuntimeError(
+                f"Unsplash API request failed with status {response.status_code}")

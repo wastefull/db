@@ -39,48 +39,16 @@ class NeonConnect:
         self.c = postgres.connect(postgres_uri)
         return self.c
 
-    def execute_query(self, query) -> None:
+    def update_neon_data(self, data: list) -> None:
         """
-        Execute a query on the Neon database.
-        :param conn: The connection object.
-        :param query: The SQL query to execute.
-        :return: None
-        """
-        if self.c is None:
-            raise ValueError("No connection to execute the query on.")
-        if query is None:
-            raise ValueError("No query to execute.")
-        cursor = self.get_cursor()
-        cursor.execute(query)
-        self.c.commit()
-        print("The query has been executed and committed.")
-        return None
-
-    def cook_and_update_neon(self, raw: list, recipe) -> None:
-        """
-        Cook the raw data and update the Neon database.
-        :param raw: The raw data to cook and update.
-        :param recipe: The function to cook the data (should return a list of dicts).
+        Update the Neon database with the provided data.
+        :param data: The cooked data to update (list of dicts).
         """
         self.c = self.connect()
         self.cr = self.c.cursor()
 
         if self.cr is None:
             raise ValueError("No cursor to cook and update data.")
-
-        cooked = recipe(raw)
-        self.update_neon_data(cooked)
-        self.c.commit()
-        print("Changes committed successfully")
-        return None
-
-    def update_neon_data(self, data: list) -> None:
-        """
-        Update the Neon database with the provided data.
-        :param data: The cooked data to update (list of dicts).
-        """
-        if self.cr is None:
-            raise ValueError("No cursor to update the data.")
         if data is None:
             raise ValueError("No data to update.")
 
@@ -106,6 +74,7 @@ class NeonConnect:
             print(f"Error updating data: {e}")
             raise e
         finally:
+            self.c.commit()
             print(
                 f"Data updated successfully. {inserted} records inserted/updated, {skipped} records skipped.")
         return None

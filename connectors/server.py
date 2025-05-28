@@ -20,7 +20,8 @@ class HTTPRequestHandler(BaseHTTPRequestHandler):
 
     def _set_cors_headers(self, json_response=False):
         origin = self.headers.get('Origin')
-        allowed = ['https://db.wastefull.org', 'http://localhost:8000']
+        allowed = ['https://db.wastefull.org',
+                   'http://localhost:8000', 'http://localhost:4200']
         if origin in allowed:
             self.send_header('Access-Control-Allow-Origin', origin)
         if json_response:
@@ -136,7 +137,7 @@ def periodic_sync(interval=3600):
     while True:
         print("Syncing Airtable → Neon...")
         try:
-            fetch(refresh=True)
+            fetch(refresh=True, unsplash=True)
             print("Sync complete.")
         except Exception as e:
             print(f"Sync error: {e}")

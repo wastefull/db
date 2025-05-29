@@ -34,8 +34,8 @@ export interface Material {
 export const defaultMaterial: Material = {
   id: '0',
   meta: {
-    name: 'Object not found',
-    description: 'Please check the URL or try searching for something else.',
+    name: 'loading . . .',
+    description: '. . .',
   },
   image: {
     url: '/assets/placeholder.png',

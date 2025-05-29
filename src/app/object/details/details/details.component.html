@@ -1,6 +1,6 @@
 <a [routerLink]="['/']">↩️</a>
 <article *ngIf="object">
-    <aside>
+    <aside [class]="'object' + object.id">
         <img class="object-photo" [src]="object.image.url" [height]="200" [width]="200"
             alt="Example of {{ object.meta.name }}" (error)="handleMissingImage($event)" crossorigin />
         <figcaption *ngIf="object && object.image.photographer">Image credit <a
@@ -13,7 +13,7 @@
         <h4 hidden>Tags</h4>
         <p class="object-meta" hidden>placeholder for tags</p>
     </aside>
-    <content>
+    <content [class]="'object' + object.id">
         <h2 class="object-heading">{{ object.meta.name | titlecase }}</h2>
         <!-- Compost Articles -->
         <main *ngIf="object.articles.ids && object.articles.ids.length > 0">

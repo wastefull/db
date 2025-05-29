@@ -1,4 +1,4 @@
-<a *ngIf="object && object.meta" [routerLink]="['/object', object.id]">
+<a *ngIf="object && object.meta" [class]="'object' + object.id" [routerLink]="['/object', object.id]">
   <img class="object-thumb" [src]="object.image.url" alt="Exterior photo of {{ object.meta.name }}"
     (error)="handleMissingImage($event)" />
   <div class="info">

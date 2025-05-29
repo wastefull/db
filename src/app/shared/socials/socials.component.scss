@@ -4,6 +4,7 @@
     align-items: center;
     gap: 0.73rem;
     margin-top: 1.5rem;
+    padding-left: 1rem;
   }
 
   .social-links path {
@@ -13,4 +14,13 @@
 
   .social-links a:hover svg path {
     fill: var(--gray-900);
+  }
+
+  .social-links img {
+    transition: filter 0.3s ease;
+    filter: grayscale(100%);
+  }
+
+  .social-links a:hover img {
+    filter: grayscale(50%);
   }

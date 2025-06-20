@@ -7,7 +7,7 @@ import { Material } from '../../object/object';
   selector: 'app-results',
   imports: [ObjectComponent, CommonModule],
   templateUrl: './results.component.html',
-  styleUrl: './results.component.scss',
+  // styleUrl: './results.component.scss',
 })
 export class ResultsComponent {
   results: Material[] = [];

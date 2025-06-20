@@ -6,11 +6,12 @@ import { defaultMaterial, Material } from '../../object';
 import { ArticleComponent } from '../article/article.component';
 import { CommonModule } from '@angular/common';
 import { Article, defaultArticle } from '../article/article';
+import { ImageDisplayComponent } from '../../../image-display/image-display.component';
 @Component({
   selector: 'app-details',
-  imports: [RouterLink, ArticleComponent, CommonModule],
+  imports: [RouterLink, ArticleComponent, CommonModule, ImageDisplayComponent],
   templateUrl: './details.component.html',
-  styleUrl: './details.component.scss',
+  // styleUrl: './details.component.scss',
 })
 export class DetailsComponent implements OnInit {
   route: ActivatedRoute = inject(ActivatedRoute);

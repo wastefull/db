@@ -5,7 +5,7 @@ import { RouterModule } from '@angular/router';
   selector: 'app-header',
   imports: [LogoComponent, RouterModule],
   templateUrl: './header.component.html',
-  styleUrl: './header.component.scss'
+  // styleUrl: './header.component.scss'
 })
 export class HeaderComponent {
   title = 'Wastefull';

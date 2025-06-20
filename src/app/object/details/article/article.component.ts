@@ -6,7 +6,7 @@ import { Article, defaultArticle } from './article';
   selector: 'app-article',
   imports: [CommonModule],
   templateUrl: './article.component.html',
-  styleUrl: './article.component.scss',
+  // styleUrl: './article.component.scss',
 })
 export class ArticleComponent {
   public defaultArticle = defaultArticle;

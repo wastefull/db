@@ -7,7 +7,7 @@ import { ResultsComponent } from './results/results.component';
   selector: 'app-search',
   imports: [CommonModule, FormsModule, ResultsComponent],
   templateUrl: './search.component.html',
-  styleUrl: './search.component.scss',
+  // styleUrl: './search.component.scss',
 })
 export class SearchComponent {
   query: string = '';

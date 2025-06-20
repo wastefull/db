@@ -1,14 +1,26 @@
-<main class="main">
-  <div class="content">
-    <app-header></app-header>
-    <div class="divider" role="separator" aria-label="Divider"></div>
-    <nav class="right-side">
-      <app-pillgroup></app-pillgroup>
-      <app-socials></app-socials>
-    </nav>
-  </div>
-  <section class="results">
-    <router-outlet></router-outlet>
-  </section>
-  
-</main>
+<!-- <main class="main">
+  <div class="content"> -->
+<ion-header>
+  <ion-toolbar>
+    <ion-title> <app-header></app-header>
+    </ion-title>
+    <app-pillgroup></app-pillgroup>
+    <app-socials></app-socials>
+    <p>Our nonprofit is building a wastefull world
+      centered on recycling, regenerative
+      agriculture, and citizen science.</p>
+  </ion-toolbar>
+
+</ion-header>
+<!-- </div> -->
+
+<!-- <section class="results"> -->
+<ion-content>
+  <div class="divider" role="separator" aria-label="Divider"></div>
+  <nav class="right-side">
+
+  </nav>
+  <router-outlet></router-outlet>
+</ion-content>
+<!-- </section> -->
+<!-- </main> -->

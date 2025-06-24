@@ -1,0 +1,6 @@
+<i class="ir fa-solid " [ngClass]="{
+    'fa-ellipsis-vertical': loading,
+     'fa-spin': loading,
+     'fa-fw': loading,
+     'fa-check': !loading
+   }" [title]="loading ? 'Loading...' : 'Loaded'"></i>

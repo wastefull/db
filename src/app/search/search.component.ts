@@ -15,4 +15,8 @@ export class SearchComponent {
   onInputChange(newValue: string) {
     this.query = newValue;
   }
+
+  onSelectObject(name: string) {
+    this.query = name;
+  }
 }

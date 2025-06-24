@@ -14,6 +14,16 @@ Populate secrets in your local .env file by running populate_env.sh in /connecto
 docker run --env-file .env -p 8000:8000 us-docker.pkg.dev/wastefull-db/my-repo/wdb-middleware
 ```
 
+Alternatively, you can run the server without Docker:
+
+```bash
+cd connectors
+source .venv/bin/activate
+pip install -r requirements.txt
+run populate_env.sh
+python3 server.py
+```
+
 ## Building
 
 To build the project in the cloud run the following while authenticated and in the /connectors directory:

@@ -1,0 +1,88 @@
+/* Colors */
+$retro-cream: #FAF7F2;
+$seagull-postman: #577590;
+$seagull-midnight: #1A535C;
+$mint-celadon: #B1CEB1;
+$rose-tea: #E6BCB5;
+$vanilla: #E4E3AC;
+$old-rose: #D08476;
+$cambridge: #9BC09B;
+$offblack: #211F1C;
+$borders: #211F1C;
+$text: #211F1C;
+
+button {
+    width: 16px;
+    height: 16px;
+    padding: 3px;
+    margin: 0 2px;
+    font-size: 8px;
+    line-height: 10px;
+    text-align: center;
+    display: inline-flex; // Use flex for better centering
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+    border-radius: 100%;
+    border-style: solid;
+    border-width: 0.1px;
+    text-overflow: clip;
+    overflow: hidden;
+
+    // Icon styles
+    i {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        vertical-align: middle;
+        font-size: 10px; // adjust as needed
+        line-height: 1;
+        height: 100%;
+        width: 100%;
+    }
+
+    // Disabled state
+    &.disabled {
+        opacity: 0.8;
+        filter: grayscale(100%);
+        pointer-events: none;
+        cursor: not-allowed;
+    }
+
+    // Button color variants
+    &.red-button {
+        background-color: $old-rose;
+        color: $old-rose;
+        cursor: pointer;
+
+        &:hover {
+            border-color: $offblack;
+            background-color: darken($old-rose, 10%);
+            color: var(--red-button-text, #ffffff);
+        }
+    }
+
+    &.green-button {
+        background-color: $cambridge;
+        color: $cambridge;
+        cursor: nesw-resize;
+
+        &:hover {
+            border-color: $offblack;
+            background-color: darken($cambridge, 10%);
+            color: var(--green-button-text, #ffffff);
+        }
+    }
+
+    &.yellow-button {
+        background-color: $vanilla;
+        color: $vanilla;
+        cursor: pointer;
+
+        &:hover {
+            border-color: $offblack;
+            background-color: darken($vanilla, 10%);
+            color: var(--yellow-button-text, #ffffff);
+        }
+    }
+}

@@ -14,7 +14,7 @@ export class ImageDisplayComponent {
   @Input() object!: Material;
 
   handleMissingImage: ($event: ErrorEvent) => void = ($event: ErrorEvent) => {
-    console.error('Image load error:', $event);
+    // console.error('Image load error:', $event);
     const target = $event.target as HTMLImageElement;
     target.src = defaultMaterial.image.url; // Fallback image
   };

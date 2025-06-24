@@ -1,0 +1,37 @@
+/* Colors */
+$retro-cream: #FAF7F2;
+$seagull-postman: #577590;
+$seagull-midnight: #1A535C;
+$mint-celadon: #B1CEB1;
+$rose-tea: #E6BCB5;
+$vanilla: #E4E3AC;
+$old-rose: #D08476;
+$cambridge: #9BC09B;
+$offblack: #211F1C;
+$borders: #211F1C;
+$text: #211F1C;
+
+$rounded: 11.46px;
+
+:host {
+  width: 100%;
+  display: block;
+}
+
+ion-card {
+  --border-radius: $rounded;
+  --background: $retro-cream;
+  --color: $offblack;
+  // --box-shadow: none
+  --border-color: $borders;
+  --border-width: 1px;
+  border-style: solid;
+  border-color: $offblack;
+  border-width: 0.1px;
+  width: 100%;
+  height: 100%;
+  // box-sizing: border-box;
+  margin: 0;
+  max-width: none;
+  ;
+}

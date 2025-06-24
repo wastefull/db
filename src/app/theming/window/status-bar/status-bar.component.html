@@ -1,0 +1,13 @@
+<ion-card-header>
+    <div class="status-bar-row">
+        <div class="status-bar-buttons">
+            <app-window-buttons [buttons]="window.buttons"></app-window-buttons>
+        </div>
+        <div class="status-bar-title">
+            {{ window.title }}
+        </div>
+        <div class="status-bar-icon">
+            <app-icon-right [loading]="loading"></app-icon-right>
+        </div>
+    </div>
+</ion-card-header>

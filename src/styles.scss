@@ -9,32 +9,205 @@
 @import '@ionic/angular/css/text-transformation.css';
 @import '@ionic/angular/css/flex-utils.css';
 @import '@ionic/angular/css/display.css';
-// /* LOGO COLORS */
-// $walnut-brown: #5b4f47ff;
-// $apple-green: #84b527ff;
-// $bone: #e2dcceff;
-// /* SCSS Gradient */
-// $gradient-top: linear-gradient(0deg, #000000ff, #5b4f47ff, #84b527ff, #000000ff, #e2dcceff);
-// $gradient-right: linear-gradient(90deg, #000000ff, #5b4f47ff, #84b527ff, #000000ff, #e2dcceff);
-// $gradient-bottom: linear-gradient(180deg, #000000ff, #5b4f47ff, #84b527ff, #000000ff, #e2dcceff);
-// $gradient-left: linear-gradient(270deg, #000000ff, #5b4f47ff, #84b527ff, #000000ff, #e2dcceff);
-// $gradient-top-right: linear-gradient(45deg, #000000ff, #5b4f47ff, #84b527ff, #000000ff, #e2dcceff);
-// $gradient-bottom-right: linear-gradient(135deg, #000000ff, #5b4f47ff, #84b527ff, #000000ff, #e2dcceff);
-// $gradient-top-left: linear-gradient(225deg, #000000ff, #5b4f47ff, #84b527ff, #000000ff, #e2dcceff);
-// $gradient-bottom-left: linear-gradient(315deg, #000000ff, #5b4f47ff, #84b527ff, #000000ff, #e2dcceff);
-// $gradient-radial: radial-gradient(#000000ff, #5b4f47ff, #84b527ff, #000000ff, #e2dcceff);
-// * {
-//     --content-padding: 10px;
-//     --content-padding-mobile: 5px;
-//     --content-padding-tablet: 10px;
-//     --content-padding-desktop: 20px;
-//     --content-padding-large: 30px;
-//     --content-padding-xlarge: 50px;
-//     --content-padding-xxlarge: 100px;
-//     --card-width: 200px;
-//     --card-height: 200px;
-// }
-// a {
-//     text-decoration: none;
-//     color: inherit;
-// }
+@import 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css';
+/* --------------------------------------------------------
+ * Global Styles
+ * --------------------------------------------------------
+ * This file contains global styles for the Ionic application.
+ * It includes color variables, font settings, and responsive design.
+ * -------------------------------------------------------- */
+/* And because I always forget: */
+/* top | right | bottom | left */
+/* -------------------------------------------------------- */
+/* Colors */
+$retro-cream: #FAF7F2;
+$seagull-postman: #577590;
+$seagull-midnight: #1A535C;
+$mint-celadon: #B1CEB1;
+$rose-tea: #E6BCB5;
+$vanilla: #E4E3AC;
+$old-rose: #D08476;
+$cambridge: #9BC09B;
+$offblack: #211F1C;
+/* LOGO COLORS */
+$walnut-brown: #5b4f47ff;
+$apple-green: #84b527ff;
+$bone: #e2dcceff;
+
+/* Variables for Ionic */
+:root {
+    /* Set the background of the entire app */
+    --ion-background-color: $cambridge;
+
+    /* Set the font family of the entire app */
+    --ion-font-family: "Sniglet", system-ui;
+    --ion-font-weight: 400;
+    --ion-font-style: normal;
+    --ion-text-color: $offblack;
+    --ion-text-size: 12px; // don't think this is working
+
+    /* Spacing */
+    --ion-statusbar-padding: 0px;
+    --ion-safe-area-top: 0px;
+    --ion-safe-area-bottom: 15px;
+    --ion-safe-area-right: 20px;
+    --ion-safe-area-left: 20px;
+
+
+    /* Colors */
+
+    --ion-color-primary: $offblack;
+    --ion-color-primary-rgb: 33,
+        31,
+        28;
+    --ion-color-primary-contrast: $retro-cream;
+    --ion-color-primary-contrast-rgb: 255,
+        255,
+        255;
+    --ion-color-primary-shade: #1d1b19;
+    --ion-color-primary-tint: #373533;
+
+    --ion-color-secondary: $vanilla;
+    --ion-color-secondary-rgb: 228,
+        227,
+        172;
+    --ion-color-secondary-contrast: #000000;
+    --ion-color-secondary-contrast-rgb: 0,
+        0,
+        0;
+    --ion-color-secondary-shade: #c9c897;
+    --ion-color-secondary-tint: #e7e6b4;
+
+    --ion-color-tertiary: #B8C8CB;
+    --ion-color-tertiary-rgb: 184,
+        200,
+        203;
+    --ion-color-tertiary-contrast: #000000;
+    --ion-color-tertiary-contrast-rgb: 0,
+        0,
+        0;
+    --ion-color-tertiary-shade: #a2b0b3;
+    --ion-color-tertiary-tint: #bfced0;
+
+    --ion-color-success: #9BC09B;
+    --ion-color-success-rgb: 155,
+        192,
+        155;
+    --ion-color-success-contrast: #000000;
+    --ion-color-success-contrast-rgb: 0,
+        0,
+        0;
+    --ion-color-success-shade: #88a988;
+    --ion-color-success-tint: #a5c6a5;
+
+    --ion-color-warning: $vanilla;
+    --ion-color-warning-rgb: 228,
+        227,
+        172;
+    --ion-color-warning-contrast: #000000;
+    --ion-color-warning-contrast-rgb: 0,
+        0,
+        0;
+    --ion-color-warning-shade: #c9c897;
+    --ion-color-warning-tint: #e7e6b4;
+
+    --ion-color-danger: $old-rose;
+    --ion-color-danger-rgb: 208,
+        132,
+        118;
+    --ion-color-danger-contrast: #000000;
+    --ion-color-danger-contrast-rgb: 0,
+        0,
+        0;
+    --ion-color-danger-shade: #b77468;
+    --ion-color-danger-tint: #d59084;
+
+    --ion-color-light: $seagull-postman;
+    --ion-color-light-rgb: 87,
+        117,
+        144;
+    --ion-color-light-contrast: #ffffff;
+    --ion-color-light-contrast-rgb: 255,
+        255,
+        255;
+    --ion-color-light-shade: #4d677f;
+    --ion-color-light-tint: #68839b;
+
+    --ion-color-medium: $seagull-midnight;
+    --ion-color-medium-rgb: 26,
+        83,
+        92;
+    --ion-color-medium-contrast: #ffffff;
+    --ion-color-medium-contrast-rgb: 255,
+        255,
+        255;
+    --ion-color-medium-shade: #174951;
+    --ion-color-medium-tint: #31646c;
+
+    --ion-color-dark: #2f2f2f;
+    --ion-color-dark-rgb: 47,
+        47,
+        47;
+    --ion-color-dark-contrast: #ffffff;
+    --ion-color-dark-contrast-rgb: 255,
+        255,
+        255;
+    --ion-color-dark-shade: #292929;
+    --ion-color-dark-tint: #444444;
+
+    --ion-background-color: $cambridge;
+
+}
+
+@media screen and (max-width: 600px) {
+    :root {
+        --ion-safe-area-top: 20px;
+        /* Adjust for smaller screens */
+        --ion-safe-area-bottom: 0px;
+        /* No bottom padding on smaller screens */
+        --ion-safe-area-right: 0px;
+        /* No right padding on smaller screens */
+        --ion-safe-area-left: 0px;
+        /* No left padding on smaller screens */
+        --ion-grid-columns: 1;
+    }
+}
+
+@media screen and (min-width: 1600px) {
+    :root {
+        --ion-safe-area-top: 0px;
+        --ion-safe-area-bottom: 2vh;
+        --ion-safe-area-right: 3vw;
+        --ion-safe-area-left: 3vw;
+        --ion-grid-columns: 2;
+    }
+}
+
+.window-grid ::ng-deep ion-card {
+    border: 3px dashed red !important;
+}
+
+.window-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    width: 100%;
+    margin: 0 auto;
+    padding: 1rem;
+
+    @media (min-width: 800px) {
+        grid-template-columns: 1fr 1fr; // 2 columns
+    }
+
+    @media (min-width: 1400px) {
+        grid-template-columns: 1fr 1fr 1fr; // 3 columns
+    }
+
+    @media (min-width: 1800px) {
+        grid-template-columns: 1fr 1fr 1fr 1fr; // 4 columns
+    }
+}
+
+.window-grid ::ng-deep app-window {
+    border: 5px dashed red;
+}

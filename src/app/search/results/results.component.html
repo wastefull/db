@@ -1,3 +1,6 @@
-<app-object class="object" *ngFor="let object of results" [object]="object"></app-object>
-<nav *ngIf="results.length == 0">Search or <a (click)="this.all()">browse</a>.</nav>
-<small *ngIf="results.length">Displaying {{results.length}} results.</small>
+<ng-container *ngIf="showResults">
+    <app-object class="object" *ngFor="let object of results" [object]="object" (click)="onResultClick(object)">
+    </app-object>
+    <nav *ngIf="results.length == 0">Search or <a (click)="all()">browse</a>.</nav>
+    <small *ngIf="results.length">Displaying {{results.length}} results.</small>
+</ng-container>

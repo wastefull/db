@@ -6,9 +6,6 @@
     </ion-title>
     <app-pillgroup></app-pillgroup>
     <app-socials></app-socials>
-    <p>Our nonprofit is building a wastefull world
-      centered on recycling, regenerative
-      agriculture, and citizen science.</p>
   </ion-toolbar>
 
 </ion-header>
@@ -20,7 +17,11 @@
   <nav class="right-side">
 
   </nav>
-  <router-outlet></router-outlet>
+  <!-- <router-outlet></router-outlet> -->
+  <div class="window-grid">
+    <app-window *ngFor="let window of windows; let i = index" [window]="window" [outletName]="'window' + (i + 1)">
+    </app-window>
+  </div>
 </ion-content>
 <!-- </section> -->
 <!-- </main> -->

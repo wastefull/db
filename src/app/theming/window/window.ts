@@ -14,6 +14,7 @@ export interface AppWindow {
   buttons: ButtonInterface[];
   activeButton?: string;
   content?: any; // This can be a component or any other content type
+  outlet: string;
 }
 
 export const defaultWindow: AppWindow = {
@@ -26,6 +27,7 @@ export const defaultWindow: AppWindow = {
   buttons: noCloseButtons,
   activeButton: '',
   content: 'This is the default content of the window.',
+  outlet: 'search',
 };
 
 export function generateWindow(title: string): AppWindow {

@@ -1,6 +1,9 @@
-<ng-container *ngIf="showResults">
+<ng-container *ngIf="showResults" class="results-list" [class.loading]="loading">
     <app-object class="object" *ngFor="let object of results" [object]="object" (click)="onResultClick(object)">
     </app-object>
-    <nav *ngIf="results.length == 0">Search or <a (click)="all()">browse</a>.</nav>
-    <small *ngIf="results.length">Displaying {{results.length}} results.</small>
+    <!-- <nav *ngIf="results.length == 0">Search or <a (click)="all()">browse</a>.</nav> -->
+    <!-- <small *ngIf="results.length">Displaying {{results.length}} results.</small> -->
+    <div *ngIf="loading" class="overlay-spinner">
+        <i class="fa fa-spinner fa-spin"></i>
+    </div>
 </ng-container>

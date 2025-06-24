@@ -34,6 +34,5 @@ export class AppComponent implements OnInit {
     this.windowService.windows$.subscribe((windows) => {
       this.windows = windows;
     });
-    this.windowService.setDefaultWindows();
   }
 }

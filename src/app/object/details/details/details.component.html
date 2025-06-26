@@ -1,54 +1,53 @@
 @if (object) {
-  <article>
+<article>
     <aside [class]="'object' + object.id">
-      <app-image-display [object]="object" />
-      <h4>Details</h4>
-      <p class="details">{{ object.meta.description }}</p>
-      <h4 hidden>AKA</h4>
-      <p class="object-meta" hidden>placeholder for alt names</p>
-      <h4 hidden>Tags</h4>
-      <p class="object-meta" hidden>placeholder for tags</p>
+        <app-image-display [object]="object" />
+        <h4>Details</h4>
+        <p class="details">{{ object.meta.description }}</p>
+        <h4 hidden>AKA</h4>
+        <p class="object-meta" hidden>placeholder for alt names</p>
+        <h4 hidden>Tags</h4>
+        <p class="object-meta" hidden>placeholder for tags</p>
     </aside>
     <content [class]="'object' + object.id">
-      <h2 class="object-heading">{{ object.meta.name | titlecase }}</h2>
-      <!-- Compost Articles -->
-      @if (object.articles.ids && object.articles.ids.length > 0) {
+        <h2 class="object-heading">{{ object.meta.name | titlecase }}</h2>
+        <!-- Compost Articles -->
+        @if (object.articles.ids && object.articles.ids.length > 0) {
         <main>
-          @if (object.articles.compost?.length) {
+            @if (object.articles.compost?.length) {
             <div>
-              <h3>How to Compost</h3>
-              @for (art of object.articles.compost; track art) {
+                <h3>How to Compost</h3>
+                @for (art of object.articles.compost; track art) {
                 <app-article [article]="art"></app-article>
-              }
+                }
             </div>
-          }
-          <!-- Recycle Articles -->
-          @if (object.articles.recycle?.length) {
+            }
+            <!-- Recycle Articles -->
+            @if (object.articles.recycle?.length) {
             <div>
-              <h3>How to Recycle</h3>
-              @for (art of object.articles.recycle; track art) {
+                <h3>How to Recycle</h3>
+                @for (art of object.articles.recycle; track art) {
                 <app-article [article]="art"></app-article>
-              }
+                }
             </div>
-          }
-          <!-- Upcycle Articles -->
-          @if (object.articles.upcycle?.length) {
+            }
+            <!-- Upcycle Articles -->
+            @if (object.articles.upcycle?.length) {
             <div>
-              <h3>How to Upcycle</h3>
-              @for (art of object.articles.upcycle; track art) {
+                <h3>How to Upcycle</h3>
+                @for (art of object.articles.upcycle; track art) {
                 <app-article [article]="art"></app-article>
-              }
+                }
             </div>
-          }
+            }
         </main>
-      }
-      @if (!object.articles.ids || object.articles.ids.length <= 0) {
-        <main>
-          <h3>Compost, Recycling, and Upcycling {{ object.meta.name | titlecase }}</h3>
-          <p class="article-text" [innerHTML]="defaultArticle"></p>
-        </main>
-      }
-      <p>DetailsComponent loaded!</p>
+        }
+        @if (!object.articles.ids || object.articles.ids.length <= 0) { <main>
+            <h3>Compost, Recycling, and Upcycling {{ object.meta.name | titlecase }}</h3>
+            <p class="article-text" [innerHTML]="defaultArticle"></p>
+            </main>
+            }
+
     </content>
-  </article>
+</article>
 }

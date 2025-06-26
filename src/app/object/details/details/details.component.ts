@@ -27,7 +27,6 @@ export class DetailsComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    console.log('DetailsComponent ngOnInit');
     this.route.params
       .pipe(
         switchMap((params) => {

@@ -21,8 +21,8 @@ import { RouterOutlet, RouterModule } from '@angular/router';
     StatusBarComponent,
     StatusBarComponent,
     RouterOutlet,
-    RouterModule
-],
+    RouterModule,
+  ],
   templateUrl: './window.component.html',
   styleUrl: './window.component.scss',
 })
@@ -42,7 +42,7 @@ export class WindowComponent implements AfterViewInit {
 
   ngAfterViewInit() {
     setTimeout(() => {
-      console.log('Window outlet:', this.window.outlet);
+      // console.log('Window outlet:', this.window.outlet);
       this.outletReady.emit(this.window.outlet);
     });
   }

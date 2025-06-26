@@ -1,3 +1,3 @@
-<a *ngIf="object && object.meta" [class]="'object' + object.id" [routerLink]="['/object', object.id]">
+<a *ngIf="object && object.meta" [class]="'object' + object.id" (click)="onClick()">
   <h2 class="object-heading">{{ object.meta.name }}</h2>
 </a>

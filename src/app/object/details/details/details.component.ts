@@ -8,6 +8,7 @@ import { defaultArticle } from '../article/article';
 import { ImageDisplayComponent } from '../../../image-display/image-display.component';
 import { ArticleComponent } from '../article/article.component';
 import { CommonModule } from '@angular/common';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-details',
@@ -18,6 +19,7 @@ export class DetailsComponent implements OnInit {
   object: Material = defaultMaterial;
   articles: Article[] = [];
   defaultArticle: string = defaultArticle;
+  loading = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -25,14 +27,29 @@ export class DetailsComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    // Subscribe to param changes!
-    this.route.params.subscribe((params) => {
-      const objectName = params['id'];
-      this.objectService.getMaterialByName(objectName).subscribe((material) => {
-        this.object = material;
-        // Fetch articles
+    console.log('DetailsComponent ngOnInit');
+    this.route.params
+      .pipe(
+        switchMap((params) => {
+          this.loading = true;
+          // Clear the object immediately to avoid showing stale data
+          this.object = {
+            ...defaultMaterial,
+            articles: { ids: [], compost: [], recycle: [], upcycle: [] },
+          };
+          const objectName = params['id'];
+          return this.objectService.getMaterialByName(objectName);
+        })
+      )
+      .subscribe((material) => {
+        this.object = {
+          ...material,
+          articles: { ids: [], compost: [], recycle: [], upcycle: [] },
+        };
+        this.loading = false;
+        // Use the material ID for fetching articles
         this.objectService
-          .getArticlesForMaterial(objectName)
+          .getArticlesForMaterial(this.object.id)
           .subscribe((articles: Article[]) => {
             this.object.articles.compost = articles.filter((a) =>
               (a.source_table || '').toLowerCase().includes('compost')
@@ -45,6 +62,5 @@ export class DetailsComponent implements OnInit {
             );
           });
       });
-    });
   }
 }

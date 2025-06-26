@@ -17,9 +17,10 @@
   <nav class="right-side">
 
   </nav>
-  <!-- <router-outlet></router-outlet> -->
+  <router-outlet></router-outlet>
   <div class="window-grid">
-    <app-window *ngFor="let window of windows; let i = index" [window]="window" [outletName]="'window' + (i + 1)">
+    <app-window *ngFor="let window of windows" [window]="window" (outletReady)="onOutletReady($event)"
+      (requestNavigation)="requestNavigation($event.outlet, $event.path)">
     </app-window>
   </div>
 </ion-content>

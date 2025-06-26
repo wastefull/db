@@ -4,4 +4,5 @@
     <button class="primary" type="button" (click)="onInputChange(query)">Search</button>
   </form>
 </section>
-<app-results [query]="query" (selectObject)="onSelectObject($event)"></app-results>
+<app-results [query]="query" (selectObject)="onSelectObject($event)"
+  (requestNavigation)="onRequestNavigation($event)" />

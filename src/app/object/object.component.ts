@@ -1,11 +1,11 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { Material } from './object';
-import { CommonModule } from '@angular/common';
+
 
 @Component({
   selector: 'app-object',
   templateUrl: './object.component.html',
-  imports: [CommonModule],
+  imports: [],
   // styleUrls: ['./object.component.scss'],
 })
 export class ObjectComponent {

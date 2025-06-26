@@ -1,23 +1,12 @@
 import { Component, Input } from '@angular/core';
-import {
-  IonCard,
-  IonCardContent,
-  IonCardHeader,
-  IonCardSubtitle,
-  IonCardTitle,
-} from '@ionic/angular/standalone';
+import { IonCardHeader } from '@ionic/angular/standalone';
 import { WindowButtonsComponent } from './window-buttons/window-buttons.component';
-import { CommonModule } from '@angular/common';
+
 import { AppWindow, defaultWindow } from '../window';
 import { IconRightComponent } from './icon-right/icon-right.component';
 @Component({
   selector: 'app-status-bar',
-  imports: [
-    IonCardHeader,
-    WindowButtonsComponent,
-    CommonModule,
-    IconRightComponent,
-  ],
+  imports: [IonCardHeader, WindowButtonsComponent, IconRightComponent],
   templateUrl: './status-bar.component.html',
   styleUrl: './status-bar.component.scss',
 })

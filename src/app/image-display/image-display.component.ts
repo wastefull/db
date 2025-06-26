@@ -1,10 +1,10 @@
 import { Component, Input } from '@angular/core';
 import { defaultMaterial, Material } from '../object/object'; // Adjust the path as necessary
-import { CommonModule } from '@angular/common';
+
 
 @Component({
   selector: 'app-image-display',
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './image-display.component.html',
 })
 export class ImageDisplayComponent {

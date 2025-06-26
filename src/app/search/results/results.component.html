@@ -1,7 +1,13 @@
-<ng-container *ngIf="showResults" class="results-list" [class.loading]="loading">
-    <app-object class="object" *ngFor="let object of results" [object]="object" (select)="onResultClick(object)">
-    </app-object>
-    <div *ngIf="loading" class="overlay-spinner">
+@if (showResults) {
+  <ng-container class="results-list" [class.loading]="loading">
+    @for (object of results; track object) {
+      <app-object class="object" [object]="object" (select)="onResultClick(object)">
+      </app-object>
+    }
+    @if (loading) {
+      <div class="overlay-spinner">
         <i class="fa fa-spinner fa-spin"></i>
-    </div>
-</ng-container>
+      </div>
+    }
+  </ng-container>
+}

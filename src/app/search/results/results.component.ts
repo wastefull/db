@@ -7,14 +7,15 @@ import {
   ChangeDetectorRef,
 } from '@angular/core';
 import { ObjectComponent } from '../../object/object.component';
-import { CommonModule } from '@angular/common';
 import { MaterialService } from '../../object/object.service';
 import { Material } from '../../object/object';
 import { Router, RouterModule } from '@angular/router';
 import { WindowService } from '../../theming/window/window.service';
+import { NavigationService } from '../../navigation.service';
+
 @Component({
   selector: 'app-results',
-  imports: [ObjectComponent, CommonModule, RouterModule],
+  imports: [ObjectComponent, RouterModule],
   templateUrl: './results.component.html',
   styleUrls: ['./results.component.scss'],
 })
@@ -36,7 +37,8 @@ export class ResultsComponent {
     private windowService: WindowService,
     private router: Router,
     private ngZone: NgZone,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private navigationService: NavigationService // Add this
   ) {
     this.objectService.getObjects().subscribe((objects: any[]) => {
       this.everything = objects;
@@ -73,23 +75,19 @@ export class ResultsComponent {
     const resultWindowId = 'details';
     if (!this.windowService.hasWindow(resultWindowId)) {
       this.windowService.addDetailsWindow(object.id, (outletName) => {
-        console.log('Emitting navigation request for', outletName, [
+        this.navigationService.requestNavigation(outletName, [
           'object',
           object.id,
         ]);
-        this.requestNavigation.emit({
-          outlet: outletName,
-          path: ['object', object.id],
-        });
         this.showResults = false;
         this.loading = false;
       });
     } else {
       this.windowService.activateWindow(resultWindowId);
-      this.requestNavigation.emit({
-        outlet: 'details',
-        path: ['object', object.id],
-      });
+      this.navigationService.requestNavigation('details', [
+        'object',
+        object.id,
+      ]);
       this.showResults = false;
       this.loading = false;
     }

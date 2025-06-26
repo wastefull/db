@@ -3,13 +3,12 @@ import { RouterModule, RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './home/header/header.component';
 import { PillgroupComponent } from './home/pillgroup/pillgroup.component';
 import { SocialsComponent } from './shared/socials/socials.component';
-// import { RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 import { WindowComponent } from './theming/window/window.component';
-import { AppWindow, sampleWindows } from './theming/window/window'; // Make sure AppWindow is a class, not just a type
-import { CommonModule } from '@angular/common';
+import { AppWindow } from './theming/window/window';
 import { WindowService } from './theming/window/window.service';
-import { Router, NavigationEnd } from '@angular/router';
+import { Router } from '@angular/router';
+import { NavigationService } from './navigation.service';
 
 @Component({
   selector: 'app-root',
@@ -20,27 +19,28 @@ import { Router, NavigationEnd } from '@angular/router';
     HeaderComponent,
     PillgroupComponent,
     SocialsComponent,
-    // RouterModule,
     IonicModule,
     WindowComponent,
-    CommonModule,
   ],
   templateUrl: './app.component.html',
-  // styleUrl: './app.component.scss',
 })
 export class AppComponent implements OnInit {
   title = 'Wastefull';
   windows: AppWindow[] = [];
-  constructor(private windowService: WindowService, private router: Router) {
-    this.router.events.subscribe((event) => {
-      console.log(event);
+  constructor(
+    private windowService: WindowService,
+    private router: Router,
+    private navigationService: NavigationService
+  ) {
+    this.router.events.subscribe(() => {});
+    this.navigationService.navigation$.subscribe(({ outlet, path }) => {
+      this.requestNavigation(outlet, path);
     });
   }
   ngOnInit() {
     this.windowService.windows$.subscribe((windows) => {
       this.windows = windows;
     });
-    // Activate both primary and search outlets on load
     this.router.navigate([{ outlets: { primary: null, search: null } }], {
       replaceUrl: true,
     });
@@ -53,7 +53,6 @@ export class AppComponent implements OnInit {
     this.tryNavigate(outletName);
   }
 
-  // Call this from ResultsComponent instead of navigating directly:
   requestNavigation(outletName: string, path: any) {
     this.pendingNavigation[outletName] = path;
     this.tryNavigate(outletName);
@@ -62,7 +61,6 @@ export class AppComponent implements OnInit {
   private tryNavigate(outletName: string) {
     const nav = this.pendingNavigation[outletName];
     if (this.outletIsReady[outletName] && nav) {
-      console.log('Navigating:', { [outletName]: nav });
       this.router.navigate([{ outlets: { [outletName]: nav } }], {
         relativeTo: this.router.routerState.root,
       });

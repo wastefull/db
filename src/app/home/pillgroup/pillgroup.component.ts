@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 
 @Component({
   selector: 'app-pillgroup',
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './pillgroup.component.html',
   // styleUrl: './pillgroup.component.scss',
 })

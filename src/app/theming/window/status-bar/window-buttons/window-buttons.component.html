@@ -1,1 +1,1 @@
-<app-button *ngFor="let button of buttons" [button]="button" />
+@for (button of buttons; track button) {<app-button [button]="button" />}

@@ -1,3 +1,5 @@
-<a *ngIf="object && object.meta" [class]="'object' + object.id" (click)="onClick()">
-  <h2 class="object-heading">{{ object.meta.name }}</h2>
-</a>
+@if (object && object.meta) {
+  <a [class]="'object' + object.id" (click)="onClick()">
+    <h2 class="object-heading">{{ object.meta.name }}</h2>
+  </a>
+}

@@ -1,16 +1,19 @@
 <div class="social-links">
   @for (item of links; track item.title) {
 
-  <a href="{item.link}" aria-label="{item.title}" target="_blank" rel="noopener">
-    <img *ngIf="!item.svg; else elseBlock;" [src]="item.logo" [alt]="item.title" width="24" height="24" />
-    <ng-template #elseBlock>
-      <svg *ngIf="item.svg" [attr.width]="item.svg.width" [attr.height]="item.svg.height"
-        [attr.viewBox]="item.svg.viewBox" [attr.fill]="item.svg.fill" xmlns="http://www.w3.org/2000/svg"
-        [attr.alt]="item.title">
-        <path [attr.d]="item.svg.pathD" />
-      </svg>
-    </ng-template>
-  </a>
+    <a href="{item.link}" aria-label="{item.title}" target="_blank" rel="noopener">
+      @if (!item.svg) {
+        <img [src]="item.logo" [alt]="item.title" width="24" height="24" />
+      } @else {
+        @if (item.svg) {
+          <svg [attr.width]="item.svg.width" [attr.height]="item.svg.height"
+            [attr.viewBox]="item.svg.viewBox" [attr.fill]="item.svg.fill" xmlns="http://www.w3.org/2000/svg"
+            [attr.alt]="item.title">
+            <path [attr.d]="item.svg.pathD" />
+          </svg>
+        }
+      }
+    </a>
 
   }
 </div>

@@ -1,6 +1,8 @@
 <article>
-    <h1>{{ article.title }}</h1>
-    <p class="article-text" [innerHTML]="article.body || defaultArticle"></p>
-    <div *ngIf="article?.author">By: {{ article.author }}</div>
+  <h1>{{ article.title }}</h1>
+  <p class="article-text" [innerHTML]="article.body || defaultArticle"></p>
+  @if (article.author) {
+  <div>By: {{ article.author }}</div>
+  }
 </article>
 <hr />

@@ -1,11 +1,11 @@
 import { Component, Output, EventEmitter } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { ResultsComponent } from './results/results.component';
 
 @Component({
   selector: 'app-search',
-  imports: [CommonModule, FormsModule, ResultsComponent],
+  imports: [FormsModule, ResultsComponent],
   templateUrl: './search.component.html',
   // styleUrl: './search.component.scss',
 })

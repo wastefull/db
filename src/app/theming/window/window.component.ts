@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { IonCard, IonCardContent } from '@ionic/angular/standalone';
 import { StatusBarComponent } from './status-bar/status-bar.component';
-import { CommonModule } from '@angular/common';
+
 import { AppWindow, generateWindow } from './window';
 import { RouterOutlet, RouterModule } from '@angular/router';
 @Component({
@@ -19,11 +19,10 @@ import { RouterOutlet, RouterModule } from '@angular/router';
     IonCard,
     IonCardContent,
     StatusBarComponent,
-    CommonModule,
     StatusBarComponent,
     RouterOutlet,
-    RouterModule,
-  ],
+    RouterModule
+],
   templateUrl: './window.component.html',
   styleUrl: './window.component.scss',
 })

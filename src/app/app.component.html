@@ -1,5 +1,5 @@
 <!-- <main class="main">
-  <div class="content"> -->
+<div class="content"> -->
 <ion-header>
   <ion-toolbar>
     <ion-title> <app-header></app-header>
@@ -19,9 +19,11 @@
   </nav>
   <router-outlet></router-outlet>
   <div class="window-grid">
-    <app-window *ngFor="let window of windows" [window]="window" (outletReady)="onOutletReady($event)"
+    @for (window of windows; track window) {
+    <app-window [window]="window" (outletReady)="onOutletReady($event)"
       (requestNavigation)="requestNavigation($event.outlet, $event.path)">
     </app-window>
+    }
   </div>
 </ion-content>
 <!-- </section> -->

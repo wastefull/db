@@ -16,32 +16,32 @@ export enum ButtonClass {
 }
 export const defaultButtons: ButtonInterface[] = [
   { icon: IconClass.CLOSE, label: 'Close', active: true, disabled: false },
-  {
-    icon: IconClass.MINIMIZE,
-    label: 'Minimize',
-    active: true,
-    disabled: false,
-  },
-  {
-    icon: IconClass.MAXIMIZE,
-    label: 'Maximize',
-    active: true,
-    disabled: false,
-  },
+  // {
+  //   icon: IconClass.MINIMIZE,
+  //   label: 'Minimize',
+  //   active: true,
+  //   disabled: false,
+  // },
+  // {
+  //   icon: IconClass.MAXIMIZE,
+  //   label: 'Maximize',
+  //   active: true,
+  //   disabled: false,
+  // },
 ];
 
 export const noCloseButtons: ButtonInterface[] = [
   { icon: IconClass.CLOSE, label: 'Close', active: true, disabled: true },
-  {
-    icon: IconClass.MINIMIZE,
-    label: 'Minimize',
-    active: true,
-    disabled: false,
-  },
-  {
-    icon: IconClass.MAXIMIZE,
-    label: 'Maximize',
-    active: true,
-    disabled: false,
-  },
+  // {
+  //   icon: IconClass.MINIMIZE,
+  //   label: 'Minimize',
+  //   active: true,
+  //   disabled: false,
+  // },
+  // {
+  //   icon: IconClass.MAXIMIZE,
+  //   label: 'Maximize',
+  //   active: true,
+  //   disabled: false,
+  // },
 ];

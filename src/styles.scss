@@ -183,31 +183,39 @@ $bone: #e2dcceff;
     }
 }
 
-.window-grid ::ng-deep ion-card {
+window-grid ::ng-deep ion-card {
     border: 3px dashed red !important;
+}
+
+ion-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; // ensures vertical centering
+}
+
+.centered-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
 }
 
 .window-grid {
     display: grid;
-    grid-template-columns: 1fr;
     gap: 1.5rem;
-    width: 100%;
-    margin: 0 auto;
     padding: 1rem;
+    max-width: 2400px;
 
-    @media (min-width: 800px) {
-        grid-template-columns: 1fr 1fr; // 2 columns
-    }
+    // @media (min-width: 800px) {
+    //     grid-template-columns: 1fr 1fr;
+    // }
 
-    @media (min-width: 1400px) {
-        grid-template-columns: 1fr 1fr 1fr; // 3 columns
-    }
+    // @media (min-width: 1400px) {
+    //     grid-template-columns: 1fr 1fr 1fr;
+    // }
 
-    @media (min-width: 1800px) {
-        grid-template-columns: 1fr 1fr 1fr 1fr; // 4 columns
-    }
-}
-
-.window-grid ::ng-deep app-window {
-    border: 5px dashed red;
+    // @media (min-width: 1800px) {
+    //     grid-template-columns: 1fr 1fr 1fr 1fr;
+    // }
 }

@@ -18,13 +18,13 @@
 
   </nav>
   <router-outlet></router-outlet>
-  <div class="window-grid">
+  <div class="centered-content"><div class="window-grid">
     @for (window of windows; track window) {
     <app-window [window]="window" (outletReady)="onOutletReady($event)"
       (requestNavigation)="requestNavigation($event.outlet, $event.path)">
     </app-window>
     }
-  </div>
+  </div></div>
 </ion-content>
 <!-- </section> -->
 <!-- </main> -->

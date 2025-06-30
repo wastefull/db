@@ -1,32 +1,34 @@
+/* Colors */
+$retro-cream: #FAF7F2;
+$seagull-postman: #577590;
+$seagull-midnight: #1A535C;
+$mint-celadon: #B1CEB1;
+$rose-tea: #E6BCB5;
+$vanilla: #E4E3AC;
+$old-rose: #D08476;
+$cambridge: #9BC09B;
+$offblack: #211F1C;
+/* LOGO COLORS */
+$walnut-brown: #5b4f47ff;
+$apple-green: #84b527ff;
+$bone: #e2dcceff;
+
 section {
     text-align: center;
     margin-bottom: 50px;
 }
 
-app-results {
-    margin-left: auto;
-    margin-right: auto;
-}
+
+
 
 input {
     width: 100%;
-    max-width: 600px;
+    max-width: 35rem;
     height: 40px;
     padding: 0 10px;
     border-radius: 5px;
-    border: 1px solid var(--primary-color);
+    border: 1px solid #211F1C;
     font-size: 1rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: none;
 
-}
-button {
-    height: 40px;
-    padding: 10px 20px;
-    border-radius: 5px;
-    border: none;
-    background-color: #84b527ff;
-    color: #fff;
-    font-size: 1rem;
-    cursor: pointer;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }

@@ -26,3 +26,13 @@
     background: #e6bcf5;
     color: #211f1c;
 }
+
+ul.autocomplete-list {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+ul.autocomplete-list li {
+    list-style: none;
+}

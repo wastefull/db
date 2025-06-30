@@ -14,6 +14,7 @@ import { switchMap } from 'rxjs/operators';
   selector: 'app-details',
   templateUrl: './details.component.html',
   imports: [ImageDisplayComponent, ArticleComponent, CommonModule],
+  styleUrls: ['./details.component.scss'],
 })
 export class DetailsComponent implements OnInit {
   object: Material = defaultMaterial;

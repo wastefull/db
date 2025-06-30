@@ -1,21 +1,13 @@
-import {
-  Component,
-  Input,
-  Output,
-  EventEmitter,
-  NgZone,
-  ChangeDetectorRef,
-} from '@angular/core';
-import { ObjectComponent } from '../../object/object.component';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { MaterialService } from '../../object/object.service';
 import { Material } from '../../object/object';
-import { Router, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { WindowService } from '../../theming/window/window.service';
 import { NavigationService } from '../../navigation.service';
 
 @Component({
   selector: 'app-results',
-  imports: [ObjectComponent, RouterModule],
+  imports: [RouterModule],
   templateUrl: './results.component.html',
   styleUrls: ['./results.component.scss'],
 })
@@ -37,9 +29,6 @@ export class ResultsComponent {
   constructor(
     public objectService: MaterialService,
     private windowService: WindowService,
-    private router: Router,
-    private ngZone: NgZone,
-    private cdr: ChangeDetectorRef,
     private navigationService: NavigationService
   ) {
     this.objectService.getObjects().subscribe((objects: any[]) => {
@@ -104,22 +93,5 @@ export class ResultsComponent {
     if (this.results[index]) {
       this.onResultClick(this.results[index]);
     }
-  }
-
-  private waitForOutlet(name: string, timeout = 1000): Promise<void> {
-    return new Promise((resolve, reject) => {
-      const start = Date.now();
-      const check = () => {
-        const outlet = document.querySelector(`router-outlet[name="${name}"]`);
-        if (outlet) {
-          resolve();
-        } else if (Date.now() - start > timeout) {
-          reject('Outlet not found in time');
-        } else {
-          setTimeout(check, 10);
-        }
-      };
-      check();
-    });
   }
 }

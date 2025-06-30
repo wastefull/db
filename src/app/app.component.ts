@@ -23,7 +23,6 @@ import { SearchService } from './search.service';
     SocialsComponent,
     IonicModule,
     WindowComponent,
-    SearchComponent,
   ],
   templateUrl: './app.component.html',
 })

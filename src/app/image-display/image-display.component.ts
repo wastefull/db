@@ -6,6 +6,7 @@ import { defaultMaterial, Material } from '../object/object'; // Adjust the path
   selector: 'app-image-display',
   imports: [],
   templateUrl: './image-display.component.html',
+  styleUrls: ['./image-display.component.scss'],
 })
 export class ImageDisplayComponent {
   photographer: { username: string; profile_url: string } | null = null;

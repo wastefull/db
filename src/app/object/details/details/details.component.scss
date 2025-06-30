@@ -4,47 +4,28 @@
 }
 
 article {
-    display: flex;
-    flex-direction: row;
     margin: 10px;
     column-gap: 1px;
     overflow: visible;
-
-
+    font-size: medium;
+    display: grid;
+    grid-template-columns: 5fr 1fr;
+    gap: .5rem;
+    max-width: 600px;
 
     aside {
-        width: var(--card-width);
-        background: var(--accent-color);
-        border-radius: 10px;
-        padding: 0 0 50px 0;
-        text-align: left;
-
-        > * {
-            padding: 0 0 0 5px;
-        }
-
-        img {
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-            object-fit: cover;
-            align-content: stretch;
-            border-radius: 10px 10px 0 0;
-            float: top;
-
-        }   
-        
+        display: grid;
+        gap: 2vh;
     }
+
     content {
-        width: calc(85% - var(--card-width));
-        border-radius: 10px;
-        background-color: rgb(216, 193, 193);
-        padding: 15px;
+        display: grid;
+        grid-template-columns: 1fr;
     }
 
 }
 
 .object0 {
-  filter: blur(0.1rem);
-  transition: filter 0.3s ease;
+    filter: blur(0.1rem);
+    transition: filter 0.3s ease;
 }

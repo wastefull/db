@@ -72,6 +72,8 @@ export class ResultsComponent {
   async onResultClick(object: Material) {
     if (this.loading) return;
     this.loading = true;
+    this.navigationService.setLoading(true);
+
     this.selectObject.emit(object.meta.name);
 
     const resultWindowId = 'details';
@@ -83,6 +85,7 @@ export class ResultsComponent {
         ]);
         this.showResults = false;
         this.loading = false;
+        this.navigationService.setLoading(false);
       });
     } else {
       this.windowService.activateWindow(resultWindowId);
@@ -93,6 +96,7 @@ export class ResultsComponent {
       ]);
       this.showResults = false;
       this.loading = false;
+      this.navigationService.setLoading(false);
     }
   }
 

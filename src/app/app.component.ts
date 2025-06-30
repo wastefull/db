@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { RouterModule, RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './home/header/header.component';
 import { PillgroupComponent } from './home/pillgroup/pillgroup.component';
@@ -9,6 +9,8 @@ import { AppWindow } from './theming/window/window';
 import { WindowService } from './theming/window/window.service';
 import { Router } from '@angular/router';
 import { NavigationService } from './navigation.service';
+import { SearchComponent } from './search/search.component';
+import { SearchService } from './search.service';
 
 @Component({
   selector: 'app-root',
@@ -21,16 +23,21 @@ import { NavigationService } from './navigation.service';
     SocialsComponent,
     IonicModule,
     WindowComponent,
+    SearchComponent,
   ],
   templateUrl: './app.component.html',
 })
 export class AppComponent implements OnInit {
   title = 'Wastefull';
   windows: AppWindow[] = [];
+
+  @ViewChild(SearchComponent) searchComponent?: SearchComponent;
+
   constructor(
     private windowService: WindowService,
     private router: Router,
-    private navigationService: NavigationService
+    private navigationService: NavigationService,
+    private searchService: SearchService
   ) {
     this.router.events.subscribe(() => {});
     this.navigationService.navigation$.subscribe(({ outlet, path }) => {
@@ -66,5 +73,9 @@ export class AppComponent implements OnInit {
       });
       delete this.pendingNavigation[outletName];
     }
+  }
+
+  onClearSearch() {
+    this.searchService.clearSearch();
   }
 }

@@ -1,18 +1,30 @@
-import { Component, Output, EventEmitter, ViewChild } from '@angular/core';
-
+import {
+  Component,
+  Output,
+  EventEmitter,
+  ViewChild,
+  OnInit,
+  OnDestroy,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ResultsComponent } from './results/results.component';
+import { SearchService } from '../search.service';
+import { NavigationService } from '../navigation.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-search',
   imports: [FormsModule, ResultsComponent],
   templateUrl: './search.component.html',
-  // styleUrl: './search.component.scss',
 })
-export class SearchComponent {
+export class SearchComponent implements OnInit, OnDestroy {
   query = '';
   highlightedIndex = 0;
-  selectionMade = false; // Track if Enter has been pressed
+  selectionMade = false;
+  isLoading = false;
+
+  private sub?: Subscription;
+  private loadingSub?: Subscription;
 
   @Output() requestNavigation = new EventEmitter<{
     outlet: string;
@@ -21,23 +33,40 @@ export class SearchComponent {
 
   @ViewChild(ResultsComponent) resultsComponent?: ResultsComponent;
 
+  constructor(
+    private searchService: SearchService,
+    private navigationService: NavigationService
+  ) {}
+
+  ngOnInit() {
+    this.sub = this.searchService.query$.subscribe((q) => {
+      this.query = q;
+      this.highlightedIndex = 0;
+      this.selectionMade = false;
+    });
+
+    this.loadingSub = this.navigationService.loading$.subscribe((loading) => {
+      this.isLoading = loading;
+    });
+  }
+
+  ngOnDestroy() {
+    this.sub?.unsubscribe();
+    this.loadingSub?.unsubscribe();
+  }
+
   onInputChange(newValue: string) {
-    this.query = newValue;
-    this.selectionMade = false; // Reset when user types
+    this.searchService.setQuery(newValue);
+    this.selectionMade = false;
   }
 
   onSelectObject(name: string) {
-    this.query = name;
-  }
-
-  // Forward navigation requests from <app-results>
-  onRequestNavigation(event: { outlet: string; path: any }) {
-    this.requestNavigation.emit(event);
+    this.searchService.setQuery(name);
+    this.query = '';
   }
 
   onInputKeydown(event: KeyboardEvent) {
     if (this.selectionMade) {
-      // Prevent further navigation after Enter
       event.preventDefault();
       return;
     }

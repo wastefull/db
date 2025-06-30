@@ -2,7 +2,7 @@
 <div class="content"> -->
 <ion-header>
   <ion-toolbar>
-    <ion-title> <app-header></app-header>
+    <ion-title> <app-header [title]="title" (clearSearch)="onClearSearch()"></app-header>
     </ion-title>
     <app-pillgroup></app-pillgroup>
     <app-socials></app-socials>
@@ -18,13 +18,15 @@
 
   </nav>
   <router-outlet></router-outlet>
-  <div class="centered-content"><div class="window-grid">
-    @for (window of windows; track window) {
-    <app-window [window]="window" (outletReady)="onOutletReady($event)"
-      (requestNavigation)="requestNavigation($event.outlet, $event.path)">
-    </app-window>
-    }
-  </div></div>
+  <div class="centered-content">
+    <div class="window-grid">
+      @for (window of windows; track window) {
+      <app-window [window]="window" (outletReady)="onOutletReady($event)"
+        (requestNavigation)="requestNavigation($event.outlet, $event.path)">
+      </app-window>
+      }
+    </div>
+  </div>
 </ion-content>
 <!-- </section> -->
 <!-- </main> -->

@@ -1,34 +1,32 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { IonCardHeader } from '@ionic/angular/standalone';
 import { WindowButtonsComponent } from './window-buttons/window-buttons.component';
-
 import { AppWindow, defaultWindow } from '../window';
 import { IconRightComponent } from './icon-right/icon-right.component';
+import { NavigationService } from '../../../navigation.service';
+import { Subscription } from 'rxjs';
+
 @Component({
   selector: 'app-status-bar',
   imports: [IonCardHeader, WindowButtonsComponent, IconRightComponent],
   templateUrl: './status-bar.component.html',
   styleUrl: './status-bar.component.scss',
 })
-export class StatusBarComponent {
+export class StatusBarComponent implements OnInit, OnDestroy {
   @Input() window: AppWindow = defaultWindow;
-  // buttons!: AppWindow['buttons'];
-  // title!: AppWindow['title'];
-  // activeButton: AppWindow['activeButton'];
-  loading: boolean = true;
+  loading: boolean = false;
+
+  private loadingSub?: Subscription;
+
+  constructor(private navigationService: NavigationService) {}
 
   ngOnInit() {
-    this.update();
-  }
-  ngOnChanges() {
-    this.update();
+    this.loadingSub = this.navigationService.loading$.subscribe((loading) => {
+      this.loading = loading;
+    });
   }
 
-  update() {
-    if (this.window !== defaultWindow) {
-      this.loading = false;
-    } else {
-      this.loading = true;
-    }
+  ngOnDestroy() {
+    this.loadingSub?.unsubscribe();
   }
 }

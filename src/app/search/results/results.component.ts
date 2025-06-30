@@ -84,6 +84,7 @@ export class ResultsComponent {
       });
     } else {
       this.windowService.activateWindow(resultWindowId);
+      this.windowService.updateWindowTitle(resultWindowId, object.meta.name);
       this.navigationService.requestNavigation('details', [
         'object',
         object.id,

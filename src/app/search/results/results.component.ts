@@ -32,13 +32,15 @@ export class ResultsComponent {
     path: any;
   }>();
 
+  @Input() highlightedIndex = 0;
+
   constructor(
     public objectService: MaterialService,
     private windowService: WindowService,
     private router: Router,
     private ngZone: NgZone,
     private cdr: ChangeDetectorRef,
-    private navigationService: NavigationService // Add this
+    private navigationService: NavigationService
   ) {
     this.objectService.getObjects().subscribe((objects: any[]) => {
       this.everything = objects;
@@ -91,6 +93,12 @@ export class ResultsComponent {
       ]);
       this.showResults = false;
       this.loading = false;
+    }
+  }
+
+  selectByIndex(index: number) {
+    if (this.results[index]) {
+      this.onResultClick(this.results[index]);
     }
   }
 

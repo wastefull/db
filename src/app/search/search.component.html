@@ -1,8 +1,8 @@
 <section>
-  <form (submit)="$event.preventDefault()">
-    <input type="text" placeholder="Look up a thing" [(ngModel)]="query" name="query" />
-    <button class="primary" type="button" (click)="onInputChange(query)">Search</button>
+  <form>
+    <input type="text" placeholder="Look up a thing" [(ngModel)]="query" name="query" (keydown)="onInputKeydown($event)"
+      (ngModelChange)="onInputChange($event)" />
   </form>
 </section>
-<app-results [query]="query" (selectObject)="onSelectObject($event)"
-  (requestNavigation)="onRequestNavigation($event)" />
+<app-results [query]="query" (selectObject)="onSelectObject($event)" (requestNavigation)="onRequestNavigation($event)"
+  [highlightedIndex]="highlightedIndex"></app-results>

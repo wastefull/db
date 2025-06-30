@@ -1,13 +1,17 @@
 @if (showResults) {
-  <ng-container class="results-list" [class.loading]="loading">
-    @for (object of results; track object) {
-      <app-object class="object" [object]="object" (select)="onResultClick(object)">
-      </app-object>
+<ng-container class="results-list" [class.loading]="loading">
+  <ul class="autocomplete-list">
+    @for (result of results; track result) {
+    <li [class.highlighted]="$index === highlightedIndex"
+      (click)="onResultClick(result)">
+      {{ result.meta.name }}
+    </li>
     }
-    @if (loading) {
-      <div class="overlay-spinner">
-        <i class="fa fa-spinner fa-spin"></i>
-      </div>
-    }
-  </ng-container>
+  </ul>
+  @if (loading) {
+  <div class="overlay-spinner">
+    <i class="fa fa-spinner fa-spin"></i>
+  </div>
+  }
+</ng-container>
 }

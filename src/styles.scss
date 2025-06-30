@@ -183,10 +183,6 @@ $bone: #e2dcceff;
     }
 }
 
-window-grid ::ng-deep ion-card {
-    border: 3px dashed red !important;
-}
-
 ion-content {
     display: flex;
     justify-content: center;
@@ -206,6 +202,7 @@ ion-content {
     gap: 1.5rem;
     padding: 1rem;
     max-width: 2400px;
+    min-width: 30rem;
 
     // @media (min-width: 800px) {
     //     grid-template-columns: 1fr 1fr;

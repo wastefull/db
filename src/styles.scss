@@ -10,6 +10,7 @@
 @import '@ionic/angular/css/flex-utils.css';
 @import '@ionic/angular/css/display.css';
 @import 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css';
+
 /* --------------------------------------------------------
  * Global Styles
  * --------------------------------------------------------
@@ -19,23 +20,36 @@
 /* And because I always forget: */
 /* top | right | bottom | left */
 /* -------------------------------------------------------- */
-/* Colors */
-$retro-cream: #FAF7F2;
-$seagull-postman: #577590;
-$seagull-midnight: #1A535C;
-$mint-celadon: #B1CEB1;
-$rose-tea: #E6BCB5;
-$vanilla: #E4E3AC;
-$old-rose: #D08476;
-$cambridge: #9BC09B;
-$offblack: #211F1C;
-/* LOGO COLORS */
-$walnut-brown: #5b4f47ff;
-$apple-green: #84b527ff;
-$bone: #e2dcceff;
-
-/* Variables for Ionic */
+/* Global CSS Variables */
 :root {
+    /* Colors */
+    --retro-cream: #FAF7F2;
+    --seagull-postman: #577590;
+    --seagull-midnight: #1A535C;
+    --mint-celadon: #B1CEB1;
+    --rose-tea: #E6BCB5;
+    --old-rose: #D08476;
+    --old-rose-dark: #b86c62; // darken(#D08476, 10%)
+    --cambridge: #9BC09B;
+    --cambridge-dark: #86a885; // darken(#9BC09B, 10%)
+    --vanilla: #E4E3AC;
+    --vanilla-dark: #c9c897; // darken(#E4E3AC, 10%)
+    --offblack: #211F1C;
+    --accent-color: #F003;
+    --primary-color: #923434;
+    --pastel-yellow: #E4E3AC;
+    --dusty-rose: #E6BEB5;
+    --pastel-blue: #B8C8CB;
+    --borders: #211F1C;
+    --text: #211F1C;
+    --rounded: 11.46px;
+
+    /* LOGO COLORS */
+    --walnut-brown: #5b4f47ff;
+    --apple-green: #84b527ff;
+    --bone: #e2dcceff;
+
+    /* Variables for Ionic */
     /* Set the background of the entire app */
     --ion-background-color: #9BC09B;
 
@@ -43,8 +57,8 @@ $bone: #e2dcceff;
     --ion-font-family: "Sniglet", system-ui;
     --ion-font-weight: 400;
     --ion-font-style: normal;
-    --ion-text-color: #211F1C;
-    --ion-text-size: 12px; // don't think this is working
+    --ion-text-color: var(--text);
+    --ion-text-size: 12px;
 
     /* Spacing */
     --ion-statusbar-padding: 0px;
@@ -56,7 +70,7 @@ $bone: #e2dcceff;
 
     /* Colors */
 
-    --ion-color-primary: #211F1C;
+    --ion-color-primary: var(--offblack);
     --ion-color-primary-rgb: 33,
         31,
         28;
@@ -155,7 +169,43 @@ $bone: #e2dcceff;
     --ion-color-dark-shade: #292929;
     --ion-color-dark-tint: #444444;
 
-    --ion-background-color: $cambridge;
+    // Ionic Card Styles
+    --ion-card-background: var(--retro-cream);
+    --ion-card-border-radius: var(--rounded);
+    // --ion-card-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    // --ion-card-padding: 16px;
+    // --ion-card-header-font-size: 1.25rem;
+    // --ion-card-header-font-weight: 600;
+    // --ion-card-content-font-size: 1rem;
+    // --ion-card-content-font-weight: 400;
+    // --ion-card-header-color: #211F1C;
+    --ion-card-header-background: var(--vanilla-dark);
+    --ion-card-content-color: var(--offblack);
+    --ion-card-border-color: var(--borders);
+    --ion-card-border-width: 1px;
+    --ion-card-border-style: solid;
+
+    // Ionic Button Styles
+    // --ion-button-background: #577590;
+    // --ion-button-color: #FAF7F2;
+    // --ion-button-border-radius: 4px;
+    // --ion-button-padding: 8px 16px;
+    // --ion-button-font-size: 1rem;
+    // --ion-button-font-weight: 500;
+    // --ion-button-hover-background: #4d677f;
+    // --ion-button-hover-color: #FAF7F2;
+    // --ion-button-active-background: #3b4f6a;
+    // --ion-button-active-color: #FAF7F2;
+    // --ion-button-disabled-background: #d3d3d3;
+    // --ion-button-disabled-color: #a9a9a9;
+    // --ion-button-border: 1px solid #211F1C;
+    // --ion-button-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    // --ion-button-text-transform: uppercase;
+    // --ion-button-transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+    // --ion-button-border-radius: 6px;
+    // --ion-button-padding: 0.5rem 1rem;
+
+
 
 }
 
@@ -203,15 +253,20 @@ ion-content {
     max-width: 2400px;
     min-width: 30rem;
 
-    // @media (min-width: 800px) {
-    //     grid-template-columns: 1fr 1fr;
-    // }
+    @media (min-width: 800px) {
+        grid-template-columns: 1fr 1fr;
+    }
 
-    // @media (min-width: 1400px) {
-    //     grid-template-columns: 1fr 1fr 1fr;
-    // }
+    @media (min-width: 1400px) {
+        grid-template-columns: 1fr 1fr 1fr;
+    }
 
-    // @media (min-width: 1800px) {
-    //     grid-template-columns: 1fr 1fr 1fr 1fr;
-    // }
+    @media (min-width: 1800px) {
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+    }
+}
+
+body,
+html {
+    overflow-y: auto !important;
 }

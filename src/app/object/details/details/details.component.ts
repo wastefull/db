@@ -83,6 +83,7 @@ export class DetailsComponent implements OnInit, OnDestroy {
             title = this.getArticleHeading(path[2]);
           }
           this.windowService.updateWindowTitle('article', title);
+          this.navigationService.setLoading(false);
         }
       }
     );

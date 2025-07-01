@@ -1,6 +1,12 @@
 <article>
   <h1>{{ article.title }}</h1>
   <p class="article-text" [innerHTML]="article.body || defaultArticle"></p>
+  @if (article.product) {
+  <div><strong>Product:</strong> {{ article.product }}</div>
+  }
+  @if (article.method) {
+  <div><strong>Method:</strong> {{ article.method }}</div>
+  }
   @if (article.author) {
   <div>By: {{ article.author }}</div>
   }

@@ -1,48 +1,33 @@
 @if (object) {
 <article [class]="'object' + object.id">
-
     <content>
         <article class="details">{{ object.meta.description }}</article>
-
     </content>
     <aside [class]="'object' + object.id">
         <app-image-display [object]="object" />
-        <!-- Compost Articles -->
-        @if (object.articles.ids && object.articles.ids.length > 0) {
-        <main>
+        <nav class="methods">
             @if (object.articles.compost.length) {
-            <!-- <div>
-                <h3>How to Compost</h3>
-                @for (art of object.articles.compost; track art) {
-                <app-article [article]="art"></app-article>
-                }
-            </div> -->
+            <ion-button class="compost" (click)="openProductPicker('compost')">Compost</ion-button>
             }
-            <!-- Recycle Articles -->
+            @else {
+            <ion-button class="compost" disabled>Compost</ion-button>}
             @if (object.articles.recycle.length) {
-            <!-- <div>
-                <h3>How to Recycle</h3>
-                @for (art of object.articles.recycle; track art) {
-                <app-article [article]="art"></app-article>
-                }
-            </div> -->
+            <ion-button class="recycle" (click)="openProductPicker('recycle')">Recycle</ion-button>
             }
-            <!-- Upcycle Articles -->
+            @else {
+            <ion-button class="recycle" disabled>Recycle</ion-button>}
+
             @if (object.articles.upcycle.length) {
-            <!-- <div>
-                <h3>How to Upcycle</h3>
-                @for (art of object.articles.upcycle; track art) {
-                <app-article [article]="art"></app-article>
-                }
-            </div> -->
+            <ion-button class="upcycle" (click)="openProductPicker('upcycle')">Upcycle</ion-button>
             }
-        </main>
-        }
-        @if (!object.articles.ids || object.articles.ids.length <= 0) { <main>
-            <!-- <h3>Compost, Recycling, and Upcycling {{ object.meta.name | titlecase }}</h3> -->
+            @else {
+            <ion-button class="upcycle" disabled>Upcycle</ion-button>}
+        </nav>
+        <!-- @if (!object.articles.ids || object.articles.ids.length <= 0) { <main>
             <p class="article-text" [innerHTML]="defaultArticle"></p>
             </main>
-            }
+            } -->
+
     </aside>
 </article>
 }

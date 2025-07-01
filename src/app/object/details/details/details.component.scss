@@ -1,6 +1,10 @@
 :host {
     --accent-color: #F003;
     --primary-color: #923434;
+    --pastel-yellow: #E4E3AC;
+    --dusty-rose: #E6BEB5;
+    --pastel-blue: #B8C8CB;
+    --offblack: #211F1C;
 }
 
 article {
@@ -28,4 +32,36 @@ article {
 .object0 {
     filter: blur(0.1rem);
     transition: filter 0.3s ease;
+}
+
+nav ion-button {
+    color: var(--offblack);
+    border: 1px solid #000;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 100%;
+    padding: 1px;
+    box-shadow: 3px 2px 4px #000;
+    background-color: var(--primary-color);
+
+    &.compost {
+        background-color: var(--pastel-yellow);
+    }
+
+    &.recycle {
+        background-color: var(--dusty-rose);
+    }
+
+    &.upcycle {
+        background-color: var(--pastel-blue);
+    }
+
+    &:hover {
+        color: white;
+        filter: hue-rotate(180deg);
+        animation: infinite alternate 0.5s;
+        box-shadow: none;
+    }
 }

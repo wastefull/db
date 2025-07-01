@@ -9,11 +9,14 @@ import { ImageDisplayComponent } from '../../../image-display/image-display.comp
 import { ArticleComponent } from '../article/article.component';
 import { CommonModule } from '@angular/common';
 import { switchMap } from 'rxjs/operators';
+import { WindowService } from '../../../theming/window/window.service';
+import { NavigationService } from '../../../navigation.service';
+import { IonicModule } from '@ionic/angular';
 
 @Component({
   selector: 'app-details',
   templateUrl: './details.component.html',
-  imports: [ImageDisplayComponent, ArticleComponent, CommonModule],
+  imports: [ImageDisplayComponent, CommonModule, IonicModule],
   styleUrls: ['./details.component.scss'],
 })
 export class DetailsComponent implements OnInit {
@@ -24,7 +27,9 @@ export class DetailsComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private objectService: MaterialService
+    private objectService: MaterialService,
+    private windowService: WindowService,
+    private navigationService: NavigationService
   ) {}
 
   ngOnInit() {
@@ -62,5 +67,25 @@ export class DetailsComponent implements OnInit {
             );
           });
       });
+  }
+
+  openProductPicker(articleType: 'compost' | 'recycle' | 'upcycle') {
+    const windowId = this.windowService.createUniqueWindowIDByType('article');
+    const outletName = windowId;
+    this.windowService.addWindow({
+      id: windowId,
+      title: `Pick a Product`,
+      icon: 'fa-box',
+      isActive: true,
+      isMinimized: false,
+      isMaximized: false,
+      buttons: [],
+      outlet: outletName,
+    });
+    this.navigationService.requestNavigation(outletName, [
+      'product-picker',
+      this.object.id,
+      articleType,
+    ]);
   }
 }

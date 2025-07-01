@@ -8,6 +8,8 @@ export interface Article {
   updated: string;
   source_table: string;
   target_names: string[];
+  product?: string; 
+  method?: string; 
 }
 export const defaultArticle: string = `Articles will cover the uses of the object, as well as potential issues
     its decomposition (or lack thereof) can create. Below will be cards for

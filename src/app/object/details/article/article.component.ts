@@ -1,20 +1,54 @@
-
-import { Component, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { MaterialService } from '../../object.service';
 import { Article, defaultArticle } from './article';
+import { marked } from 'marked';
 
 @Component({
   selector: 'app-article',
-  imports: [],
   templateUrl: './article.component.html',
+  standalone: true,
   // styleUrl: './article.component.scss',
 })
-export class ArticleComponent {
+export class ArticleComponent implements OnInit {
   public defaultArticle = defaultArticle;
-  @Input() material!: string;
-  @Input() article!: Article;
-  @Input() articleType!: string;
+  articles: Article[] = [];
+  material!: string;
+  articleType!: string;
+  product!: string;
+  method!: string;
+  loading = true;
+
+  constructor(
+    private route: ActivatedRoute,
+    private materialService: MaterialService
+  ) {}
+  parseMarkdown(md: string): string {
+    return marked.parse(md || '').toString();
+  }
+  ngOnInit() {
+    this.material = this.route.snapshot.params['objectId'];
+    this.articleType = this.route.snapshot.params['articleType'];
+    this.product = this.route.snapshot.params['product'];
+    this.method = this.route.snapshot.params['method'];
+    this.materialService
+      .getArticlesForMaterial(this.material)
+      .subscribe((articles: Article[]) => {
+        this.articles = articles.filter((a) => {
+          const matchesType = (a.source_table || '')
+            .toLowerCase()
+            .includes(this.articleType);
+          const matchesProduct =
+            this.product === 'all' || !a.product || a.product === this.product;
+          const matchesMethod =
+            this.method === 'all' || !a.method || a.method === this.method;
+          return matchesType && matchesProduct && matchesMethod;
+        });
+        this.loading = false;
+      });
+  }
+
   public setHeading() {
-    // Set the heading based on the type
     switch (this.articleType) {
       case 'compost':
         return 'How to Compost ' + this.material;
@@ -29,7 +63,7 @@ export class ArticleComponent {
       case 'hazards':
         return 'Hazard';
       default:
-        return 'How to ' + this.articleType + ' ' + this.material;
+        return 'How to Make Use of ' + this.material;
     }
   }
 }

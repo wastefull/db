@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MaterialService } from '../../object.service';
 import { Material } from '../../object';
@@ -12,6 +12,7 @@ import { switchMap } from 'rxjs/operators';
 import { WindowService } from '../../../theming/window/window.service';
 import { NavigationService } from '../../../navigation.service';
 import { IonicModule } from '@ionic/angular';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-details',
@@ -19,11 +20,12 @@ import { IonicModule } from '@ionic/angular';
   imports: [ImageDisplayComponent, CommonModule, IonicModule],
   styleUrls: ['./details.component.scss'],
 })
-export class DetailsComponent implements OnInit {
+export class DetailsComponent implements OnInit, OnDestroy {
   object: Material = defaultMaterial;
   articles: Article[] = [];
   defaultArticle: string = defaultArticle;
   loading = false;
+  private navigationSub?: Subscription;
 
   constructor(
     private route: ActivatedRoute,
@@ -67,25 +69,57 @@ export class DetailsComponent implements OnInit {
             );
           });
       });
+
+    // Subscribe to navigation events and update window title
+    this.navigationSub = this.navigationService.navigation$.subscribe(
+      ({ outlet, path }) => {
+        if (outlet === 'article' && Array.isArray(path)) {
+          let title = '';
+          if (path[0] === 'product-picker') {
+            title = 'Pick a Product';
+          } else if (path[0] === 'method-picker') {
+            title = 'Pick a Method';
+          } else if (path[0] === 'article') {
+            title = this.getArticleHeading(path[2]);
+          }
+          this.windowService.updateWindowTitle('article', title);
+        }
+      }
+    );
+  }
+
+  ngOnDestroy() {
+    this.navigationSub?.unsubscribe();
   }
 
   openProductPicker(articleType: 'compost' | 'recycle' | 'upcycle') {
-    const windowId = this.windowService.createUniqueWindowIDByType('article');
-    const outletName = windowId;
     this.windowService.addWindow({
-      id: windowId,
+      id: 'article',
       title: `Pick a Product`,
       icon: 'fa-box',
       isActive: true,
       isMinimized: false,
       isMaximized: false,
       buttons: [],
-      outlet: outletName,
+      outlet: 'article',
     });
-    this.navigationService.requestNavigation(outletName, [
+    this.navigationService.requestNavigation('article', [
       'product-picker',
       this.object.id,
       articleType,
     ]);
+  }
+
+  private getArticleHeading(articleType: string): string {
+    switch (articleType) {
+      case 'compost':
+        return 'How to Compost ' + (this.object.meta.name || '');
+      case 'recycle':
+        return 'How to Recycle ' + (this.object.meta.name || '');
+      case 'upcycle':
+        return 'How to Upcycle ' + (this.object.meta.name || '');
+      default:
+        return 'How to Make Use of ' + (this.object.meta.name || '');
+    }
   }
 }

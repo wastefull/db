@@ -26,16 +26,16 @@ export const routes: Routes = [
   {
     path: 'product-picker/:objectId/:articleType',
     component: ProductPickerComponent,
-    outlet: ':windowId',
+    outlet: 'article',
   },
   {
     path: 'method-picker/:objectId/:articleType/:product',
     component: MethodPickerComponent,
-    outlet: ':windowId',
+    outlet: 'article',
   },
   {
     path: 'article/:objectId/:articleType/:product/:method',
     component: ArticleComponent,
-    outlet: ':windowId',
+    outlet: 'article',
   },
 ];

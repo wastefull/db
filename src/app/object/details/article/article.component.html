@@ -1,6 +1,13 @@
+@if (loading) {
+<div class="spinner">Loading...</div>
+} @else {
+@if (articles.length === 0) {
+<div>No articles found.</div>
+} @else {
+@for (article of articles; track article.id) {
 <article>
   <h1>{{ article.title }}</h1>
-  <p class="article-text" [innerHTML]="article.body || defaultArticle"></p>
+  <div class="article-text" [innerHTML]="parseMarkdown(article.body || defaultArticle)"></div>
   @if (article.product) {
   <div><strong>Product:</strong> {{ article.product }}</div>
   }
@@ -12,3 +19,6 @@
   }
 </article>
 <hr />
+}
+}
+}

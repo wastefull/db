@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Inject } from '@angular/core';
 import { MaterialService } from '../../../object.service';
 import { NavigationService } from '../../../../navigation.service';
+import { IonicModule } from '@ionic/angular';
 
 @Component({
   selector: 'app-method-picker',
   templateUrl: './method-picker.component.html',
   styleUrl: './method-picker.component.scss',
+  imports: [IonicModule],
   standalone: true,
-  imports: [],
 })
 export class MethodPickerComponent implements OnInit {
   methods: string[] = [];
@@ -17,9 +17,9 @@ export class MethodPickerComponent implements OnInit {
   articleType!: string;
   product!: string;
   windowId!: string;
-  route: any;
 
   constructor(
+    private route: ActivatedRoute,
     private materialService: MaterialService,
     private navigationService: NavigationService
   ) {}
@@ -32,24 +32,26 @@ export class MethodPickerComponent implements OnInit {
     this.materialService
       .getArticlesForMaterial(this.objectId)
       .subscribe((articles) => {
-        this.methods = [
+        const methods = [
           ...new Set(
             articles
               .filter(
                 (a: any) =>
                   (a.source_table || '')
                     .toLowerCase()
-                    .includes(this.articleType) && a.product === this.product
+                    .includes(this.articleType) &&
+                  (this.product === 'all' || a.product === this.product)
               )
               .map((a: any) => a.method)
-              .filter((m: string | undefined) => !!m)
+              .filter((m: string | undefined): m is string => !!m)
           ),
         ] as string[];
+        this.methods = methods; // fallback
       });
   }
 
   pickMethod(method: string) {
-    this.navigationService.requestNavigation(this.windowId, [
+    this.navigationService.requestNavigation('article', [
       'article',
       this.objectId,
       this.articleType,

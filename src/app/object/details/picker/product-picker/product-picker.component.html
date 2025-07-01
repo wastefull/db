@@ -1,5 +1,9 @@
 <div>
+    @if (products.length === 0) {
+    <ion-button (click)="pickProduct('all')">See All</ion-button>
+    } @else {
     @for (product of products; track product) {
-    <button (click)="pickProduct(product)">{{ product }}</button>
+    <ion-button (click)="pickProduct(product)">{{ product }}</ion-button>
+    }
     }
 </div>

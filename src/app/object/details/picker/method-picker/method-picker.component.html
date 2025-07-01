@@ -1,5 +1,9 @@
 <div>
+    @if (methods.length === 0) {
+    <ion-button (click)="pickMethod('all')">See All</ion-button>
+    } @else {
     @for (method of methods; track method) {
-    <button (click)="pickMethod(method)">{{ method }}</button>
+    <ion-button (click)="pickMethod(method)">{{ method }}</ion-button>
+    }
     }
 </div>

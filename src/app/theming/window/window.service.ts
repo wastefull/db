@@ -81,4 +81,18 @@ export class WindowService {
   hasWindow(id: string): boolean {
     return this.windows.some((w) => w.id === id);
   }
+
+  getWindowById(id: string): AppWindow | undefined {
+    return this.windows.find((w) => w.id === id);
+  }
+
+  ngAfterViewInit() {
+    setTimeout(() => {
+      // Only update if the title is different
+      const currentWindow = this.getWindowById?.('article');
+      if (!currentWindow || currentWindow.title !== 'Pick a Product') {
+        this.updateWindowTitle('article', 'Pick a Product');
+      }
+    });
+  }
 }

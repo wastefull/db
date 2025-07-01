@@ -37,13 +37,13 @@ $bone: #e2dcceff;
 /* Variables for Ionic */
 :root {
     /* Set the background of the entire app */
-    --ion-background-color: $cambridge;
+    --ion-background-color: #9BC09B;
 
     /* Set the font family of the entire app */
     --ion-font-family: "Sniglet", system-ui;
     --ion-font-weight: 400;
     --ion-font-style: normal;
-    --ion-text-color: $offblack;
+    --ion-text-color: #211F1C;
     --ion-text-size: 12px; // don't think this is working
 
     /* Spacing */
@@ -56,18 +56,18 @@ $bone: #e2dcceff;
 
     /* Colors */
 
-    --ion-color-primary: $offblack;
+    --ion-color-primary: #211F1C;
     --ion-color-primary-rgb: 33,
         31,
         28;
-    --ion-color-primary-contrast: $retro-cream;
+    --ion-color-primary-contrast: #FAF7F2;
     --ion-color-primary-contrast-rgb: 255,
         255,
         255;
     --ion-color-primary-shade: #1d1b19;
     --ion-color-primary-tint: #373533;
 
-    --ion-color-secondary: $vanilla;
+    --ion-color-secondary: #E4E3AC;
     --ion-color-secondary-rgb: 228,
         227,
         172;
@@ -100,7 +100,7 @@ $bone: #e2dcceff;
     --ion-color-success-shade: #88a988;
     --ion-color-success-tint: #a5c6a5;
 
-    --ion-color-warning: $vanilla;
+    --ion-color-warning: #E4E3AC;
     --ion-color-warning-rgb: 228,
         227,
         172;
@@ -111,7 +111,7 @@ $bone: #e2dcceff;
     --ion-color-warning-shade: #c9c897;
     --ion-color-warning-tint: #e7e6b4;
 
-    --ion-color-danger: $old-rose;
+    --ion-color-danger: #D08476;
     --ion-color-danger-rgb: 208,
         132,
         118;
@@ -122,7 +122,7 @@ $bone: #e2dcceff;
     --ion-color-danger-shade: #b77468;
     --ion-color-danger-tint: #d59084;
 
-    --ion-color-light: $seagull-postman;
+    --ion-color-light: #577590;
     --ion-color-light-rgb: 87,
         117,
         144;
@@ -133,7 +133,7 @@ $bone: #e2dcceff;
     --ion-color-light-shade: #4d677f;
     --ion-color-light-tint: #68839b;
 
-    --ion-color-medium: $seagull-midnight;
+    --ion-color-medium: #1A535C;
     --ion-color-medium-rgb: 26,
         83,
         92;

@@ -1,8 +1,9 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title> <app-header [title]="title" (clearSearch)="onClearSearch()"></app-header>
+    <ion-title slot="primary">
+      <app-header [title]="title" (clearSearch)="onClearSearch()"></app-header>
     </ion-title>
-    <app-socials></app-socials>
+    <app-socials slot="end"></app-socials>
   </ion-toolbar>
 </ion-header>
 

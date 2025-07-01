@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { RouterModule, RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './home/header/header.component';
-import { PillgroupComponent } from './home/pillgroup/pillgroup.component';
 import { SocialsComponent } from './shared/socials/socials.component';
 import { IonicModule } from '@ionic/angular';
 import { WindowComponent } from './theming/window/window.component';
@@ -19,12 +18,12 @@ import { SearchService } from './search.service';
     RouterOutlet,
     RouterModule,
     HeaderComponent,
-    PillgroupComponent,
     SocialsComponent,
     IonicModule,
     WindowComponent,
   ],
   templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
   title = 'Wastefull';

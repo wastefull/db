@@ -1,14 +1,14 @@
 import { Component, Input, OnInit, OnDestroy } from '@angular/core';
-import { IonCardHeader } from '@ionic/angular/standalone';
 import { WindowButtonsComponent } from './window-buttons/window-buttons.component';
 import { AppWindow, defaultWindow } from '../window';
 import { IconRightComponent } from './icon-right/icon-right.component';
 import { NavigationService } from '../../../navigation.service';
 import { Subscription } from 'rxjs';
+import { IonicModule } from '@ionic/angular';
 
 @Component({
   selector: 'app-status-bar',
-  imports: [IonCardHeader, WindowButtonsComponent, IconRightComponent],
+  imports: [WindowButtonsComponent, IconRightComponent, IonicModule],
   templateUrl: './status-bar.component.html',
   styleUrl: './status-bar.component.scss',
 })

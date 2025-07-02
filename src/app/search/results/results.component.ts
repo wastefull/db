@@ -4,10 +4,11 @@ import { Material } from '../../object/object';
 import { RouterModule } from '@angular/router';
 import { WindowService } from '../../theming/window/window.service';
 import { NavigationService } from '../../navigation.service';
+import { IonicModule } from '@ionic/angular';
 
 @Component({
   selector: 'app-results',
-  imports: [RouterModule],
+  imports: [RouterModule, IonicModule],
   templateUrl: './results.component.html',
   styleUrls: ['./results.component.scss'],
 })

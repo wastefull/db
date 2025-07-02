@@ -2,12 +2,13 @@
   <ion-row class="ion-justify-content-center">
     <ion-col>
       <ion-row>
-        <ion-icon name="logo-discord" [src]="discordlink"></ion-icon></ion-row>
-      <ion-row>
-        <ion-icon name="logo-github" [src]="ghlink"></ion-icon>
+        <a [href]="discordlink"><ion-icon name="logo-discord"></ion-icon></a>
       </ion-row>
       <ion-row>
-        <ion-icon name="logo-instagram" [src]="instagramlink"></ion-icon>
+        <a [href]="ghlink"><ion-icon name="logo-github"></ion-icon></a>
+      </ion-row>
+      <ion-row>
+        <a [href]="instagramlink"><ion-icon name="logo-instagram"></ion-icon></a>
       </ion-row>
     </ion-col>
   </ion-row>

@@ -1,6 +1,10 @@
-<i class="ir fa-solid " [ngClass]="{
+@if (loading) {
+<ion-spinner name="dots" slot="end" aria-hidden="true"></ion-spinner>
+} @else {
+<ion-icon class="ir fa-solid " [ngClass]="{
     'fa-ellipsis-vertical': loading,
      'fa-spin': loading,
      'fa-fw': loading,
      'fa-check': !loading
-   }" [title]="loading ? 'Loading...' : 'Loaded'"></i>
+   }" name="checkmark-outline" slot="end" aria-hidden="true"></ion-icon>
+}

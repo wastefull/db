@@ -11,10 +11,11 @@ import { ResultsComponent } from './results/results.component';
 import { SearchService } from '../search.service';
 import { NavigationService } from '../navigation.service';
 import { Subscription } from 'rxjs';
+import { IonicModule } from '@ionic/angular';
 
 @Component({
   selector: 'app-search',
-  imports: [FormsModule, ResultsComponent],
+  imports: [FormsModule, ResultsComponent, IonicModule],
   templateUrl: './search.component.html',
   styleUrls: ['./search.component.scss'],
 })

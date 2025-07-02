@@ -1,8 +1,4 @@
-<section>
-  <form>
-    <input type="text" placeholder="Look up a thing" [ngModel]="query" name="query" (keydown)="onInputKeydown($event)"
-      (ngModelChange)="onInputChange($event)" />
-  </form>
-</section>
+<ion-searchbar [debounce]="500" type="text" placeholder="Look up a thing" show-clear-button="focus" [ngModel]="query"
+  name="query" (keydown)="onInputKeydown($event)" (ngModelChange)="onInputChange($event)"></ion-searchbar>
 <app-results [query]="query" (selectObject)="onSelectObject($event)"
   [highlightedIndex]="highlightedIndex"></app-results>

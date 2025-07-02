@@ -1,17 +1,14 @@
 @if (showResults) {
-<ng-container class="results-list" [class.loading]="loading">
-  <ul class="autocomplete-list">
-    @for (result of results; track result) {
-    <li [class.highlighted]="$index === highlightedIndex"
-      (click)="onResultClick(result)">
+<ion-list>
+  @for (result of results; track result) {
+  <ion-item [class.highlighted]="$index === highlightedIndex" (click)="onResultClick(result)">
+    <ion-label>
       {{ result.meta.name }}
-    </li>
-    }
-  </ul>
-  @if (loading) {
-  <div class="overlay-spinner">
-    <i class="fa fa-spinner fa-spin"></i>
-  </div>
+    </ion-label>
+  </ion-item>
   }
-</ng-container>
+  @if (loading) {
+  <ion-spinner name="dots" slot="end" aria-hidden="true"></ion-spinner>
+  }
+</ion-list>
 }

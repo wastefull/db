@@ -50,6 +50,12 @@
     /* Variables for Ionic */
     /* Set the background of the entire app */
     --ion-background-color: var(--bone);
+    --ion-background-color-rgb: 226, 220, 206;
+    --ion-background-color-contrast: var(--offblack);
+    --ion-background-color-contrast-rgb: 33, 31, 28;
+    --ion-background-color-shade: var(--vanilla-dark);
+    --ion-background-color-tint: var(--vanilla);
+
 
     /* Set the font family of the entire app */
     --ion-font-family: "Sniglet", system-ui;
@@ -59,11 +65,11 @@
     --ion-text-size: 12px;
 
     /* Spacing */
-    --ion-statusbar-padding: 10px;
+    --ion-statusbar-padding: 2rem;
     --ion-safe-area-top: 0px;
-    --ion-safe-area-bottom: 15px;
-    --ion-safe-area-right: 20px;
-    --ion-safe-area-left: 20px;
+    --ion-safe-area-bottom: 2rem;
+    --ion-safe-area-right: 2rem;
+    --ion-safe-area-left: 2rem;
 
     /* Ionic Colors */
 
@@ -148,33 +154,7 @@
     --ion-toolbar-title-margin: 0 0 4px 0;
     --ion-toolbar-title-padding: 0;
 
-    // Ionic Card Styles
-    --ion-card-background: var(--retro-cream);
-    --ion-card-border-radius: var(--rounded);
-    --ion-card-header-background: var(--vanilla-dark);
-    --ion-card-content-color: var(--offblack);
-    --ion-card-border-color: var(--borders);
-    --ion-card-border-width: 1px;
-    --ion-card-border-style: solid;
 
-    // Ionic Card Header Styles
-    --ion-card-header-padding: 0.25rem 0.5rem;
-    --ion-card-header-border-bottom: 1px solid var(--ion-color-primary-tint);
-
-    ion-card-header {
-        padding: 0.25rem 0.5rem;
-        border-bottom: 1px solid var(--ion-color-primary-tint);
-    }
-
-    // Ionic Card Title Styles
-    --ion-card-title-font-size: clamp(12px, 6vh, 24px);
-    --ion-card-title-font-weight: 300;
-    --ion-card-title-color: var(--ion-color-step-600, var(--ion-text-color-step-400, #666666));
-    --ion-card-title-margin: 0 0 4px 0;
-    --ion-card-title-padding: 0;
-    --ion-card-title-letter-spacing: 0.2px;
-    --ion-card-title-text-transform: uppercase;
-    --ion-card-title-width: 100%;
 
     // Ionic Button Styles
     --ion-button-background: var(--vanilla);
@@ -183,22 +163,65 @@
     --ion-button-padding: 0.5rem 1rem;
     --ion-button-box-shadow: 3px 2px 4px #000;
     --ion-button-transition: background-color 0.3s ease,
-    color 0.3s ease,
-    box-shadow 0.3s ease;
+        color 0.3s ease,
+        box-shadow 0.3s ease;
     --ion-button-border: 1px solid #000;
 
     // Ionic Grid Styles
-    --ion-grid-columns: 1;
-    --ion-grid-column-gap: .25rem;
-    --ion-grid-row-gap: .1rem;
-    --ion-grid-padding: .1rem;
-    --ion-grid-max-width: 2400px;
-    --ion-grid-min-width: 30rem;
-    --ion-grid-column-width: calc((100% - (var(--ion-grid-column-gap) * (var(--ion-grid-columns) - 1))) / var(--ion-grid-columns));
-    --ion-grid-column-min-width: 150px;
-    --ion-grid-column-max-width: calc((100% - (var(--ion-grid-column-gap) * (var(--ion-grid-columns) - 1))) / var(--ion-grid-columns));
-    --ion-grid-column-align-items: center;
-    --ion-grid-column-justify-content: center;
+    --ion-grid-padding: 0.5rem;
+    --ion-grid-padding-lg: 1rem;
+    --ion-grid-padding-md: 0.75rem;
+    --ion-grid-padding-sm: 0.25rem;
+    --ion-grid-padding-xl: 1.5rem;
+    --ion-grid-padding-xs: 0.125rem;
+
+    --ion-grid-width: 100%;
+    --ion-grid-width-lg: 1200px;
+    --ion-grid-width-md: 992px;
+    --ion-grid-width-sm: 768px;
+    --ion-grid-width-xl: 1400px;
+    --ion-grid-width-xs: 576px;
+
+
+    // Ionic Card Styles
+    --ion-card-background: var(--retro-cream);
+    --ion-card-content-color: var(--offblack);
+
+
+    // Ionic Input Styles
+    // Ionic documentation recommends creating a custom class to style inputs due to specificity requirements
+
+    // Per new update, nested rules need to appear after all of the custom property declarations
+
+    // Ionic Card Nested Styles
+    ion-card-header {
+        padding: 0.25rem 0.5rem;
+        border-bottom: 1px solid var(--ion-color-primary-tint);
+    }
+
+    ion-card {
+        background-color: var(--retro-cream);
+        color: var(--offblack);
+        border-radius: 6px;
+        border: 1px solid var(--borders);
+
+        margin: 0.5rem;
+        transition: background-color 0.3s ease,
+            color 0.3s ease,
+            box-shadow 0.3s ease;
+    }
+
+    ion-card-title {
+        font-size: clamp(12px, 6vh, 24px);
+        font-weight: 100;
+        color: var(--ion-color-step-600, var(--ion-text-color-step-400, #666666));
+        margin: 0 0 4px 0;
+        padding: 0 30px 0 30px;
+        letter-spacing: 0.2px;
+        text-transform: uppercase;
+        width: 100%;
+    }
+
 
     @media (min-width: 800px) {
         --ion-grid-template-columns: 1fr 1fr;

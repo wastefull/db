@@ -24,7 +24,6 @@ import { RouterOutlet, RouterModule } from '@angular/router';
     RouterModule,
   ],
   templateUrl: './window.component.html',
-  styleUrl: './window.component.scss',
 })
 export class WindowComponent implements AfterViewInit {
   @Input() window: AppWindow = generateWindow('Default Window');

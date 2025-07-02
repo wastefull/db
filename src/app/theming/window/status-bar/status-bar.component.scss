@@ -1,30 +1,30 @@
-.status-bar-buttons {
-    width: 60px;
-}
+// .status-bar-buttons {
+//     width: 60px;
+// }
 
-.status-bar-title {
-    text-align: center;
-    font-size: clamp(12px, 6vh, 24px);
-    font-weight: 300;
-    letter-spacing: 0.2px;
-    color: var(--ion-color-step-600, var(--ion-text-color-step-400, #666666));
-    pointer-events: none; // so dragging doesn't select title
-    font-size: 1.1rem;
-    text-align: center;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+// .status-bar-title {
+//     text-align: center;
+//     font-size: clamp(12px, 6vh, 24px);
+//     font-weight: 300;
+//     letter-spacing: 0.2px;
+//     color: var(--ion-color-step-600, var(--ion-text-color-step-400, #666666));
+//     pointer-events: none; // so dragging doesn't select title
+//     font-size: 1.1rem;
+//     text-align: center;
+//     white-space: nowrap;
+//     overflow: hidden;
+//     text-overflow: ellipsis;
 
-}
+// }
 
-ion-grid {
-    margin-inline-start: 0;
-    margin-inline-end: 0;
-    padding-bottom: 0;
-    padding-top: 3rem;
+// ion-card-header ion-grid {
+//     margin-inline-start: 0;
+//     margin-inline-end: 0;
+//     padding-bottom: 0;
+//     padding-top: 3rem;
 
-    ion-row {
-        align-items: center;
-        white-space: nowrap;
-    }
-}
+//     ion-row {
+//         align-items: center;
+//         white-space: nowrap;
+//     }
+// }

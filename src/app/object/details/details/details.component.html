@@ -1,28 +1,35 @@
 @if (object) {
-<article [class]="'object' + object.id">
-    <content>
-        <article class="details">{{ object.meta.description }}</article>
-    </content>
-    <aside [class]="'object' + object.id">
-        <app-image-display [object]="object" />
-        <nav class="methods">
-            @if (object.articles.compost.length) {
-            <ion-button class="compost" (click)="openProductPicker('compost')">Compost</ion-button>
-            }
-            @else {
-            <ion-button class="compost" disabled>Compost</ion-button>}
-            @if (object.articles.recycle.length) {
-            <ion-button class="recycle" (click)="openProductPicker('recycle')">Recycle</ion-button>
-            }
-            @else {
-            <ion-button class="recycle" disabled>Recycle</ion-button>}
+<ion-grid [class]="'object' + object.id">
+    <ion-row>
+        <ion-col><ion-row><app-image-display [object]="object" /></ion-row>
 
-            @if (object.articles.upcycle.length) {
-            <ion-button class="upcycle" (click)="openProductPicker('upcycle')">Upcycle</ion-button>
-            }
-            @else {
-            <ion-button class="upcycle" disabled>Upcycle</ion-button>}
-        </nav>
-    </aside>
-</article>
+            <ion-row>
+                <nav class="methods">
+                    @if (object.articles.compost.length) {
+                    <ion-button color="secondary" (click)="openProductPicker('compost')">Compost</ion-button>
+                    }
+                    @else {
+                    <ion-button color="secondary" disabled>Compost</ion-button>}
+                    @if (object.articles.recycle.length) {
+                    <ion-button color="tertiary" (click)="openProductPicker('recycle')">Recycle</ion-button>
+                    }
+                    @else {
+                    <ion-button color="tertiary" disabled>Recycle</ion-button>}
+
+                    @if (object.articles.upcycle.length) {
+                    <ion-button color="success" (click)="openProductPicker('upcycle')">Upcycle</ion-button>
+                    }
+                    @else {
+                    <ion-button color="success" disabled>Upcycle</ion-button>}
+                </nav>
+            </ion-row>
+        </ion-col>
+
+        <ion-col>
+            <article class="details">{{ object.meta.description }}</article>
+        </ion-col>
+
+    </ion-row>
+</ion-grid>
+
 }

@@ -6,7 +6,6 @@ import { Article } from '../article/article';
 import { defaultMaterial } from '../../object';
 import { defaultArticle } from '../article/article';
 import { ImageDisplayComponent } from '../../../image-display/image-display.component';
-import { ArticleComponent } from '../article/article.component';
 import { CommonModule } from '@angular/common';
 import { switchMap } from 'rxjs/operators';
 import { WindowService } from '../../../theming/window/window.service';
@@ -18,7 +17,6 @@ import { Subscription } from 'rxjs';
   selector: 'app-details',
   templateUrl: './details.component.html',
   imports: [ImageDisplayComponent, CommonModule, IonicModule],
-  styleUrls: ['./details.component.scss'],
 })
 export class DetailsComponent implements OnInit, OnDestroy {
   object: Material = defaultMaterial;

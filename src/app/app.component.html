@@ -8,17 +8,17 @@
 </ion-header>
 
 <ion-content>
-  <div class="divider" role="separator" aria-label="Divider"></div>
-  <nav class="right-side">
-  </nav>
-  <router-outlet></router-outlet>
-  <div class="centered-content">
-    <div class="window-grid">
+  <ion-grid class="ion-justify-content-center">
+    <ion-row class="ion-justify-content-center" size="12">
       @for (window of windows; track window) {
-      <app-window [window]="window" (outletReady)="onOutletReady($event)"
-        (requestNavigation)="requestNavigation($event.outlet, $event.path)">
-      </app-window>
+      <ion-col>
+        <app-window [window]="window" (outletReady)="onOutletReady($event)"
+          (requestNavigation)="requestNavigation($event.outlet, $event.path)">
+        </app-window>
+      </ion-col>
       }
-    </div>
-  </div>
+
+    </ion-row>
+  </ion-grid>
+  <router-outlet></router-outlet>
 </ion-content>

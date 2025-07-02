@@ -8,7 +8,6 @@ import { marked } from 'marked';
   selector: 'app-article',
   templateUrl: './article.component.html',
   standalone: true,
-  // styleUrl: './article.component.scss',
 })
 export class ArticleComponent implements OnInit {
   public defaultArticle = defaultArticle;

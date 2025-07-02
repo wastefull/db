@@ -13,21 +13,7 @@ $text: #211F1C;
 
 $rounded: 11.46px;
 
-ion-card-title {
-    color: var(--ion-color-step-600, var(--ion-text-color-step-400, #666666));
-    font-size: clamp(12px, 6vh, 24px);
-    font-weight: 300;
-    margin: 0 0 4px 0;
-    padding: 0;
-    letter-spacing: 0.2px;
-    text-transform: uppercase;
-    width: 100%;
-}
 
-ion-card-header {
-    padding: 0.25rem 0.5rem;
-    border-bottom: 1px solid lighten($offblack, 40%);
-}
 
 .status-bar-row {
     display: flex;

@@ -8,8 +8,8 @@
 </ion-header>
 
 <ion-content>
-  <ion-grid class="ion-justify-content-center">
-    <ion-row class="ion-justify-content-center" size="12">
+  <ion-grid [fixed]="true">
+    <ion-row class="ion-justify-content-center">
       @for (window of windows; track window) {
       <ion-col>
         <app-window [window]="window" (outletReady)="onOutletReady($event)"

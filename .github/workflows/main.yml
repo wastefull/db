@@ -1,3 +1,5 @@
+name: "Deploy to GitHub Pages"
+
 on:
   push:
     branches:
@@ -5,7 +7,7 @@ on:
   workflow_dispatch:
     inputs:
       skip_cache:
-        description: "Skip node_modules cache (useful after dependency changes)"
+        description: "Reinstall node_modules"
         required: false
         default: false
         type: boolean
@@ -38,17 +40,9 @@ jobs:
       - run: npm ci # dependencies
 
       - run: rm -rf dist # cleanup
-      - run: npx ng build --configuration=production --base-href=/ # attempting SPA build
+      - run: npx ng build --configuration=production --base-href=/
       - run: cp dist/app/index.html dist/app/404.html # fallback 404, index
       - uses: actions/upload-pages-artifact@v3 #upload artifact to pages
         with:
           path: dist/app
       - uses: actions/deploy-pages@v4 # deploy to pages
-
-# This condition means cache is USED when:
-# if: ${{ !inputs.skip_cache }}
-# - Normal pushes (inputs.skip_cache is false/undefined)
-# - Manual runs with checkbox unchecked (inputs.skip_cache is false)
-
-# Cache is SKIPPED when:
-# - Manual runs with checkbox checked (inputs.skip_cache is true)

@@ -1,14 +1,11 @@
-@if (showResults) {
-<ion-list>
-  @for (result of results; track result) {
-  <ion-item [class.highlighted]="$index === highlightedIndex" (click)="onResultClick(result)">
-    <ion-label>
-      {{ result.meta.name }}
-    </ion-label>
-  </ion-item>
-  }
-  @if (loading) {
-  <ion-spinner name="dots" slot="end" aria-hidden="true"></ion-spinner>
-  }
-</ion-list>
-}
+<ul class="list" *ngIf="showResults && results.length > 0">
+  <li *ngFor="let result of results; let i = index" class="list-item" [class.highlighted]="i === highlightedIndex"
+    (click)="onResultClick(result)">
+    {{ result.meta.name }}
+    <div class="spinner" *ngIf="loading"></div>
+  </li>
+</ul>
+
+<div *ngIf="showResults && results.length === 0" class="no-results">
+
+</div>

@@ -1,35 +1,39 @@
-@if (object) {
-<ion-grid [class]="'object' + object.id">
-    <ion-row>
-        <ion-col><ion-row><app-image-display [object]="object" /></ion-row>
+<div class="details-container" *ngIf="!loading">
+    <div class="object-header">
+        <h1>{{ object.meta.name }}</h1>
+        <app-image-display [object]="object"></app-image-display>
+    </div>
 
-            <ion-row>
-                <nav class="methods">
-                    @if (object.articles.compost.length) {
-                    <ion-button color="secondary" (click)="openProductPicker('compost')">Compost</ion-button>
-                    }
-                    @else {
-                    <ion-button color="secondary" disabled>Compost</ion-button>}
-                    @if (object.articles.recycle.length) {
-                    <ion-button color="tertiary" (click)="openProductPicker('recycle')">Recycle</ion-button>
-                    }
-                    @else {
-                    <ion-button color="tertiary" disabled>Recycle</ion-button>}
+    <div class="description" *ngIf="object.meta.description">
+        <p>{{ object.meta.description }}</p>
+    </div>
 
-                    @if (object.articles.upcycle.length) {
-                    <ion-button color="success" (click)="openProductPicker('upcycle')">Upcycle</ion-button>
-                    }
-                    @else {
-                    <ion-button color="success" disabled>Upcycle</ion-button>}
-                </nav>
-            </ion-row>
-        </ion-col>
+    <div class="actions">
+        <h2>What would you like to do?</h2>
 
-        <ion-col>
-            <article class="details">{{ object.meta.description }}</article>
-        </ion-col>
+        <div class="action-buttons">
+            <button class="btn action-btn" (click)="openProductPicker('compost')"
+                *ngIf="object.articles.compost.length > 0">
+                <i class="fa-solid fa-seedling"></i>
+                Compost
+            </button>
 
-    </ion-row>
-</ion-grid>
+            <button class="btn action-btn" (click)="openProductPicker('recycle')"
+                *ngIf="object.articles.recycle.length > 0">
+                <i class="fa-solid fa-recycle"></i>
+                Recycle
+            </button>
 
-}
+            <button class="btn action-btn" (click)="openProductPicker('upcycle')"
+                *ngIf="object.articles.upcycle.length > 0">
+                <i class="fa-solid fa-arrow-up"></i>
+                Upcycle
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="loading-container" *ngIf="loading">
+    <div class="spinner"></div>
+    <p>Loading material details...</p>
+</div>

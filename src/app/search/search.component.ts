@@ -1,23 +1,18 @@
-import {
-  Component,
-  Output,
-  EventEmitter,
-  ViewChild,
-  OnInit,
-  OnDestroy,
-} from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ResultsComponent } from './results/results.component';
-import { SearchService } from '../search.service';
-import { NavigationService } from '../navigation.service';
 import { Subscription } from 'rxjs';
-import { IonicModule } from '@ionic/angular';
+import { MaterialService } from '../object/object.service';
+import { SearchService } from '../search.service';
+import { WindowService } from '../theming/window/window.service';
+import { ResultsComponent } from './results/results.component';
 
 @Component({
   selector: 'app-search',
-  imports: [FormsModule, ResultsComponent, IonicModule],
+  imports: [CommonModule, FormsModule, ResultsComponent],
   templateUrl: './search.component.html',
   styleUrls: ['./search.component.scss'],
+  standalone: true,
 })
 export class SearchComponent implements OnInit, OnDestroy {
   query = '';
@@ -26,52 +21,69 @@ export class SearchComponent implements OnInit, OnDestroy {
   isLoading = false;
 
   private sub?: Subscription;
-  private loadingSub?: Subscription;
-
-  @Output() requestNavigation = new EventEmitter<{
-    outlet: string;
-    path: any;
-  }>();
 
   @ViewChild(ResultsComponent) resultsComponent?: ResultsComponent;
 
   constructor(
     private searchService: SearchService,
-    private navigationService: NavigationService
-  ) {}
+    private windowService: WindowService,
+    private materialService: MaterialService
+  ) {
+    console.log('SearchComponent constructor called');
+  }
 
   ngOnInit() {
+    console.log('SearchComponent ngOnInit called');
     this.sub = this.searchService.query$.subscribe((q) => {
+      console.log('Query changed to:', q);
       this.query = q;
       this.highlightedIndex = 0;
       this.selectionMade = false;
-    });
-
-    this.loadingSub = this.navigationService.loading$.subscribe((loading) => {
-      this.isLoading = loading;
     });
   }
 
   ngOnDestroy() {
     this.sub?.unsubscribe();
-    this.loadingSub?.unsubscribe();
   }
 
-  onInputChange(newValue: string) {
-    this.searchService.setQuery(newValue);
-    this.selectionMade = false;
+  onSearchBarClick() {
+    console.log('Search bar clicked!');
   }
 
-  onSelectObject(name: string) {
-    this.searchService.setQuery(name);
+  onInputChange(newValue: string | null) {
+    console.log('Input changed:', newValue);
+    if (newValue !== null && newValue !== undefined) {
+      this.query = newValue;
+      this.searchService.setQuery(newValue);
+      this.selectionMade = false;
+    }
+  }
+
+  onSelectObject(materialName: string) {
+    console.log('Object selected:', materialName);
+    this.materialService
+      .getMaterialByName(materialName)
+      .subscribe((material) => {
+        this.windowService.openDetailsWindow(material.id, material.meta.name);
+      });
+    this.searchService.setQuery(materialName);
     this.query = '';
   }
 
   onInputKeydown(event: KeyboardEvent) {
+    console.log('Key pressed:', event.key);
+
+    const target = event.target as HTMLInputElement;
+    if (target && target.value !== this.query) {
+      console.log('Updating query from keydown:', target.value);
+      this.onInputChange(target.value);
+    }
+
     if (this.selectionMade) {
       event.preventDefault();
       return;
     }
+
     const resultsLength = this.resultsComponent?.results.length ?? 0;
     if (event.key === 'ArrowDown') {
       this.highlightedIndex = Math.min(

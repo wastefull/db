@@ -1,31 +1,36 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, Inject, OnInit, Optional } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { WindowService } from '../../../../theming/window/window.service';
 import { MaterialService } from '../../../object.service';
-import { NavigationService } from '../../../../navigation.service';
-import { IonicModule } from '@ionic/angular';
+
 @Component({
   selector: 'app-product-picker',
-  imports: [IonicModule],
+  imports: [CommonModule],
   templateUrl: './product-picker.component.html',
-  styleUrl: './product-picker.component.scss',
-  providers: [MaterialService],
   standalone: true,
 })
 export class ProductPickerComponent implements OnInit {
   products: string[] = [];
   objectId!: string;
+  materialName!: string;
   articleType!: string;
-  windowId!: string;
 
   constructor(
-    private route: ActivatedRoute,
     private materialService: MaterialService,
-    private navigationService: NavigationService
+    private windowService: WindowService,
+    @Optional() @Inject('WINDOW_DATA') private windowData: any
   ) {}
 
   ngOnInit() {
-    this.objectId = this.route.snapshot.params['objectId'];
-    this.articleType = this.route.snapshot.params['articleType'];
+    if (this.windowData) {
+      this.objectId = this.windowData.materialId;
+      this.materialName = this.windowData.materialName;
+      this.articleType = this.windowData.articleType;
+      this.loadProducts();
+    }
+  }
+
+  private loadProducts() {
     if (this.articleType === 'compost') {
       this.products = ['soil'];
     } else {
@@ -45,18 +50,16 @@ export class ProductPickerComponent implements OnInit {
             ),
           ] as string[];
           this.products = products;
-          // If no products, allow fallback
         });
     }
   }
 
   pickProduct(product: string) {
-    console.log('pickProduct called with:', product);
-    this.navigationService.requestNavigation('article', [
-      'method-picker',
+    this.windowService.openMethodPicker(
       this.objectId,
+      this.materialName,
       this.articleType,
-      product,
-    ]);
+      product
+    );
   }
 }

@@ -1,7 +1,7 @@
-<ion-card>
-    <app-status-bar [window]="window" />
-
-    <ion-card-content>
-        <router-outlet #outlet [name]="window.outlet"></router-outlet>
-    </ion-card-content>
-</ion-card>
+<div class="card">
+    <app-status-bar [window]="window"></app-status-bar>
+    <div class="card-content">
+        <ng-container [ngComponentOutlet]="window.component ?? null" [ngComponentOutletInjector]="componentInjector">
+        </ng-container>
+    </div>
+</div>

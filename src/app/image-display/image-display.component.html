@@ -1,8 +1,13 @@
-<img class="object-thumb" [src]="object.image.url" alt="Exterior photo of {{ object.meta.name }}"
-  (error)="handleMissingImage($event)" />
-<div class="info">
-  @if (object && object.image.photographer) {
-  <small>Image credit <a
-      [href]="object.image.photographer.profile_url">{{object.image.photographer.username}}</a></small>
-  }
+<div class="image-container">
+  <img class="object-thumb" [src]="object.image.url" [alt]="'Exterior photo of ' + object.meta.name"
+    (error)="handleMissingImage($event)" />
+
+  <div class="info" *ngIf="object && object.image.photographer">
+    <small>
+      Image credit
+      <a [href]="object.image.photographer.profile_url" target="_blank" rel="noopener">
+        {{ object.image.photographer.username }}
+      </a>
+    </small>
+  </div>
 </div>

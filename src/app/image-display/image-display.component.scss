@@ -2,14 +2,45 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 100%;
+}
+
+.image-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 300px;
+}
+
+.object-thumb {
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--rounded);
+    border: 1px solid var(--borders);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 0.5rem;
 }
 
 .info {
     width: 100%;
     display: flex;
     justify-content: center;
+    margin-top: 0.25rem;
 }
 
 small {
     text-align: center;
+    color: var(--text);
+    font-size: 0.8rem;
+    opacity: 0.8;
+}
+
+small a {
+    color: var(--cambridge);
+    text-decoration: none;
+}
+
+small a:hover {
+    text-decoration: underline;
 }

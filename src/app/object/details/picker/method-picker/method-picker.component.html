@@ -1,9 +1,14 @@
-<div>
-    @if (methods.length === 0) {
-    <ion-button (click)="pickMethod('all')">See All</ion-button>
-    } @else {
-    @for (method of methods; track method) {
-    <ion-button (click)="pickMethod(method)">{{ method }}</ion-button>
-    }
-    }
+<div class="picker-container">
+    <h2>Select Method</h2>
+    <p>Choose how you want to process {{ materialName }} into {{ product }}:</p>
+
+    <ul class="list" *ngIf="methods.length > 0">
+        <li *ngFor="let method of methods" class="list-item" (click)="pickMethod(method)">
+            {{ method }}
+        </li>
+    </ul>
+
+    <div *ngIf="methods.length === 0" class="no-options">
+        <p>No methods available for this combination.</p>
+    </div>
 </div>

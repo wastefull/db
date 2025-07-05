@@ -1,38 +1,42 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, Inject, OnInit, Optional } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { WindowService } from '../../../../theming/window/window.service';
 import { MaterialService } from '../../../object.service';
-import { NavigationService } from '../../../../navigation.service';
-import { IonicModule } from '@ionic/angular';
 
 @Component({
   selector: 'app-method-picker',
   templateUrl: './method-picker.component.html',
-  styleUrl: './method-picker.component.scss',
-  imports: [IonicModule],
+  imports: [CommonModule],
   standalone: true,
 })
 export class MethodPickerComponent implements OnInit {
-  methods: string[] = [];
+  methods: string[] = ['DIY', 'Industrial', 'Experimental'];
   objectId!: string;
+  materialName!: string;
   articleType!: string;
   product!: string;
-  windowId!: string;
 
   constructor(
-    private route: ActivatedRoute,
     private materialService: MaterialService,
-    private navigationService: NavigationService
+    private windowService: WindowService,
+    @Optional() @Inject('WINDOW_DATA') private windowData: any
   ) {}
 
   ngOnInit() {
-    this.objectId = this.route.snapshot.params['objectId'];
-    this.articleType = this.route.snapshot.params['articleType'];
-    this.product = this.route.snapshot.params['product'];
-    this.windowId = this.route.outlet;
+    if (this.windowData) {
+      this.objectId = this.windowData.materialId;
+      this.materialName = this.windowData.materialName;
+      this.articleType = this.windowData.articleType;
+      this.product = this.windowData.product;
+      this.loadMethods();
+    }
+  }
+
+  private loadMethods() {
     this.materialService
       .getArticlesForMaterial(this.objectId)
       .subscribe((articles) => {
-        const methods = [
+        const availableMethods = [
           ...new Set(
             articles
               .filter(
@@ -46,17 +50,26 @@ export class MethodPickerComponent implements OnInit {
               .filter((m: string | undefined): m is string => !!m)
           ),
         ] as string[];
-        this.methods = methods; // fallback
+
+        this.methods = this.methods.filter((method) =>
+          availableMethods.some((available) =>
+            available.toLowerCase().includes(method.toLowerCase())
+          )
+        );
+
+        if (this.methods.length === 0) {
+          this.methods = ['DIY', 'Industrial', 'Experimental'];
+        }
       });
   }
 
   pickMethod(method: string) {
-    this.navigationService.requestNavigation('article', [
-      'article',
+    this.windowService.openArticle(
       this.objectId,
+      this.materialName,
       this.articleType,
       this.product,
-      method,
-    ]);
+      method
+    );
   }
 }

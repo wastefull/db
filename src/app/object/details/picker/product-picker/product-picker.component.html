@@ -1,9 +1,14 @@
-<div>
-    @if (products.length === 0) {
-    <ion-button (click)="pickProduct('all')">See All</ion-button>
-    } @else {
-    @for (product of products; track product) {
-    <ion-button (click)="pickProduct(product)">{{ product }}</ion-button>
-    }
-    }
+<div class="picker-container">
+    <h2>Select Product</h2>
+    <p>Choose what you want to make from {{ materialName }}:</p>
+
+    <ul class="list" *ngIf="products.length > 0">
+        <li *ngFor="let product of products" class="list-item" (click)="pickProduct(product)">
+            {{ product }}
+        </li>
+    </ul>
+
+    <div *ngIf="products.length === 0" class="no-options">
+        <p>No products available for this material type.</p>
+    </div>
 </div>

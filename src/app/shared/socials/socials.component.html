@@ -1,15 +1,17 @@
-<ion-grid>
-  <ion-row class="ion-justify-content-center">
-    <ion-col>
-      <ion-row>
-        <a [href]="discordlink"><ion-icon name="logo-discord"></ion-icon></a>
-      </ion-row>
-      <ion-row>
-        <a [href]="ghlink"><ion-icon name="logo-github"></ion-icon></a>
-      </ion-row>
-      <ion-row>
-        <a [href]="instagramlink"><ion-icon name="logo-instagram"></ion-icon></a>
-      </ion-row>
-    </ion-col>
-  </ion-row>
-</ion-grid>
+<div class="grid">
+  <div class="row justify-content-center">
+    <div class="col">
+      <div class="social-links">
+        <a [href]="discordlink" target="_blank" rel="noopener">
+          <i class="fa-brands fa-discord"></i>
+        </a>
+        <a [href]="ghlink" target="_blank" rel="noopener">
+          <i class="fa-brands fa-github"></i>
+        </a>
+        <a [href]="instagramlink" target="_blank" rel="noopener">
+          <i class="fa-brands fa-instagram"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,20 +1,9 @@
-/* You can add global styles to this file, and also import other style files */
-@import '@ionic/angular/css/core.css';
-@import '@ionic/angular/css/normalize.css';
-@import '@ionic/angular/css/structure.css';
-@import '@ionic/angular/css/typography.css';
-@import '@ionic/angular/css/padding.css';
-@import '@ionic/angular/css/float-elements.css';
-@import '@ionic/angular/css/text-alignment.css';
-@import '@ionic/angular/css/text-transformation.css';
-@import '@ionic/angular/css/flex-utils.css';
-@import '@ionic/angular/css/display.css';
 @import 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css';
 
 /* --------------------------------------------------------
  * Global Styles
  * --------------------------------------------------------
- * This file contains global styles for the Ionic application.
+ * This file contains global styles for the application.
  * It includes color variables, font settings, and responsive design.
  * -------------------------------------------------------- */
 /* And because I always forget: */
@@ -47,313 +36,565 @@
     --apple-green: #84b527ff;
     --bone: #e2dcceff;
 
-    /* Variables for Ionic */
-    /* Set the background of the entire app */
-    --ion-background-color: var(--bone);
-    --ion-background-color-rgb: 226, 220, 206;
-    --ion-background-color-contrast: var(--offblack);
-    --ion-background-color-contrast-rgb: 33, 31, 28;
-    --ion-background-color-shade: var(--vanilla-dark);
-    --ion-background-color-tint: var(--vanilla);
+    /* App-wide styles */
+    --background-color: var(--bone);
+    --font-family: "Sniglet", system-ui;
+    --font-weight: 400;
+    --font-style: normal;
+    --text-color: var(--text);
+    --text-size: 12px;
 
+    /* Layout Variables */
+    --header-height: 60px;
+    --content-padding: 1rem;
+    --window-min-width: 320px;
+    --window-max-width: 400px;
+    --grid-gap: 1rem;
 
-    /* Set the font family of the entire app */
-    --ion-font-family: "Sniglet", system-ui;
-    --ion-font-weight: 400;
-    --ion-font-style: normal;
-    --ion-text-color: var(--text);
-    --ion-text-size: 12px;
+    /* Calculated breakpoints */
+    --single-window-width: calc(var(--window-max-width) + 2 * var(--content-padding));
+    --dual-window-width: calc(2 * var(--window-max-width) + var(--grid-gap) + 2 * var(--content-padding));
+    --triple-window-width: calc(3 * var(--window-max-width) + 2 * var(--grid-gap) + 2 * var(--content-padding));
+    --quad-window-width: calc(4 * var(--window-max-width) + 3 * var(--grid-gap) + 2 * var(--content-padding));
 
-    /* Spacing */
-    --ion-statusbar-padding: 2rem;
-    --ion-safe-area-top: 0px;
-    --ion-safe-area-bottom: 2rem;
-    --ion-safe-area-right: 2rem;
-    --ion-safe-area-left: 2rem;
+    /* Button Styles */
+    --button-background: var(--vanilla);
+    --button-color: var(--offblack);
+    --button-border-radius: 6px;
+    --button-padding: 0.5rem 1rem;
+    --button-box-shadow: 3px 2px 4px #000;
+    --button-transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+    --button-border: 1px solid #000;
 
-    /* Ionic Colors */
+    /* Card Styles */
+    --card-background: var(--retro-cream);
+    --card-content-color: var(--offblack);
 
-    --ion-color-primary: var(--offblack);
-    --ion-color-primary-rgb: 33, 31, 28;
-    --ion-color-primary-contrast: #ffffff;
-    --ion-color-primary-contrast-rgb: 255, 255, 255;
-    --ion-color-primary-shade: #1d1b19;
-    --ion-color-primary-tint: #373533;
+    /* Header Styles */
+    --header-background: var(--vanilla-dark);
+    --header-border-bottom: 1px solid var(--offblack);
+    --header-border-radius: var(--rounded);
+    --header-padding: 0.5rem 1rem;
+}
 
-    --ion-color-secondary: var(--vanilla);
-    --ion-color-secondary-rgb: 228, 227, 172;
-    --ion-color-secondary-contrast: #000000;
-    --ion-color-secondary-contrast-rgb: 0, 0, 0;
-    --ion-color-secondary-shade: #c9c897;
-    --ion-color-secondary-tint: #e7e6b4;
+/* Base styles */
+html,
+body {
+    margin: 0;
+    padding: 0;
+    font-family: var(--font-family);
+    background-color: var(--background-color);
+    color: var(--text-color);
+    height: 100vh;
+    overflow: auto;
+}
 
-    --ion-color-tertiary: var(--pastel-blue);
-    --ion-color-tertiary-rgb: 184, 200, 203;
-    --ion-color-tertiary-contrast: #000000;
-    --ion-color-tertiary-contrast-rgb: 0, 0, 0;
-    --ion-color-tertiary-shade: #a2b0b3;
-    --ion-color-tertiary-tint: #bfced0;
+/* App Layout */
+.app-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    max-height: 100vh;
+}
 
-    --ion-color-success: var(--cambridge);
-    --ion-color-success-rgb: 155, 192, 155;
-    --ion-color-success-contrast: #000000;
-    --ion-color-success-contrast-rgb: 0, 0, 0;
-    --ion-color-success-shade: #88a988;
-    --ion-color-success-tint: #a5c6a5;
+/* Header */
+.header {
+    background: var(--header-background);
+    border-bottom: var(--header-border-bottom);
+    height: var(--header-height);
+    flex-shrink: 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
 
-    --ion-color-warning: #ffc409;
-    --ion-color-warning-rgb: 255, 196, 9;
-    --ion-color-warning-contrast: #000000;
-    --ion-color-warning-contrast-rgb: 0, 0, 0;
-    --ion-color-warning-shade: #e0ac08;
-    --ion-color-warning-tint: #ffca22;
+.toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+    padding: 0 1rem;
+}
 
-    --ion-color-danger: var(--dusty-rose);
-    --ion-color-danger-rgb: 230, 190, 181;
-    --ion-color-danger-contrast: #000000;
-    --ion-color-danger-contrast-rgb: 0, 0, 0;
-    --ion-color-danger-shade: #caa79f;
-    --ion-color-danger-tint: #e9c5bc;
+.title {
+    flex: 1;
+    text-align: center;
+    font-size: 1rem;
+    margin: 0;
+    min-width: 0;
+}
 
-    --ion-color-light: var(--retro-cream);
-    --ion-color-light-rgb: 250, 247, 242;
-    --ion-color-light-contrast: #000000;
-    --ion-color-light-contrast-rgb: 0, 0, 0;
-    --ion-color-light-shade: #dcd9d5;
-    --ion-color-light-tint: #fbf8f3;
+/* Content Area */
+.content {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: auto;
+    padding: var(--content-padding);
+    min-height: 0;
+}
 
-    --ion-color-medium: var(--seagull-postman);
-    --ion-color-medium-rgb: 87, 117, 144;
-    --ion-color-medium-contrast: #ffffff;
-    --ion-color-medium-contrast-rgb: 255, 255, 255;
-    --ion-color-medium-shade: #4d677f;
-    --ion-color-medium-tint: #68839b;
+/* Window Grid System - Masonry with Gap Control */
+.windows-grid {
+    display: grid;
+    gap: var(--grid-gap);
+    align-items: start;
+    justify-content: center;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 1rem;
 
-    --ion-color-dark: var(--seagull-midnight);
-    --ion-color-dark-rgb: 26, 83, 92;
-    --ion-color-dark-contrast: #ffffff;
-    --ion-color-dark-contrast-rgb: 255, 255, 255;
-    --ion-color-dark-shade: #174951;
-    --ion-color-dark-tint: #31646c;
+    grid-template-columns: repeat(auto-fit, minmax(var(--window-min-width), var(--window-max-width)));
+    grid-auto-rows: min-content;
 
-    // Ionic Header Styles
-    --ion-header-background: var(--vanilla-dark);
-    --ion-header-border-bottom: 1px solid var(--ion-color-primary-tint);
-    --ion-header-border-radius: var(--rounded);
-    --ion-header-padding: 0.5rem 1rem;
+    /* Enable masonry when supported */
+    grid-template-rows: masonry;
 
-    // Ionic Toolbar Styles
-    --ion-toolbar-background: var(--vanilla-dark);
-    --ion-toolbar-border-bottom: 1px solid var(--ion-color-primary-tint);
-    --ion-toolbar-border-radius: var(--rounded);
-    --ion-toolbar-padding: 0.5rem 1rem;
-    --ion-toolbar-color: var(--offblack);
-    --ion-toolbar-title-font-size: clamp(12px, 6vh, 24px);
-    --ion-toolbar-title-font-weight: 300;
-    --ion-toolbar-title-color: var(--ion-color-step-600, var(--ion-text-color-step-400, #666666));
-    --ion-toolbar-title-margin: 0 0 4px 0;
-    --ion-toolbar-title-padding: 0;
+    max-width: var(--quad-window-width);
+}
 
+.window {
+    width: 100%;
+    max-width: var(--window-max-width);
+    min-width: var(--window-min-width);
+}
 
+/* Mobile: Single column */
+@media (max-width: 863px) {
+    .windows-grid {
+        grid-template-columns: minmax(var(--window-min-width), var(--window-max-width));
+        max-width: var(--single-window-width);
+    }
+}
 
-    // Ionic Button Styles
-    --ion-button-background: var(--vanilla);
-    --ion-button-color: var(--offblack);
-    --ion-button-border-radius: 6px;
-    --ion-button-padding: 0.5rem 1rem;
-    --ion-button-box-shadow: 3px 2px 4px #000;
-    --ion-button-transition: background-color 0.3s ease,
-        color 0.3s ease,
-        box-shadow 0.3s ease;
-    --ion-button-border: 1px solid #000;
+/* Fix for the gap issue: Force 2 columns in mid-range with column control */
+@media (min-width: 864px) and (max-width: 1296px) {
+    .windows-grid {
+        grid-template-columns: repeat(2, minmax(var(--window-min-width), var(--window-max-width)));
+        max-width: var(--dual-window-width);
+        justify-content: center;
 
-    // Ionic Grid Styles
-    --ion-grid-padding: 0.5rem;
-    --ion-grid-padding-lg: 1rem;
-    --ion-grid-padding-md: 0.75rem;
-    --ion-grid-padding-sm: 0.25rem;
-    --ion-grid-padding-xl: 1.5rem;
-    --ion-grid-padding-xs: 0.125rem;
-
-    --ion-grid-width: 576px;
-
-    --ion-grid-width-xl: 1400px;
-    --ion-grid-width-xs: 576px;
-
-
-    // Ionic Card Styles
-    --ion-card-background: var(--retro-cream);
-    --ion-card-content-color: var(--offblack);
-
-
-    // Ionic Input Styles
-    // Ionic documentation recommends creating a custom class to style inputs due to specificity requirements
-
-    // Per new update, nested rules need to appear after all of the custom property declarations
-
-    // Ionic Card Nested Styles
-    ion-card-header {
-        padding: 0.25rem 0.5rem;
-        border-bottom: 1px solid var(--ion-color-primary-tint);
-        max-height: 3rem;
+        /* Keep masonry enabled - accept gap as known issue */
+        grid-template-rows: masonry;
+        grid-auto-rows: min-content;
     }
 
-    ion-card {
-        background-color: var(--retro-cream);
-        color: var(--offblack);
-        border-radius: 6px;
-        border: 1px solid var(--borders);
-
-        margin: 0.5rem;
-        transition: background-color 0.3s ease,
-            color 0.3s ease,
-            box-shadow 0.3s ease;
-
-        max-width: 650px;
+    /* Search window always at top of column 1 */
+    .window:nth-child(1) {
+        grid-column: 1;
     }
 
-    ion-card-title {
-        font-size: clamp(12px, 6vh, 24px);
-        font-weight: 100;
-        color: var(--ion-color-step-600, var(--ion-text-color-step-400, #666666));
-        margin: 0 0 4px 0;
-        padding: 0 30px 0 30px;
-        letter-spacing: 0.2px;
-        text-transform: uppercase;
+    /* Second window in column 2 */
+    .window:nth-child(2) {
+        grid-column: 2;
     }
 
-
-    @media (min-width: 800px) {
-        --ion-grid-template-columns: 1fr 1fr;
+    /* Third window in column 1 (below search, may have gap) */
+    .window:nth-child(3) {
+        grid-column: 1;
     }
 
-    @media (min-width: 1400px) {
-        --ion-grid-template-columns: 1fr 1fr 1fr;
+    /* Fourth window in column 2 */
+    .window:nth-child(4) {
+        grid-column: 2;
     }
 
-    @media (min-width: 1800px) {
-        --ion-grid-template-columns: 1fr 1fr 1fr 1fr;
+    /* Continue pattern */
+    .window:nth-child(5) {
+        grid-column: 1;
     }
 
-    html,
-    body {
-        overflow-y: scroll;
-        overflow: visible;
+    .window:nth-child(6) {
+        grid-column: 2;
+    }
+}
+
+/* Desktop: Allow auto-fit for 3+ windows */
+@media (min-width: 1297px) {
+    .windows-grid {
+        grid-template-columns: repeat(auto-fit, minmax(var(--window-min-width), var(--window-max-width)));
+        max-width: var(--quad-window-width);
     }
 
-    /* --------------------------------------------------------
-     * Object Styles
-     * --------------------------------------------------------
-     * Styles for the object details and display components.
-     * -------------------------------------------------------- */
-    // Blur default placeholder object during loading
-    .object0 {
-        filter: blur(0.1rem);
-        transition: filter 0.3s ease;
+    /* Reset explicit positioning for desktop */
+    .window {
+        grid-column: auto;
+        grid-row: auto;
+    }
+}
+
+/* Fallback for browsers without masonry support */
+@supports not (grid-template-rows: masonry) {
+    .windows-grid {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-start;
+        justify-content: center;
     }
 
-    .status-bar-buttons {
-        width: 60px;
+    .window {
+        flex: 0 0 var(--window-max-width);
     }
 
-    .status-bar-title {
-        text-align: center;
-        font-size: clamp(12px, 6vh, 24px);
-        font-weight: 300;
-        letter-spacing: 0.2px;
-        color: var(--ion-color-step-600, var(--ion-text-color-step-400, #666666));
-        pointer-events: none; // so dragging doesn't select title
-        font-size: 1.1rem;
-        text-align: center;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-
-    }
-
-    ion-card-header ion-grid {
-        margin-inline-start: 0;
-        margin-inline-end: 0;
-        padding-bottom: 0;
-        padding-top: 3rem;
-
-        ion-row {
-            align-items: center;
-            white-space: nowrap;
-        }
-    }
-
-    app-logo img {
-        max-width: 100px;
-        min-width: 50px;
-        overflow: visible;
-        margin-left: auto;
-        margin-right: auto;
-        display: block;
-    }
-
-    app-results {
-        .results-list.loading {
-            pointer-events: none;
-            opacity: 0.5;
-        }
-
-        .overlay-spinner {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            display: flex;
-
-            align-items: center;
+    /* Force specific behavior in problematic range - MATCH THE MAIN RULES */
+    @media (min-width: 864px) and (max-width: 1296px) {
+        .windows-grid {
             justify-content: center;
-            background: rgba(255, 255, 255, 0.7);
-            z-index: 10;
+            max-width: var(--dual-window-width);
+            display: grid;
+            /* Override flex for precise control */
+            grid-template-columns: repeat(2, minmax(var(--window-min-width), var(--window-max-width)));
         }
 
-        .object.disabled {
-            pointer-events: none;
-            opacity: 0.5;
+        /* Same positioning as main rules - search window at top */
+        .window:nth-child(1) {
+            grid-column: 1;
+            grid-row: 1;
+            /* Changed from 2 to 1 */
         }
 
-        .autocomplete-list .highlighted {
-            background: #e6bcf5;
-            color: #211f1c;
+        .window:nth-child(2) {
+            grid-column: 2;
+            grid-row: 1;
         }
 
-        ul.autocomplete-list {
-            list-style: none;
-            padding-left: 0;
-            margin: 0;
+        .window:nth-child(3) {
+            grid-column: 1;
+            grid-row: 2;
+            /* Changed from 1 to 2 */
         }
 
-        ul.autocomplete-list li {
-            list-style: none;
+        .window:nth-child(4) {
+            grid-column: 2;
+            grid-row: 2;
+        }
+
+        .window:nth-child(5) {
+            grid-column: 1;
+            grid-row: 3;
+        }
+
+        .window:nth-child(6) {
+            grid-column: 2;
+            grid-row: 3;
         }
     }
+}
 
-    app-logo {
-        cursor: pointer;
+.card {
+    background: var(--card-background);
+    border-radius: 6px;
+    border: 1px solid var(--borders);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    height: fit-content;
+    width: 100%;
+    max-width: var(--window-max-width);
+    min-width: var(--window-min-width);
+    box-sizing: border-box;
+}
+
+.card-header {
+    padding: 0.5rem;
+    border-bottom: 1px solid var(--borders);
+    background: var(--header-background);
+    min-height: 2.5rem;
+    display: flex;
+    align-items: center;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+.card-content {
+    padding: 1rem;
+    color: var(--card-content-color);
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow-wrap: break-word;
+}
+
+.card-title {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 500;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Status Bar Grid */
+.status-bar-row {
+    display: grid;
+    grid-template-columns: 60px 1fr 60px;
+    align-items: center;
+    width: 100%;
+    gap: 0.5rem;
+}
+
+.status-bar-buttons {
+    justify-self: start;
+}
+
+.status-bar-title {
+    justify-self: center;
+}
+
+.status-bar-icon {
+    justify-self: end;
+}
+
+/* Social Links */
+.social-links {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.social-links a {
+    color: var(--offblack);
+    font-size: 1rem;
+    transition: color 0.3s ease;
+}
+
+.social-links a:hover {
+    color: var(--cambridge);
+}
+
+/* Button Styles */
+.btn {
+    background: var(--button-background);
+    color: var(--button-color);
+    border: var(--button-border);
+    border-radius: var(--button-border-radius);
+    padding: var(--button-padding);
+    box-shadow: var(--button-box-shadow);
+    transition: var(--button-transition);
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.9rem;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+}
+
+.btn:hover {
+    background: var(--cambridge);
+    transform: translateY(-1px);
+}
+
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Color variants */
+.btn.secondary {
+    background: var(--vanilla);
+    color: var(--offblack);
+}
+
+.btn.tertiary {
+    background: var(--pastel-blue);
+    color: var(--offblack);
+}
+
+.btn.success {
+    background: var(--cambridge);
+    color: var(--offblack);
+}
+
+/* List Styles */
+.list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    background: white;
+    border-radius: 4px;
+    border: 1px solid var(--borders);
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.list-item {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.list-item:last-child {
+    border-bottom: none;
+}
+
+.list-item:hover {
+    background-color: #f5f5f5;
+}
+
+.list-item.highlighted {
+    background-color: var(--cambridge);
+    color: white;
+}
+
+/* Icon Styles */
+.icon {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    vertical-align: middle;
+}
+
+/* Spinner */
+.spinner {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid var(--cambridge);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
     }
 
-    ion-searchbar {
-        --background: #ffffff;
-        --color: var(--offblack);
-        --placeholder-color: var(--offblack);
-        --placeholder-opacity: 0.8;
-        --padding-bottom: 10px;
-        --padding-end: 10px;
-        --padding-start: 10px;
-        --padding-top: 10px;
-
-        max-height: 60px;
-        max-width: 500px;
-        border-radius: 5px;
-        border: 1px solid var(--offblack);
-        font-size: 1rem;
-        box-shadow: none;
-        margin-left: auto;
-        margin-right: auto;
+    100% {
+        transform: rotate(360deg);
     }
+}
+
+/* Search input styles */
+.search-container {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 10px;
+}
+
+.search-input {
+    width: 100%;
+    padding: 10px 15px;
+    border: 1px solid var(--offblack);
+    border-radius: 5px;
+    background: #ffffff;
+    color: var(--offblack);
+    font-size: 1rem;
+    font-family: var(--font-family);
+    box-shadow: none;
+    transition: border-color 0.3s ease;
+}
+
+.search-input::placeholder {
+    color: var(--offblack);
+    opacity: 0.8;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--cambridge);
+    box-shadow: 0 0 0 2px rgba(155, 192, 155, 0.2);
+}
+
+.search-input:hover {
+    border-color: var(--cambridge-dark);
+}
+
+/* Picker Styles */
+.picker-container {
+    padding: 1rem;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.picker-container h2 {
+    color: var(--offblack);
+    margin-bottom: 0.5rem;
+    text-align: center;
+}
+
+.picker-container p {
+    color: var(--text);
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.no-options {
+    text-align: center;
+    color: var(--text);
+    font-style: italic;
+}
+
+.details-container {
+    padding: 1rem;
+}
+
+.object-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.object-header h1 {
+    color: var(--offblack);
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+}
+
+.description {
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.actions h2 {
+    color: var(--offblack);
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    max-width: 300px;
+    margin: 0 auto;
+}
+
+.action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1rem;
+    font-size: 1.1rem;
+}
+
+.action-btn i {
+    font-size: 1.2rem;
+}
+
+.loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    gap: 1rem;
+}
+
+/* Social links */
+.social-links {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.social-links a {
+    color: var(--offblack);
+    font-size: 1.2rem;
+    transition: color 0.3s ease;
+}
+
+.social-links a:hover {
+    color: var(--cambridge);
 }

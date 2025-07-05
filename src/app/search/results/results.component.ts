@@ -1,14 +1,12 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { MaterialService } from '../../object/object.service';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { Material } from '../../object/object';
-import { RouterModule } from '@angular/router';
+import { MaterialService } from '../../object/object.service';
 import { WindowService } from '../../theming/window/window.service';
-import { NavigationService } from '../../navigation.service';
-import { IonicModule } from '@ionic/angular';
 
 @Component({
   selector: 'app-results',
-  imports: [RouterModule, IonicModule],
+  imports: [CommonModule],
   templateUrl: './results.component.html',
   styleUrls: ['./results.component.scss'],
 })
@@ -19,18 +17,11 @@ export class ResultsComponent {
   loading = false;
 
   @Output() selectObject = new EventEmitter<string>();
-  // Bubble up the (requestNavigation) event from ResultsComponent → SearchComponent → WindowComponent → AppComponent
-  @Output() requestNavigation = new EventEmitter<{
-    outlet: string;
-    path: any;
-  }>();
-
   @Input() highlightedIndex = 0;
 
   constructor(
     public objectService: MaterialService,
-    private windowService: WindowService,
-    private navigationService: NavigationService
+    private windowService: WindowService
   ) {
     this.objectService.getObjects().subscribe((objects: any[]) => {
       this.everything = objects;
@@ -40,7 +31,7 @@ export class ResultsComponent {
   @Input()
   set query(value: string) {
     this.loading = false;
-    this.showResults = true; // Show results whenever query changes
+    this.showResults = true;
     this.search(value);
   }
 
@@ -62,32 +53,12 @@ export class ResultsComponent {
   async onResultClick(object: Material) {
     if (this.loading) return;
     this.loading = true;
-    this.navigationService.setLoading(true);
 
     this.selectObject.emit(object.meta.name);
+    await this.windowService.openDetailsWindow(object.id, object.meta.name);
 
-    const resultWindowId = 'details';
-    if (!this.windowService.hasWindow(resultWindowId)) {
-      this.windowService.addDetailsWindow(object.id, (outletName) => {
-        this.navigationService.requestNavigation(outletName, [
-          'object',
-          object.id,
-        ]);
-        this.showResults = false;
-        this.loading = false;
-        this.navigationService.setLoading(false);
-      });
-    } else {
-      this.windowService.activateWindow(resultWindowId);
-      this.windowService.updateWindowTitle(resultWindowId, object.meta.name);
-      this.navigationService.requestNavigation('details', [
-        'object',
-        object.id,
-      ]);
-      this.showResults = false;
-      this.loading = false;
-      this.navigationService.setLoading(false);
-    }
+    this.showResults = false;
+    this.loading = false;
   }
 
   selectByIndex(index: number) {

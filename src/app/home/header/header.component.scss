@@ -1,3 +1,11 @@
-app-logo {
+:host {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
+    transition: opacity 0.3s ease;
+}
+
+:host:hover {
+    opacity: 0.8;
 }

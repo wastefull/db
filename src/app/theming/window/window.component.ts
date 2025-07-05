@@ -1,52 +1,35 @@
-import {
-  Component,
-  Input,
-  AfterViewInit,
-  Output,
-  EventEmitter,
-  ViewChild,
-  ElementRef,
-} from '@angular/core';
-import { IonCard, IonCardContent } from '@ionic/angular/standalone';
+import { CommonModule, NgComponentOutlet } from '@angular/common';
+import { Component, Injector, Input, OnInit } from '@angular/core';
 import { StatusBarComponent } from './status-bar/status-bar.component';
+import { AppWindow } from './window';
 
-import { AppWindow, generateWindow } from './window';
-import { RouterOutlet, RouterModule } from '@angular/router';
 @Component({
   selector: 'app-window',
   standalone: true,
   imports: [
-    IonCard,
-    IonCardContent,
+    CommonModule,
+    NgComponentOutlet,
     StatusBarComponent,
-    StatusBarComponent,
-    RouterOutlet,
-    RouterModule,
   ],
   templateUrl: './window.component.html',
+  styleUrls: ['./window.component.scss'],
 })
-export class WindowComponent implements AfterViewInit {
-  @Input() window: AppWindow = generateWindow('Default Window');
-  @Input() outletName!: string;
+export class WindowComponent implements OnInit {
+  @Input() window!: AppWindow;
 
-  @Output() outletReady = new EventEmitter<string>();
-  @Output() requestNavigation = new EventEmitter<{
-    outlet: string;
-    path: any;
-  }>();
-  @ViewChild('outlet', { static: false, read: ElementRef })
-  outletRef!: ElementRef;
+  componentInjector!: Injector;
 
-  constructor() {}
+  constructor(private injector: Injector) {}
 
-  ngAfterViewInit() {
-    setTimeout(() => {
-      // console.log('Window outlet:', this.window.outlet);
-      this.outletReady.emit(this.window.outlet);
+  ngOnInit() {
+    this.componentInjector = Injector.create({
+      providers: [
+        {
+          provide: 'WINDOW_DATA',
+          useValue: this.window.componentData || {},
+        },
+      ],
+      parent: this.injector,
     });
-  }
-
-  onRequestNavigation(event: { outlet: string; path: any }) {
-    this.requestNavigation.emit(event);
   }
 }

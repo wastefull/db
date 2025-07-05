@@ -1,4 +1,7 @@
-<ion-searchbar [debounce]="500" type="text" placeholder="Look up a thing" show-clear-button="focus" [ngModel]="query"
-  name="query" (keydown)="onInputKeydown($event)" (ngModelChange)="onInputChange($event)"></ion-searchbar>
-<app-results [query]="query" (selectObject)="onSelectObject($event)"
-  [highlightedIndex]="highlightedIndex"></app-results>
+<div class="search-container">
+  <input [(ngModel)]="query" (input)="onInputChange($any($event.target).value)" (keydown)="onInputKeydown($event)"
+    (click)="onSearchBarClick()" type="text" placeholder="Look up a thing" class="search-input">
+</div>
+
+<app-results [query]="query" [highlightedIndex]="highlightedIndex" (selectObject)="onSelectObject($event)">
+</app-results>

@@ -1,24 +1,18 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title slot="primary">
-      <app-header [title]="title" (clearSearch)="onClearSearch()"></app-header>
-    </ion-title>
-    <app-socials slot="end"></app-socials>
-  </ion-toolbar>
-</ion-header>
+<div class="app-container">
+  <header class="header">
+    <div class="toolbar">
+      <h1 class="title">
+        <app-header [title]="title" (clearSearch)="onClearSearch()"></app-header>
+      </h1>
+      <app-socials></app-socials>
+    </div>
+  </header>
 
-<ion-content>
-  <ion-grid [fixed]="true">
-    <ion-row class="ion-justify-content-center">
-      @for (window of windows; track window) {
-      <ion-col>
-        <app-window [window]="window" (outletReady)="onOutletReady($event)"
-          (requestNavigation)="requestNavigation($event.outlet, $event.path)">
-        </app-window>
-      </ion-col>
-      }
-
-    </ion-row>
-  </ion-grid>
-  <router-outlet></router-outlet>
-</ion-content>
+  <main class="content">
+    <div class="windows-grid">
+      <div class="window" *ngFor="let window of windows">
+        <app-window [window]="window"></app-window>
+      </div>
+    </div>
+  </main>
+</div>

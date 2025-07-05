@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { IonicModule } from '@ionic/angular';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-socials',
-  imports: [IonicModule],
+  imports: [CommonModule],
   templateUrl: './socials.component.html',
 })
 export class SocialsComponent {

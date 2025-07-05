@@ -1,3 +1,5 @@
+import { Type } from '@angular/core';
+import { SearchComponent } from '../../search/search.component';
 import {
   ButtonInterface,
   defaultButtons,
@@ -13,39 +15,31 @@ export interface AppWindow {
   isMaximized: boolean;
   buttons: ButtonInterface[];
   activeButton?: string;
-  content?: any; // This can be a component or any other content type
-  outlet: string;
+  content?: any;
+  outlet?: string;
+  component?: Type<any>; // any Angular component
+  componentData?: any; // data —> component
 }
 
 export const defaultWindow: AppWindow = {
-  id: '0',
+  id: 'search',
   title: 'Search',
-  icon: '',
+  icon: 'fa-search',
   isActive: true,
   isMinimized: false,
   isMaximized: false,
   buttons: noCloseButtons,
-  activeButton: '',
-  content: 'This is the default content of the window.',
-  outlet: 'search',
+  component: SearchComponent,
 };
 
 export function generateWindow(title: string): AppWindow {
   return {
     ...defaultWindow,
-    id: `window-${Math.random().toString(36).substr(2, 9)}`, // Generate a unique ID
+    id: `window-${Math.random().toString(36).substr(2, 9)}`,
     title: title,
     icon: 'default-icon', // Placeholder for an icon
     content: 'Loading ' + title + ' content...',
     isActive: false,
     buttons: defaultButtons,
   };
-}
-export function sampleWindows(): AppWindow[] {
-  return [
-    generateWindow('Window 1'),
-    generateWindow('Window 2'),
-    generateWindow('Window 3'),
-    generateWindow('Window 4'),
-  ];
 }

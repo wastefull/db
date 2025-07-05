@@ -1,16 +1,15 @@
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
-import { WindowButtonsComponent } from './window-buttons/window-buttons.component';
+import { CommonModule } from '@angular/common';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { NavigationService } from '../../../navigation.service';
 import { AppWindow, defaultWindow } from '../window';
 import { IconRightComponent } from './icon-right/icon-right.component';
-import { NavigationService } from '../../../navigation.service';
-import { Subscription } from 'rxjs';
-import { IonicModule } from '@ionic/angular';
+import { WindowButtonsComponent } from './window-buttons/window-buttons.component';
 
 @Component({
   selector: 'app-status-bar',
-  imports: [WindowButtonsComponent, IconRightComponent, IonicModule],
+  imports: [CommonModule, WindowButtonsComponent, IconRightComponent],
   templateUrl: './status-bar.component.html',
-  styleUrl: './status-bar.component.scss',
 })
 export class StatusBarComponent implements OnInit, OnDestroy {
   @Input() window: AppWindow = defaultWindow;

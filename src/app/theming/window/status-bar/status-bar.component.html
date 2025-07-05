@@ -1,15 +1,13 @@
-<ion-card-header>
-    <ion-grid>
-        <ion-row class="ion-justify-content-between">
-            <ion-col size="1" class="status-bar-buttons">
-                <app-window-buttons [buttons]="window.buttons"></app-window-buttons>
-            </ion-col>
-            <ion-col class="status-bar-title" size="10">
-                <ion-card-title>{{ window.title }}</ion-card-title>
-            </ion-col>
-            <ion-col size="1">
-                <app-icon-right [loading]="loading"></app-icon-right>
-            </ion-col>
-        </ion-row>
-    </ion-grid>
-</ion-card-header>
+<div class="card-header">
+    <div class="status-bar-row">
+        <div class="status-bar-buttons">
+            <app-window-buttons [buttons]="window.buttons"></app-window-buttons>
+        </div>
+        <div class="status-bar-title">
+            <h1 class="card-title">{{ window.title }}</h1>
+        </div>
+        <div class="status-bar-icon">
+            <app-icon-right [loading]="loading"></app-icon-right>
+        </div>
+    </div>
+</div>

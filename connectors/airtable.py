@@ -38,17 +38,26 @@ class AirtableConnector:
             self.table_name = PRIVATE["table"]
             self.table = self.api.base(self.base_id).table(self.table_name)
 
-    def get_all_data(self):
+    def get_all_data(self, filter_approved_only=True):
         """
         Retrieve all records from the Airtable table.
+        :param filter_approved_only: If True, only fetch records with Status = "Approved"
         :return: A list of all records in the table.
         """
         # Ensure the table exists in Airtable
         if not self.table:
             raise ValueError("Table does not exist or is not initialized.")
 
-        # Retrieve all records from the table
-        return self.table.all()
+        # Add filter for approved records only
+        if filter_approved_only:
+            formula = "Status = 'Approved'"
+            records = self.table.all(formula=formula)
+            print(
+                f"Fetched {len(records)} approved records from {self.table_name}")
+            return records
+        else:
+            # Retrieve all records from the table
+            return self.table.all()
 
     def get_table(self, table_name):
         """
@@ -57,3 +66,19 @@ class AirtableConnector:
         :return: The Airtable table object.
         """
         return self.api.base(self.base_id).table(table_name)
+
+    def get_table_data(self, table_name, filter_approved_only=True):
+        """
+        Retrieve records from a specific table with optional status filtering.
+        :param table_name: The name of the table to retrieve.
+        :param filter_approved_only: If True, only fetch approved records
+        :return: List of records from the table.
+        """
+        table = self.get_table(table_name)
+        if filter_approved_only:
+            formula = "Status = 'Approved'"
+            records = table.all(formula=formula)
+            print(f"Fetched {len(records)} approved records from {table_name}")
+            return records
+        else:
+            return table.all()

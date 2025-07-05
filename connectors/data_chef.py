@@ -43,17 +43,7 @@ def cook_data(raw: list, unsplash=False) -> list:
 def format_row(data: dict):
     """
     Convert the data to a JSON string and clean it up.
-    :param data: The data to convert.
-    :return: A JSON string of the data or None if the data is not Approved.
-
-    Data format is going to look like:
-        - id
-        - meta: name, description, *tags (not implemented yet), *alt_names (not implemented yet)
-        - image: url, thumbnail_url
-        - risk: types, factors, hazards
-        - updated: datetime, user_id
-        - articles: compost, recycle, upcycle
-    Note: We only want the data with Status = "Approved"
+    Only processes records with Status = "Approved"
     """
     # Check if the required keys are present in the data
     required_keys = ["id", "fields"]
@@ -64,8 +54,11 @@ def format_row(data: dict):
         raise TypeError("Fields must be a dictionary.")
 
     fields = data["fields"]
-    # Check if the status is "Approved"
-    if fields["Status"] != "Approved":
+
+    # Check if the status is "Approved" - make this more explicit
+    status = fields.get("Status", "").strip()
+    if status != "Approved":
+        print(f"Skipping material {data.get('id')} with status: {status}")
         return None
 
     # Check if the required keys are present in the fields dictionary
@@ -144,9 +137,11 @@ def cook_articles(raw: list) -> list:
         if not record or "id" not in record:
             continue
         fields = record.get("fields", {})
-        # Only include approved articles
-        if fields.get("Status") != "Approved":
+        status = fields.get("Status", "").strip()
+        if status != "Approved":
+            print(f"Skipping article {record.get('id')} with status: {status}")
             continue
+
         cooked.append({
             "id": record["id"],
             "title": fields.get("Article ID"),
@@ -170,4 +165,6 @@ def cook_articles(raw: list) -> list:
             # source table for linking:
             "source_table": record.get("source_table")
         })
+
+    print(f"Filtered articles: {len(cooked)} approved out of {len(raw)} total")
     return cooked

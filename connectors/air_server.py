@@ -8,7 +8,8 @@ def fetch(*, refresh=False, unsplash=False):
     if refresh:
         # --- Material sync ---
         at_connect = ac(refresh)
-        at_mats = at_connect.get_all_data()
+        # Only fetch approved materials
+        at_mats = at_connect.get_all_data(filter_approved_only=True)
         neon_mats = n.fetch_all_materials()
 
         # -- Remove stale data --
@@ -18,16 +19,15 @@ def fetch(*, refresh=False, unsplash=False):
             print(
                 f"Deleting {len(ids_to_delete)} records from Neon: {ids_to_delete}")
             n.delete_materials_by_ids(list(ids_to_delete))
-        fresh_mats = [
-            m for m in at_mats if m.get("id") not in ids_to_delete
-        ]
+
+        fresh_mats = [m for m in at_mats if m.get("id") not in ids_to_delete]
         cooked_mats = dc.cook_data(fresh_mats, unsplash)
-
         n.update_neon_data(cooked_mats)
-        # --- Article sync ---
 
-        # Fetch articles
-        articles_raw = fetch_articles_from_materials(at_connect, at_mats)
+        # --- Article sync ---
+        # Fetch only approved articles
+        articles_raw = fetch_articles_from_materials(
+            at_connect, at_mats, approved_only=True)
         cooked_articles = dc.cook_articles(articles_raw)
         n.cook_and_update_articles(cooked_articles, lambda x: x)
     else:
@@ -41,29 +41,31 @@ def fetch(*, refresh=False, unsplash=False):
     return None
 
 
-def fetch_articles_from_materials(at_connect, at_mats):
-    article_ids = set()
-    for mat in at_mats:
-        articles = mat.get("fields", {}).get("articles", {})
-        for key in ["compost", "recycle", "upcycle"]:
-            ids = articles.get(key)
-            if isinstance(ids, list):
-                article_ids.update(ids)
-            elif isinstance(ids, str):
-                article_ids.add(ids)
-        # Fetch articles from all three article tables
+def fetch_articles_from_materials(at_connect, at_mats, approved_only=True):
+    """
+    Fetch articles from all article tables, optionally filtering for approved only.
+    """
     article_tables = ["Composting", "Recycling", "Upcycling"]
     articles_raw = []
+
     for table_name in article_tables:
-        table = at_connect.get_table(table_name)
         try:
-            records = table.all()
+            if approved_only:
+                records = at_connect.get_table_data(
+                    table_name, filter_approved_only=True)
+            else:
+                table = at_connect.get_table(table_name)
+                records = table.all()
+
             # Add source_table info to each record
             for r in records:
                 r["source_table"] = table_name
             articles_raw.extend(records)
+
         except Exception as e:
             print(f"Error fetching from {table_name}: {e}")
+
+    print(f"Total approved articles fetched: {len(articles_raw)}")
     return articles_raw
 
 

@@ -1,6 +1,7 @@
 from typing import Optional
 import os
 import requests
+import re
 
 
 def gl(l, n):
@@ -76,15 +77,39 @@ class Unsplash:
             "Accept": "application/json"
         }
 
+    def clean_query(self, query: str) -> str:
+        """
+        Clean the query by removing content in parentheses and limiting length.
+        :param query: The original search query.
+        :return: Cleaned query (max 36 characters, no parentheses content).
+        """
+        if not query:
+            return ""
+
+        # Remove everything in parentheses (including the parentheses)
+        cleaned = re.sub(r'\([^)]*\)', '', query)
+
+        # Remove extra whitespace and strip
+        cleaned = ' '.join(cleaned.split())
+
+        # Limit to 36 characters
+        if len(cleaned) > 36:
+            cleaned = cleaned[:36].strip()
+
+        return cleaned
+
     def get_random_image(self, query: str) -> dict:
         """
         Get a random image URL from Unsplash based on a query.
         :param query: The search query for the image.
         :return: A URL of a random image.
         """
+        # Clean the query first
+        clean_query = self.clean_query(query)
+
         where = "https://api.unsplash.com"
         what = "photos/random"
-        description = f"query={query}"
+        description = f"query={clean_query}"
         pick_one = "count=1"
         auth = f"client_id={self.access_key}"
         orientation = "orientation=squarish"

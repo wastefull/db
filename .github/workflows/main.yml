@@ -2,6 +2,13 @@ on:
   push:
     branches:
       - "main"
+  workflow_dispatch:
+    inputs:
+      skip_cache:
+        description: "Skip node_modules cache (useful after dependency changes)"
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: read
@@ -16,14 +23,20 @@ jobs:
       - uses: actions/setup-node@v4 # set up node
         with:
           node-version: 20 # not latest but safer for Angular
+
+      # Conditional cache step
       - name: Cache node_modules
+        if: ${{ !inputs.skip_cache }}
         uses: actions/cache@v4
         with:
           path: node_modules
           key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
+
+      # Clean install (will use cache if available and not skipped)
       - run: npm ci # dependencies
+
       - run: rm -rf dist # cleanup
       - run: npx ng build --configuration=production --base-href=/ # attempting SPA build
       - run: cp dist/app/index.html dist/app/404.html # fallback 404, index
@@ -31,3 +44,11 @@ jobs:
         with:
           path: dist/app
       - uses: actions/deploy-pages@v4 # deploy to pages
+
+# This condition means cache is USED when:
+# if: ${{ !inputs.skip_cache }}
+# - Normal pushes (inputs.skip_cache is false/undefined)
+# - Manual runs with checkbox unchecked (inputs.skip_cache is false)
+
+# Cache is SKIPPED when:
+# - Manual runs with checkbox checked (inputs.skip_cache is true)

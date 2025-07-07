@@ -1,6 +1,10 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { MaterialService } from '../../object/object.service';
+import {
+  defaultButtons,
+  noCloseButtons,
+} from './status-bar/window-buttons/button';
 import { AppWindow } from './window';
 
 @Injectable({
@@ -25,7 +29,7 @@ export class WindowService {
       isActive: true,
       isMinimized: false,
       isMaximized: false,
-      buttons: [],
+      buttons: noCloseButtons,
       component: SearchComponent,
     };
 
@@ -82,7 +86,7 @@ export class WindowService {
         isActive: true,
         isMinimized: false,
         isMaximized: false,
-        buttons: [],
+        buttons: defaultButtons,
         component: DetailsComponent,
         componentData: { materialId, materialName },
       });
@@ -105,7 +109,7 @@ export class WindowService {
       isActive: true,
       isMinimized: false,
       isMaximized: false,
-      buttons: [],
+      buttons: defaultButtons,
       component: ProductPickerComponent,
       componentData: { materialId, materialName, articleType },
     });
@@ -128,7 +132,7 @@ export class WindowService {
       isActive: true,
       isMinimized: false,
       isMaximized: false,
-      buttons: [],
+      buttons: defaultButtons,
       component: MethodPickerComponent,
       componentData: { materialId, materialName, articleType, product },
     });
@@ -152,7 +156,7 @@ export class WindowService {
       isActive: true,
       isMinimized: false,
       isMaximized: false,
-      buttons: [],
+      buttons: defaultButtons,
       component: ArticleComponent,
       componentData: { materialId, materialName, articleType, product, method },
     });

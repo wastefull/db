@@ -14,8 +14,8 @@
 .search-input {
     width: var(--search-width);
     padding: 8px 12px;
-    border: 1px solid var(--offblack);
-    border-radius: 5px;
+    border: 1px solid var(--offblack) !important;
+    border-radius: var(--rounded);
     background: #ffffff;
     color: var(--offblack);
     font-size: 0.9rem;

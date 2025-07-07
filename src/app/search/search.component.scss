@@ -1,11 +1,18 @@
+:host {
+    --search-width: 90%;
+}
+
 .search-container {
     max-width: 100%;
     margin: 0 auto;
-    padding: 10px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .search-input {
-    width: 100%;
+    width: var(--search-width);
     padding: 8px 12px;
     border: 1px solid var(--offblack);
     border-radius: 5px;
@@ -15,6 +22,8 @@
     font-family: var(--font-family);
     box-shadow: none;
     transition: border-color 0.3s ease;
+    box-sizing: border-box;
+    margin: 0;
 
     &::placeholder {
         color: var(--offblack);
@@ -23,11 +32,27 @@
 
     &:focus {
         outline: none;
-        border-color: var(--cambridge);
+        border-color: var(--rose-tea);
         box-shadow: 0 0 0 2px rgba(155, 192, 155, 0.2);
     }
 
     &:hover {
         border-color: var(--cambridge-dark);
+    }
+}
+
+::ng-deep app-results {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+
+    .list {
+        width: var(--search-width) !important;
+        margin: 0.5rem 0 0 0 !important;
+        box-sizing: border-box !important;
+        padding: 0 !important;
+        position: relative !important;
+        left: 0 !important;
+        right: 0 !important;
     }
 }

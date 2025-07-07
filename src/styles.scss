@@ -11,7 +11,7 @@
     --seagull-postman: #577590;
     --seagull-midnight: #1A535C;
     --mint-celadon: #B1CEB1;
-    --rose-tea: #E6BCB5;
+    --rose-tea: #E6C0B5;
     --old-rose: #D08476;
     --old-rose-dark: #b86c62;
     --cambridge: #9BC09B;
@@ -418,7 +418,7 @@ h2 {
         }
 
         &.highlighted {
-            background-color: var(--cambridge);
+            background-color: rgba(230, 192, 181, 0.74);
             color: white;
         }
     }
@@ -442,42 +442,7 @@ h2 {
     }
 }
 
-/* Form Elements */
-.search {
-    &-container {
-        max-width: 500px;
-        margin: 0 auto;
-        padding: 10px;
-    }
 
-    &-input {
-        width: 90% !important;
-        padding: 10px 15px;
-        border: 1px solid var(--offblack);
-        border-radius: 5px;
-        background: #ffffff;
-        color: var(--offblack);
-        font-size: 1rem;
-        font-family: var(--font-family);
-        box-shadow: none;
-        transition: border-color 0.3s ease;
-
-        &::placeholder {
-            color: var(--offblack);
-            opacity: 0.8;
-        }
-
-        &:focus {
-            outline: none;
-            border-color: var(--cambridge);
-            box-shadow: 0 0 0 2px rgba(155, 192, 155, 0.2);
-        }
-
-        &:hover {
-            border-color: var(--cambridge-dark);
-        }
-    }
-}
 
 /* Picker & Details */
 .picker-container,

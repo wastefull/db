@@ -37,19 +37,35 @@ export class DetailsComponent implements OnInit {
       };
       this.loading = false;
 
-      this.objectService
-        .getArticlesForMaterial(this.object.id)
-        .subscribe((articles: Article[]) => {
-          this.object.articles.compost = articles.filter((a) =>
-            (a.source_table || '').toLowerCase().includes('compost')
-          );
-          this.object.articles.recycle = articles.filter((a) =>
-            (a.source_table || '').toLowerCase().includes('recycle')
-          );
-          this.object.articles.upcycle = articles.filter((a) =>
-            (a.source_table || '').toLowerCase().includes('upcycle')
-          );
-        });
+      this.getArticles();
+    });
+  }
+
+  private getArticles() {
+    this.objectService
+      .getArticlesForMaterial(this.object.id)
+      .subscribe((articles: Article[]) => {
+        this.filterArticlesByType(articles);
+      });
+  }
+
+  private filterArticlesByType(articles: Article[]) {
+    const typeTableMap: Record<
+      'compost' | 'recycle' | 'upcycle',
+      'Composting' | 'Recycling' | 'Upcycling'
+    > = {
+      compost: 'Composting',
+      recycle: 'Recycling',
+      upcycle: 'Upcycling',
+    };
+
+    (
+      Object.keys(typeTableMap) as Array<'compost' | 'recycle' | 'upcycle'>
+    ).forEach((type) => {
+      const table = typeTableMap[type];
+      this.object.articles[type] = articles.filter(
+        (a) => (a.source_table || '').toLowerCase() === table.toLowerCase()
+      );
     });
   }
 

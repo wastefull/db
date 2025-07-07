@@ -2,13 +2,15 @@
     <h2>Select Product</h2>
     <p>Choose what you want to make from {{ materialName }}:</p>
 
-    <ul class="list" *ngIf="products.length > 0">
-        <li *ngFor="let product of products" class="list-item" (click)="pickProduct(product)">
-            {{ product }}
-        </li>
-    </ul>
-
-    <div *ngIf="products.length === 0" class="no-options">
-        <p>No products available for this material type.</p>
-    </div>
+    @if (products.length > 0) {
+        <ul class="list">
+            <li *ngFor="let product of products" class="list-item" (click)="pickProduct(product)">
+                {{ product }}
+            </li>
+        </ul>
+    } @else {
+        <div class="no-options">
+            <p>No products available for this material type.</p>
+        </div>
+    }
 </div>

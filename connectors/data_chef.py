@@ -160,8 +160,8 @@ def cook_articles(raw: list) -> list:
                 fields.get("Name (from Recycling Target)") or
                 fields.get("Name (from Upcycling Target)")
             ),
-            "product": fields.get("product"),
-            "method": fields.get("method"),
+            "product": fields.get("Product"),
+            "method": fields.get("Method"),
             # source table for linking:
             "source_table": record.get("source_table")
         })

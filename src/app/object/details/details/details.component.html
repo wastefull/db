@@ -12,23 +12,26 @@
         <h2>What would you like to do?</h2>
 
         <div class="action-buttons">
-            <button class="btn action-btn" (click)="openProductPicker('compost')"
-                *ngIf="object.articles.compost.length > 0">
+            @if (object.articles.compost.length > 0) {
+            <button class="btn action-btn" (click)="openProductPicker('compost')">
                 <i class="fa-solid fa-seedling"></i>
                 Compost
             </button>
+            }
 
-            <button class="btn action-btn" (click)="openProductPicker('recycle')"
-                *ngIf="object.articles.recycle.length > 0">
+            @if (object.articles.recycle.length > 0) {
+            <button class="btn action-btn" (click)="openProductPicker('recycle')">
                 <i class="fa-solid fa-recycle"></i>
                 Recycle
             </button>
+            }
 
-            <button class="btn action-btn" (click)="openProductPicker('upcycle')"
-                *ngIf="object.articles.upcycle.length > 0">
+            @if (object.articles.upcycle.length > 0) {
+            <button class="btn action-btn" (click)="openProductPicker('upcycle')">
                 <i class="fa-solid fa-arrow-up"></i>
                 Upcycle
             </button>
+            }
         </div>
     </div>
 </div>

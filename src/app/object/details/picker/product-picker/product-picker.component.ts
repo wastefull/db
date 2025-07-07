@@ -1,5 +1,5 @@
-import { Component, Inject, OnInit, Optional } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, Inject, OnInit, Optional } from '@angular/core';
 import { WindowService } from '../../../../theming/window/window.service';
 import { MaterialService } from '../../../object.service';
 
@@ -32,24 +32,49 @@ export class ProductPickerComponent implements OnInit {
 
   private loadProducts() {
     if (this.articleType === 'compost') {
-      this.products = ['soil'];
+      if (this.products.length === 0) {
+        this.products = ['soil'];
+      }
     } else {
       this.materialService
         .getArticlesForMaterial(this.objectId)
         .subscribe((articles) => {
+          console.log('All articles:', articles);
+
+          const filteredArticles = articles.filter((a: any) => {
+            const sourceTable = a.source_table || '';
+
+            let matches = false;
+            if (this.articleType === 'upcycle' && sourceTable === 'Upcycling') {
+              matches = true;
+            } else if (
+              this.articleType === 'recycle' &&
+              sourceTable === 'Recycling'
+            ) {
+              matches = true;
+            } else if (
+              this.articleType === 'compost' &&
+              sourceTable === 'Composting'
+            ) {
+              matches = true;
+            }
+
+            console.log(
+              `Article: ${a.id}, source_table: "${sourceTable}", articleType: "${this.articleType}", matches: ${matches}`
+            );
+            return matches;
+          });
+
           const products = [
             ...new Set(
-              articles
-                .filter((a: any) =>
-                  (a.source_table || '')
-                    .toLowerCase()
-                    .includes(this.articleType)
-                )
+              filteredArticles
                 .map((a: any) => a.product)
                 .filter((p: string | undefined): p is string => !!p)
             ),
           ] as string[];
+
           this.products = products;
+          console.log('Loaded products:', this.products);
         });
     }
   }

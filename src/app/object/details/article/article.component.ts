@@ -44,19 +44,57 @@ export class ArticleComponent implements OnInit {
     this.materialService
       .getArticlesForMaterial(this.material)
       .subscribe((articles: Article[]) => {
+        console.log('All articles in ArticleComponent:', articles);
+        console.log('Filtering with:', {
+          articleType: this.articleType,
+          product: this.product,
+          method: this.method,
+        });
+
         this.articles = articles.filter((a) => {
-          const matchesType = (a.source_table || '')
-            .toLowerCase()
-            .includes(this.articleType);
+          let matchesType = false;
+          const sourceTable = a.source_table || '';
+
+          if (this.articleType === 'compost' && sourceTable === 'Composting') {
+            matchesType = true;
+          } else if (
+            this.articleType === 'recycle' &&
+            sourceTable === 'Recycling'
+          ) {
+            matchesType = true;
+          } else if (
+            this.articleType === 'upcycle' &&
+            sourceTable === 'Upcycling'
+          ) {
+            matchesType = true;
+          }
+
           const matchesProduct =
-            this.product === 'all' || !a.product || a.product === this.product;
+            this.product === 'all' ||
+            this.product === 'soil' || // Special case for compost
+            !a.product ||
+            a.product === this.product;
+
           const matchesMethod =
             this.method === 'all' ||
             !a.method ||
             (a.method &&
               a.method.toLowerCase().includes(this.method.toLowerCase()));
+
+          console.log(`Article ${a.id}:`, {
+            sourceTable,
+            product: a.product,
+            method: a.method,
+            matchesType,
+            matchesProduct,
+            matchesMethod,
+            overallMatch: matchesType && matchesProduct && matchesMethod,
+          });
+
           return matchesType && matchesProduct && matchesMethod;
         });
+
+        console.log('Filtered articles:', this.articles);
         this.loading = false;
       });
   }

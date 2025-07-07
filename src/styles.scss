@@ -42,7 +42,7 @@
     --header-height: 60px;
     --content-padding: 1rem;
     --window-min-width: 320px;
-    --window-max-width: 400px;
+    --window-max-width: 500px;
     --grid-gap: 1rem;
 
     /* Calculated breakpoints */
@@ -153,9 +153,13 @@ body {
 }
 
 h1,
-h2 {
+h2,
+h3,
+strong {
     font-weight: normal;
 }
+
+
 
 /* App Layout */
 .app-container {

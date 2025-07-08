@@ -2,5 +2,8 @@
   @if (loading) {
   <app-patience></app-patience>
   }
-  <i class="fa-solid fa-check icon" *ngIf="!loading" aria-hidden="true"></i>
+  @else {
+  <i class="fa-solid fa-check icon" aria-hidden="true"></i>
+  }
+
 </div>

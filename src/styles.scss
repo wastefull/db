@@ -131,12 +131,16 @@ strong {
     min-height: 0;
 }
 
-/* App Windows - Override Bootstrap's responsive behavior */
+app-window {
+    margin: 0 auto !important;
+}
+
+/* Window height control */
 .app-window {
     min-width: var(--window-min-width);
     max-width: var(--window-max-width);
     width: 100%;
-    margin: 0 auto;
+    margin: 0 auto !important;
 
     /* Ensure windows don't stretch too wide on larger screens */
     @media (min-width: 768px) {
@@ -152,6 +156,7 @@ strong {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     overflow: hidden;
     box-sizing: border-box;
+    height: auto;
 
     &-header {
         padding: 0.5rem;
@@ -421,7 +426,6 @@ ngb-typeahead-window {
     }
 }
 
-/* Window highlight animation - make it more visible */
 .window-highlight {
     position: relative;
     transform: scale(1.02);
@@ -451,7 +455,7 @@ ngb-typeahead-window {
         right: -10px;
         font-size: 1.5rem;
         z-index: 100;
-        animation: bounce 1s ease-in-out 3;
+        animation: jello 1s ease-in-out 2;
     }
 }
 
@@ -502,4 +506,26 @@ ngb-typeahead-window {
 /* Ensure scroll padding for header offset */
 html {
     scroll-padding-top: calc(var(--header-height) + 1rem);
+}
+
+/* Prevent the column containers from forcing equal heights */
+.content .container-fluid .row .col-12,
+.content .container-fluid .row .col-sm-6,
+.content .container-fluid .row .col-lg-4,
+.content .container-fluid .row .col-xl-3 {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+
+    &:has(.card .search-container) {
+        align-items: flex-start;
+        /* Don't stretch search window vertically */
+
+        .app-window {
+            align-self: flex-start;
+            height: auto !important;
+            min-height: auto !important;
+
+        }
+    }
 }

@@ -1,28 +1,26 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Subscription } from 'rxjs';
+import { NgbTypeaheadModule } from '@ng-bootstrap/ng-bootstrap';
+import { Observable, OperatorFunction, Subscription } from 'rxjs';
+import { debounceTime, map } from 'rxjs/operators';
+import { Material } from '../object/object';
 import { MaterialService } from '../object/object.service';
 import { SearchService } from '../search.service';
 import { WindowService } from '../theming/window/window.service';
-import { ResultsComponent } from './results/results.component';
 
 @Component({
   selector: 'app-search',
-  imports: [CommonModule, FormsModule, ResultsComponent],
+  imports: [CommonModule, FormsModule, NgbTypeaheadModule],
   templateUrl: './search.component.html',
   styleUrls: ['./search.component.scss'],
   standalone: true,
 })
-export class SearchComponent implements OnInit, OnDestroy {
-  query = '';
-  highlightedIndex = 0;
-  selectionMade = false;
-  isLoading = false;
+export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
+  model: Material | null = null;
+  materials: Material[] = [];
 
   private sub?: Subscription;
-
-  @ViewChild(ResultsComponent) resultsComponent?: ResultsComponent;
 
   constructor(
     private searchService: SearchService,
@@ -34,76 +32,77 @@ export class SearchComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     console.log('SearchComponent ngOnInit called');
+
+    // Load all materials for typeahead
+    this.materialService.getObjects().subscribe((materials: Material[]) => {
+      this.materials = materials;
+    });
+
+    // Subscribe to search service for external query changes
     this.sub = this.searchService.query$.subscribe((q) => {
       console.log('Query changed to:', q);
-      this.query = q;
-      this.highlightedIndex = 0;
-      this.selectionMade = false;
+      // Find material that matches the query
+      const foundMaterial = this.materials.find(
+        (m) => m.meta.name.toLowerCase() === q.toLowerCase()
+      );
+      this.model = foundMaterial || null;
     });
+  }
+
+  ngAfterViewInit() {
+    // Force dropdown to append to body
+    document.body.style.position = 'relative';
   }
 
   ngOnDestroy() {
     this.sub?.unsubscribe();
   }
 
-  onSearchBarClick() {
-    console.log('Search bar clicked!');
-  }
+  // Search function for typeahead
+  search: OperatorFunction<string, readonly Material[]> = (
+    text$: Observable<string>
+  ) =>
+    text$.pipe(
+      debounceTime(200),
+      map((term) => {
+        if (term === '') {
+          return [];
+        }
 
-  onInputChange(newValue: string | null) {
-    console.log('Input changed:', newValue);
-    if (newValue !== null && newValue !== undefined) {
-      this.query = newValue;
-      this.searchService.setQuery(newValue);
-      this.selectionMade = false;
-    }
-  }
+        const filtered = this.materials
+          .filter((material) =>
+            material.meta.name.toLowerCase().includes(term.toLowerCase())
+          )
+          .slice(0, 10); // Limit to 10 results
 
-  onSelectObject(materialName: string) {
-    console.log('Object selected:', materialName);
-    this.materialService
-      .getMaterialByName(materialName)
-      .subscribe((material) => {
-        this.windowService.openDetailsWindow(material.id, material.meta.name);
-      });
-    this.searchService.setQuery(materialName);
-    this.query = '';
-  }
+        console.log('Typeahead search results:', filtered);
+        return filtered;
+      })
+    );
 
-  onInputKeydown(event: KeyboardEvent) {
-    console.log('Key pressed:', event.key);
+  // Format function to display material name
+  formatter = (material: Material) => material.meta.name;
 
-    const target = event.target as HTMLInputElement;
-    if (target && target.value !== this.query) {
-      console.log('Updating query from keydown:', target.value);
-      this.onInputChange(target.value);
-    }
+  // Handle selection
+  onSelectItem(event: any) {
+    console.log('Material selected:', event.item);
+    const selectedMaterial = event.item as Material;
 
-    if (this.selectionMade) {
-      event.preventDefault();
-      return;
-    }
-
-    const resultsLength = this.resultsComponent?.results.length ?? 0;
-    if (event.key === 'ArrowDown') {
-      this.highlightedIndex = Math.min(
-        this.highlightedIndex + 1,
-        resultsLength - 1
+    if (selectedMaterial) {
+      this.searchService.setQuery(selectedMaterial.meta.name);
+      this.windowService.openDetailsWindow(
+        selectedMaterial.id,
+        selectedMaterial.meta.name
       );
-      event.preventDefault();
-    } else if (event.key === 'ArrowUp') {
-      this.highlightedIndex = Math.max(this.highlightedIndex - 1, 0);
-      event.preventDefault();
-    } else if (event.key === 'Enter') {
-      this.selectHighlightedResult();
-      this.selectionMade = true;
-      event.preventDefault();
     }
   }
 
-  selectHighlightedResult() {
-    if (this.resultsComponent) {
-      this.resultsComponent.selectByIndex(this.highlightedIndex);
+  // Handle input changes
+  onInputChange() {
+    if (this.model && typeof this.model === 'object') {
+      this.searchService.setQuery(this.model.meta.name);
+    } else if (typeof this.model === 'string') {
+      this.searchService.setQuery(this.model);
     }
   }
 }

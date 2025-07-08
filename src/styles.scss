@@ -547,6 +547,40 @@ strong {
     text-align: center;
 }
 
+/* NgbTypeAhead */
+.app-window {
+    overflow: visible !important;
+    /* Allow content to overflow the window */
+}
+
+.window-content {
+    overflow: visible !important;
+    /* Allow content to overflow */
+    position: relative;
+    z-index: 1;
+}
+
+.dropdown-menu,
+ngb-typeahead-window {
+    position: fixed !important;
+    z-index: 10000 !important;
+    overflow: visible !important;
+    width: calc(.9*var(--window-min-width));
+    border-radius: var(--rounded);
+    border: 1px solid var(--borders);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+    button.active {
+        background-color: var(--rose-tea);
+        color: #000;
+    }
+
+    .ngb-highlight {
+        font-weight: 400;
+        color: var(--offblack);
+    }
+}
+
 /* Animations */
 @keyframes spin {
     0% {

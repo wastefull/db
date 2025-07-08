@@ -1,7 +1,5 @@
 <div class="search-container">
-  <input [(ngModel)]="query" (input)="onInputChange($any($event.target).value)" (keydown)="onInputKeydown($event)"
-    (click)="onSearchBarClick()" type="text" placeholder="Look up a thing" class="search-input">
+  <input type="text" class="search-input" placeholder="Look up a thing" [(ngModel)]="model" [ngbTypeahead]="search"
+    [inputFormatter]="formatter" [resultFormatter]="formatter" (selectItem)="onSelectItem($event)"
+    (ngModelChange)="onInputChange()" [showHint]="true" [focusFirst]="true" container="body" />
 </div>
-
-<app-results [query]="query" [highlightedIndex]="highlightedIndex" (selectObject)="onSelectObject($event)">
-</app-results>

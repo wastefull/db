@@ -3,7 +3,7 @@
 }
 
 .search-container {
-    max-width: 100%;
+    width: var(--search-width);
     margin: 0 auto;
     padding: 0;
     display: flex;
@@ -32,27 +32,11 @@
 
     &:focus {
         outline: none;
-        border-color: var(--rose-tea);
+        border-color: var(--rose-tea) !important;
         box-shadow: 0 0 0 2px rgba(155, 192, 155, 0.2);
     }
 
     &:hover {
         border-color: var(--cambridge-dark);
-    }
-}
-
-::ng-deep app-results {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-
-    .list {
-        width: var(--search-width) !important;
-        margin: 0.5rem 0 0 0 !important;
-        box-sizing: border-box !important;
-        padding: 0 !important;
-        position: relative !important;
-        left: 0 !important;
-        right: 0 !important;
     }
 }

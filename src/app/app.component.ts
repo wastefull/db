@@ -25,10 +25,9 @@ import { WindowService } from './theming/window/window.service';
   imports: [
     CommonModule,
     HeaderComponent,
-    SocialsComponent,
     WindowComponent,
-    NgbScrollSpyModule,
-  ],
+    NgbScrollSpyModule
+],
   templateUrl: './app.component.html',
 })
 export class AppComponent implements OnInit, OnDestroy, AfterViewInit {

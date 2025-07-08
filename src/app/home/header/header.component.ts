@@ -3,16 +3,19 @@ import { Router, RouterModule } from '@angular/router';
 import { SearchService } from '../../search.service';
 import { LogoComponent } from '../../shared/logo/logo.component';
 import { WindowService } from '../../theming/window/window.service';
+import { SocialsComponent } from '../../shared/socials/socials.component';
+import { NgbCollapseModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-header',
-  imports: [LogoComponent, RouterModule],
+  imports: [LogoComponent, RouterModule, SocialsComponent, NgbCollapseModule],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent {
   @Input() title = '';
   @Output() clearSearch = new EventEmitter<void>();
+  isMenuCollapsed = true;
 
   constructor(
     private router: Router,

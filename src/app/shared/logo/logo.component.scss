@@ -1,13 +1,5 @@
-:host {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    max-width: 200px;
-    /* Limit logo width */
-}
-
 .logo {
-    max-height: 60px;
-    width: auto;
+    width: 5rem;
+
     object-fit: contain;
 }

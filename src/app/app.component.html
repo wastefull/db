@@ -1,11 +1,8 @@
 <div class="app-container">
   <header class="header">
-    <div class="toolbar">
-      <h1 class="title">
-        <app-header [title]="title" (clearSearch)="onClearSearch()"></app-header>
-      </h1>
-      <app-socials></app-socials>
-    </div>
+    <h1 class="title">
+      <app-header [title]="title" (clearSearch)="onClearSearch()"></app-header>
+    </h1>
   </header>
 
   <main class="content" ngbScrollSpy [scrollBehavior]="'smooth'" [threshold]="0.5" [rootMargin]="'0px 0px -50% 0px'"

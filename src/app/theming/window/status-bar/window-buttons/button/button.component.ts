@@ -34,7 +34,7 @@ export class ButtonComponent {
   }
   onClick(): void {
     if (!this.disabled) {
-      console.log(`Button clicked: ${this.label}`);
+      // console.log(`Button clicked: ${this.label}`);
     }
   }
   get buttonClass(): string {

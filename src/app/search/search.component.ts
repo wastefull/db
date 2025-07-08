@@ -27,11 +27,9 @@ export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
     private windowService: WindowService,
     private materialService: MaterialService
   ) {
-    console.log('SearchComponent constructor called');
   }
 
   ngOnInit() {
-    console.log('SearchComponent ngOnInit called');
 
     // Load all materials for typeahead
     this.materialService.getObjects().subscribe((materials: Material[]) => {
@@ -40,7 +38,7 @@ export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
 
     // Subscribe to search service for external query changes
     this.sub = this.searchService.query$.subscribe((q) => {
-      console.log('Query changed to:', q);
+      // console.log('Query changed to:', q);
       // Find material that matches the query
       const foundMaterial = this.materials.find(
         (m) => m.meta.name.toLowerCase() === q.toLowerCase()
@@ -75,7 +73,7 @@ export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
           )
           .slice(0, 10); // Limit to 10 results
 
-        console.log('Typeahead search results:', filtered);
+        // console.log('Typeahead search results:', filtered);
         return filtered;
       })
     );
@@ -104,13 +102,13 @@ export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
 
   // Handle image load errors
   onImageError(event: any) {
-    console.log('Image failed to load, using fallback');
+    // console.log('Image failed to load, using fallback');
     event.target.src = '/assets/placeholder.png';
   }
 
   // Handle selection
   onSelectItem(event: any) {
-    console.log('Material selected:', event.item);
+    // console.log('Material selected:', event.item);
     const selectedMaterial = event.item as Material;
 
     if (selectedMaterial) {

@@ -37,10 +37,7 @@ export class WindowService {
   }
 
   async resetToDefault() {
-    // clear all windows
     this.windowsSubject.next([]);
-
-    // open search window
     await this.initializeDefaultWindow();
   }
 
@@ -52,8 +49,26 @@ export class WindowService {
     this.windowsSubject.next(windows);
   }
 
+  // Set a window as active and deactivate others
+  setActiveWindow(id: string) {
+    const updatedWindows = this.windows.map((window) => ({
+      ...window,
+      isActive: window.id === id,
+    }));
+    this.windowsSubject.next(updatedWindows);
+  }
+
   addWindow(window: AppWindow) {
-    this.windowsSubject.next([...this.windows, window]);
+    // console.log('Adding window:', window.id, 'with data:', window.componentData);
+
+    // Deactivate all existing windows and make the new one active
+    const updatedExistingWindows = this.windows.map((w) => ({
+      ...w,
+      isActive: false,
+    }));
+
+    const newWindow = { ...window, isActive: true };
+    this.windowsSubject.next([...updatedExistingWindows, newWindow]);
   }
 
   removeWindow(id: string) {
@@ -61,9 +76,18 @@ export class WindowService {
   }
 
   updateWindow(updated: AppWindow) {
-    this.windowsSubject.next(
-      this.windows.map((w) => (w.id === updated.id ? updated : w))
-    );
+    // console.log('Updating window:', updated.id, 'with data:', updated.componentData);
+
+    // When updating a window, make it active and deactivate others
+    const updatedWindows = this.windows.map((w) => {
+      if (w.id === updated.id) {
+        return { ...updated, isActive: true };
+      } else {
+        return { ...w, isActive: false };
+      }
+    });
+
+    this.windowsSubject.next(updatedWindows);
   }
 
   async openDetailsWindow(materialId: string, materialName: string) {
@@ -158,15 +182,23 @@ export class WindowService {
       isMaximized: false,
       buttons: defaultButtons,
       component: ArticleComponent,
-      componentData: { materialId, materialName, articleType, product, method },
+      componentData: {
+        materialId,
+        materialName,
+        articleType,
+        product: product || 'all',
+        method: method || 'all',
+      },
     });
   }
 
   private updateOrAddWindow(id: string, window: AppWindow) {
     const existingWindow = this.windows.find((w) => w.id === id);
     if (existingWindow) {
+      // console.log('Updating existing window:', id);
       this.updateWindow(window);
     } else {
+      // console.log('Adding new window:', id);
       this.addWindow(window);
     }
   }

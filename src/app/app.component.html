@@ -8,12 +8,15 @@
     </div>
   </header>
 
-  <main class="content">
+  <main class="content" ngbScrollSpy [scrollBehavior]="'smooth'" [threshold]="0.5" [rootMargin]="'0px 0px -50% 0px'"
+    (activeChange)="onActiveFragmentChange($event)">
     <div class="container-fluid px-3">
       <div class="row g-3 justify-content-center">
-        <div class="col-12 col-sm-6 col-lg-4 col-xl-3" *ngFor="let window of windows">
+        @for (window of windows; track window.id) {
+        <div class="col-12 col-sm-6 col-lg-4 col-xl-3" [ngbScrollSpyFragment]="window.id">
           <app-window [window]="window"></app-window>
         </div>
+        }
       </div>
     </div>
   </main>

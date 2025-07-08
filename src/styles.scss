@@ -195,6 +195,7 @@ strong {
         align-items: center;
         width: 100%;
         gap: 0.5rem;
+        overflow: hidden;
     }
 
     &-buttons {
@@ -418,4 +419,87 @@ ngb-typeahead-window {
     100% {
         transform: rotate(360deg);
     }
+}
+
+/* Window highlight animation - make it more visible */
+.window-highlight {
+    position: relative;
+    transform: scale(1.02);
+    transition: transform 0.3s ease;
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: -8px;
+        left: -8px;
+        right: -8px;
+        bottom: -8px;
+        background: linear-gradient(45deg,
+                var(--cambridge),
+                var(--rose-tea),
+                var(--cambridge));
+        border-radius: 12px;
+        z-index: -1;
+        animation: pulse-highlight 2s ease-out;
+        box-shadow: 0 0 20px rgba(155, 192, 155, 0.6);
+    }
+
+    &::after {
+        content: '📍';
+        position: absolute;
+        top: -10px;
+        right: -10px;
+        font-size: 1.5rem;
+        z-index: 100;
+        animation: bounce 1s ease-in-out 3;
+    }
+}
+
+@keyframes pulse-highlight {
+    0% {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+
+    50% {
+        opacity: 0.8;
+        transform: scale(1.05);
+    }
+
+    100% {
+        opacity: 0;
+        transform: scale(1);
+    }
+}
+
+@keyframes bounce {
+
+    0%,
+    20%,
+    50%,
+    80%,
+    100% {
+        transform: translateY(0);
+    }
+
+    40% {
+        transform: translateY(-10px);
+    }
+
+    60% {
+        transform: translateY(-5px);
+    }
+}
+
+/* Smooth scroll behavior */
+.content {
+    scroll-behavior: smooth;
+    position: relative;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* Ensure scroll padding for header offset */
+html {
+    scroll-padding-top: calc(var(--header-height) + 1rem);
 }

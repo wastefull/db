@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { NavigationService } from '../../../navigation.service';
+import { ContentReadyService } from '../../../shared/content-ready.service';
 import { AppWindow, defaultWindow } from '../window';
 import { IconRightComponent } from './icon-right/icon-right.component';
 import { WindowButtonsComponent } from './window-buttons/window-buttons.component';
@@ -17,11 +17,11 @@ export class StatusBarComponent implements OnInit, OnDestroy {
 
   private loadingSub?: Subscription;
 
-  constructor(private navigationService: NavigationService) {}
+  constructor(private contentReadyService: ContentReadyService) {}
 
   ngOnInit() {
-    this.loadingSub = this.navigationService.loading$.subscribe((loading) => {
-      this.loading = loading;
+    this.loadingSub = this.contentReadyService.windowLoadingStates$.subscribe((states) => {
+      this.loading = states[this.window.id] || false;
     });
   }
 

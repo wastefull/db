@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, Inject, OnInit, Optional } from '@angular/core';
+import { ContentReadyService } from '../../../../shared/content-ready.service';
 import { WindowService } from '../../../../theming/window/window.service';
 import { MaterialService } from '../../../object.service';
 
@@ -18,6 +19,7 @@ export class ProductPickerComponent implements OnInit {
   constructor(
     private materialService: MaterialService,
     private windowService: WindowService,
+    private contentReadyService: ContentReadyService,
     @Optional() @Inject('WINDOW_DATA') private windowData: any
   ) {}
 
@@ -26,42 +28,42 @@ export class ProductPickerComponent implements OnInit {
       this.objectId = this.windowData.materialId;
       this.materialName = this.windowData.materialName;
       this.articleType = this.windowData.articleType;
+
+      // console.log('ProductPickerComponent initialized with:', {
+      //   objectId: this.objectId,
+      //   materialName: this.materialName,
+      //   articleType: this.articleType,
+      // });
+
       this.loadProducts();
     }
   }
 
   private loadProducts() {
     if (this.articleType === 'compost') {
-      if (this.products.length === 0) {
-        this.products = ['soil'];
-      }
+      // For composting, default to soil
+      this.products = ['soil'];
+      // console.log('Compost products loaded:', this.products);
+
+      // Notify content is ready
+      setTimeout(() => {
+        this.contentReadyService.notifyContentReady('picker');
+      }, 500);
     } else {
       this.materialService
         .getArticlesForMaterial(this.objectId)
         .subscribe((articles) => {
-          console.log('All articles:', articles);
+          // console.log('All articles:', articles);
 
           const filteredArticles = articles.filter((a: any) => {
-            const sourceTable = a.source_table || '';
+            const sourceTable = (a.source_table || '').toLowerCase();
+            const targetType = this.articleType.toLowerCase();
 
-            let matches = false;
-            if (this.articleType === 'upcycle' && sourceTable === 'Upcycling') {
-              matches = true;
-            } else if (
-              this.articleType === 'recycle' &&
-              sourceTable === 'Recycling'
-            ) {
-              matches = true;
-            } else if (
-              this.articleType === 'compost' &&
-              sourceTable === 'Composting'
-            ) {
-              matches = true;
-            }
+            const matches = sourceTable === targetType + 'ing'; // recycling, upcycling
 
-            console.log(
-              `Article: ${a.id}, source_table: "${sourceTable}", articleType: "${this.articleType}", matches: ${matches}`
-            );
+            // console.log(
+              // `Article: ${a.id}, source_table: "${sourceTable}", articleType: "${targetType}ing", matches: ${matches}`
+            // );
             return matches;
           });
 
@@ -74,12 +76,18 @@ export class ProductPickerComponent implements OnInit {
           ] as string[];
 
           this.products = products;
-          console.log('Loaded products:', this.products);
+          // console.log('Loaded products:', this.products);
+
+          // Notify content is ready after products are loaded
+          setTimeout(() => {
+            this.contentReadyService.notifyContentReady('picker');
+          }, 500);
         });
     }
   }
 
   pickProduct(product: string) {
+    // console.log('Product picked:', product);
     this.windowService.openMethodPicker(
       this.objectId,
       this.materialName,

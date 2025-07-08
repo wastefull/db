@@ -1,13 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { Component, Inject, OnInit, Optional } from '@angular/core';
 import { marked } from 'marked';
+import { PatienceComponent } from '../../../shared/patience/patience.component';
 import { MaterialService } from '../../object.service';
 import { Article, defaultArticle } from './article';
-
 @Component({
   selector: 'app-article',
   templateUrl: './article.component.html',
-  imports: [CommonModule],
+  imports: [CommonModule, PatienceComponent],
   standalone: true,
 })
 export class ArticleComponent implements OnInit {

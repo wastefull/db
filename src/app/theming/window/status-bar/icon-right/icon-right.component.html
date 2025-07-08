@@ -1,4 +1,6 @@
 <div class="icon-container">
-  <div class="spinner" *ngIf="loading"></div>
+  @if (loading) {
+  <app-patience></app-patience>
+  }
   <i class="fa-solid fa-check icon" *ngIf="!loading" aria-hidden="true"></i>
 </div>

@@ -36,7 +36,6 @@
     </div>
 </div>
 
-<div class="loading-container" *ngIf="loading">
-    <div class="spinner"></div>
-    <p>Loading material details...</p>
-</div>
+@if (loading) {
+<app-patience></app-patience>
+}

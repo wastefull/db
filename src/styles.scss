@@ -489,25 +489,6 @@ strong {
     vertical-align: middle;
 }
 
-.spinner {
-    display: inline-block;
-    width: 20px;
-    height: 20px;
-    border: 3px solid #f3f3f3;
-    border-top: 3px solid var(--cambridge);
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-}
-
-.loading-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 2rem;
-    gap: 1rem;
-}
-
 .no-options {
     text-align: center;
     color: var(--text);

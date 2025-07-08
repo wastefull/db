@@ -5,11 +5,12 @@ import { WindowService } from '../../../theming/window/window.service';
 import { Material, defaultMaterial } from '../../object';
 import { MaterialService } from '../../object.service';
 import { Article } from '../article/article';
+import { PatienceComponent } from "../../../shared/patience/patience.component";
 
 @Component({
   selector: 'app-details',
   templateUrl: './details.component.html',
-  imports: [ImageDisplayComponent, CommonModule],
+  imports: [ImageDisplayComponent, CommonModule, PatienceComponent],
   standalone: true,
 })
 export class DetailsComponent implements OnInit {

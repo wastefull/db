@@ -7,30 +7,33 @@ header {
 nav .container-fluid {
     padding-left: 25px;
 }
+
 nav {
     background-color: rgba(0, 0, 0, 0.5);
     color: var(--offwhite);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
+
 .navbar-toggler {
     border: 1px solid var(--offblack);
     background-color: var(--retro-cream);
     color: var(--offblack) !important;
     padding: 0.25rem 0.5rem;
     border-radius: var(--rounded);
-    
+
     &:focus {
         box-shadow: 0 0 0 0.2rem var(--cambridge);
         outline: none;
     }
-    
+
     &:hover {
         background-color: var(--vanilla);
         border-color: var(--cambridge-dark);
     }
 }
+
 nav-link {
-    color: var(--cambridge-dark);
+    color: white !important;
     font-size: 1.2rem;
     font-weight: normal;
 }
@@ -40,15 +43,18 @@ nav-link {
     margin-right: 0;
 }
 
-nav-item {
-    cursor: pointer;
-    outline: color(from color srgb 255 255 255);
-    border-radius: 999px;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    background: linear-gradient(135deg,
-            rgba(255, 255, 255, 0.2) 0%,
-            rgba(255, 255, 255, 0.08) 50%,
-            rgba(255, 255, 255, 0.03) 100%) !important;
-    transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 2.2);
+.nav-item {
+    a {
+        color: white;
+        cursor: pointer;
 
+        &:hover {
+            color: var(--cambridge);
+            transform: rotate3d(0, 0, 1, -15deg);
+        }
+    }
+
+    &:nth-child(odd) a:hover {
+        transform: rotate3d(0, 0, 1, 15deg);
+    }
 }

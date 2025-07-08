@@ -1,5 +1,6 @@
 @import 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css';
 @import "bootstrap/scss/bootstrap";
+@import 'animate.css';
 /* --------------------------------------------------------
  * Global Styles
  * -------------------------------------------------------- */
@@ -61,8 +62,9 @@
     --button-border: 1px solid #000;
 
     /* Card Styles */
-    --card-background: var(--retro-cream);
+    --card-background: white;
     --card-content-color: var(--offblack);
+    --card-header-background: var(--retro-cream);
 
     /* Header Styles */
     --header-background: var(--offblack);
@@ -298,7 +300,7 @@ strong {
     &-header {
         padding: 0.5rem;
         border-bottom: 1px solid var(--borders);
-        background: var(--vanilla);
+        background: var(--card-header-background);
         min-height: 2.5rem;
         display: flex;
         align-items: center;
@@ -397,37 +399,7 @@ strong {
     }
 }
 
-/* Lists */
-.list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    background: white;
-    border-radius: var(--rounded);
-    border: 1px solid var(--borders);
-    max-height: 300px;
-    overflow-y: auto;
 
-    &-item {
-        padding: 0.75rem 1rem;
-        border-bottom: 1px solid #eee;
-        cursor: pointer;
-        transition: background-color 0.2s ease;
-
-        &:last-child {
-            border-bottom: none;
-        }
-
-        &:hover {
-            background-color: #f5f5f5;
-        }
-
-        &.highlighted {
-            background-color: rgba(230, 192, 181, 0.74);
-            color: white;
-        }
-    }
-}
 
 /* Social Links */
 .social-links {
@@ -555,7 +527,6 @@ strong {
 
 .window-content {
     overflow: visible !important;
-    /* Allow content to overflow */
     position: relative;
     z-index: 1;
 }
@@ -564,20 +535,48 @@ strong {
 ngb-typeahead-window {
     position: fixed !important;
     z-index: 10000 !important;
-    overflow: visible !important;
-    width: calc(.9*var(--window-min-width));
-    border-radius: var(--rounded);
+    overflow: hidden;
+    width: calc(.9*var(--window-min-width)) !important;
+    border-radius: var(--rounded) !important;
     border: 1px solid var(--borders);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 0;
 
-    button.active {
-        background-color: var(--rose-tea);
-        color: #000;
+    button {
+        border: none !important;
+        padding: 0 !important;
+        width: 100% !important;
+        text-align: left !important;
+        background: none !important;
+
+        &.active,
+        &:hover {
+            background-color: var(--rose-tea) !important;
+            color: #000 !important;
+
+            .typeahead-result {
+                background-color: transparent;
+            }
+        }
+
+        &:hover {
+            border-color: var(--old-rose-dark);
+        }
+
+        &:focus {
+            box-shadow: none !important;
+        }
     }
 
     .ngb-highlight {
-        font-weight: 400;
-        color: var(--offblack);
+        font-weight: normal !important;
+        // color: var(--seagull-midnight) !important;
+        background-color: transparent !important;
+        padding: 0 !important;
+        text-shadow:
+            0 6px 6px var(--vanilla),
+            0 0 12px var(--old-rose),
+            0 0 18px var(--old-rose-dark);
     }
 }
 

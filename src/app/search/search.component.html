@@ -1,5 +1,15 @@
 <div class="search-container">
   <input type="text" class="search-input" placeholder="Look up a thing" [(ngModel)]="model" [ngbTypeahead]="search"
-    [inputFormatter]="formatter" [resultFormatter]="formatter" (selectItem)="onSelectItem($event)"
+    [inputFormatter]="formatter" [resultTemplate]="resultTemplate" (selectItem)="onSelectItem($event)"
     (ngModelChange)="onInputChange()" [showHint]="true" [focusFirst]="true" container="body" />
+
+  <!-- Custom result template -->
+  <ng-template #resultTemplate let-result="result" let-term="term">
+    <div class="typeahead-result">
+      <img [src]="getImageUrl(result)" [alt]="result.meta.name" class="result-image" (error)="onImageError($event)" />
+      <span class="result-text">
+        <ngb-highlight [result]="result.meta.name" [term]="term"></ngb-highlight>
+      </span>
+    </div>
+  </ng-template>
 </div>

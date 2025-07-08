@@ -1,6 +1,7 @@
 @import 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css';
 @import "bootstrap/scss/bootstrap";
 @import 'animate.css';
+
 /* --------------------------------------------------------
  * Global Styles
  * -------------------------------------------------------- */
@@ -42,15 +43,8 @@
     /* Layout Variables */
     --header-height: 60px;
     --content-padding: .25rem;
-    --window-min-width: 320px;
+    --window-min-width: 280px;
     --window-max-width: 400px;
-    --grid-gap: 1rem;
-
-    /* Calculated breakpoints */
-    --single-window-width: calc(var(--window-max-width) + 2 * var(--content-padding));
-    --dual-window-width: calc(2 * var(--window-max-width) + var(--grid-gap) + 2 * var(--content-padding));
-    --triple-window-width: calc(3 * var(--window-max-width) + 2 * var(--grid-gap) + 2 * var(--content-padding));
-    --quad-window-width: calc(4 * var(--window-max-width) + 3 * var(--grid-gap) + 2 * var(--content-padding));
 
     /* Button Styles */
     --button-background: var(--vanilla);
@@ -73,75 +67,6 @@
     --header-padding: 0.5rem 1rem;
 }
 
-/* Mixins */
-@mixin grid-column-pattern {
-    .window {
-        &:nth-child(1) {
-            grid-column: 1;
-        }
-
-        &:nth-child(2) {
-            grid-column: 2;
-        }
-
-        &:nth-child(3) {
-            grid-column: 1;
-        }
-
-        &:nth-child(4) {
-            grid-column: 2;
-        }
-
-        &:nth-child(5) {
-            grid-column: 1;
-        }
-
-        &:nth-child(6) {
-            grid-column: 2;
-        }
-    }
-}
-
-@mixin grid-row-pattern {
-    .window {
-        &:nth-child(1) {
-            grid-column: 1;
-            grid-row: 1;
-        }
-
-        &:nth-child(2) {
-            grid-column: 2;
-            grid-row: 1;
-        }
-
-        &:nth-child(3) {
-            grid-column: 1;
-            grid-row: 2;
-        }
-
-        &:nth-child(4) {
-            grid-column: 2;
-            grid-row: 2;
-        }
-
-        &:nth-child(5) {
-            grid-column: 1;
-            grid-row: 3;
-        }
-
-        &:nth-child(6) {
-            grid-column: 2;
-            grid-row: 3;
-        }
-    }
-}
-
-@mixin dual-column-grid {
-    grid-template-columns: repeat(2, minmax(var(--window-min-width), var(--window-max-width)));
-    max-width: var(--dual-window-width);
-    justify-content: center;
-}
-
 /* Base styles */
 html,
 body {
@@ -161,8 +86,6 @@ strong {
     font-weight: normal;
 }
 
-
-
 /* App Layout */
 .app-container {
     display: flex;
@@ -181,8 +104,6 @@ strong {
     position: sticky;
     top: 0;
     z-index: 100;
-
-
 }
 
 .toolbar {
@@ -205,82 +126,21 @@ strong {
 .content {
     flex: 1;
     overflow-y: auto;
-    overflow-x: auto;
+    overflow-x: hidden;
     padding: var(--content-padding);
     min-height: 0;
 }
 
-/* Window Grid System */
-.windows-grid {
-    display: grid;
-    gap: var(--grid-gap);
-    align-items: start;
-    justify-content: center;
+/* App Windows - Override Bootstrap's responsive behavior */
+.app-window {
+    min-width: var(--window-min-width);
+    max-width: var(--window-max-width);
     width: 100%;
     margin: 0 auto;
-    padding: 0 1rem;
-    grid-template-columns: repeat(auto-fit, minmax(var(--window-min-width), var(--window-max-width)));
-    grid-auto-rows: min-content;
-    grid-template-rows: masonry;
-    max-width: var(--quad-window-width);
-}
 
-.window {
-    width: 100%;
-    max-width: var(--window-max-width);
-    min-width: var(--window-min-width);
-}
-
-/* Responsive Grid */
-@media (max-width: 863px) {
-    .windows-grid {
-        grid-template-columns: minmax(var(--window-min-width), var(--window-max-width));
-        max-width: var(--single-window-width);
-    }
-}
-
-@media (min-width: 864px) and (max-width: 1296px) {
-    .windows-grid {
-        @include dual-column-grid;
-        grid-template-rows: masonry;
-        grid-auto-rows: min-content;
-    }
-
-    @include grid-column-pattern;
-}
-
-@media (min-width: 1297px) {
-    .windows-grid {
-        grid-template-columns: repeat(auto-fit, minmax(var(--window-min-width), var(--window-max-width)));
-        max-width: var(--quad-window-width);
-    }
-
-    .window {
-        grid-column: auto;
-        grid-row: auto;
-    }
-}
-
-/* Fallback for browsers without masonry support */
-@supports not (grid-template-rows: masonry) {
-    .windows-grid {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: flex-start;
-        justify-content: center;
-    }
-
-    .window {
-        flex: 0 0 var(--window-max-width);
-    }
-
-    @media (min-width: 864px) and (max-width: 1296px) {
-        .windows-grid {
-            @include dual-column-grid;
-            display: grid;
-        }
-
-        @include grid-row-pattern;
+    /* Ensure windows don't stretch too wide on larger screens */
+    @media (min-width: 768px) {
+        max-width: var(--window-max-width);
     }
 }
 
@@ -291,10 +151,6 @@ strong {
     border: 1px solid var(--borders);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     overflow: hidden;
-    height: fit-content;
-    width: 100%;
-    max-width: var(--window-max-width);
-    min-width: var(--window-min-width);
     box-sizing: border-box;
 
     &-header {
@@ -306,12 +162,10 @@ strong {
         align-items: center;
         max-width: 100%;
         box-sizing: border-box;
-
     }
 
     h1 {
         margin-top: 0;
-
     }
 
     &-content {
@@ -399,8 +253,6 @@ strong {
     }
 }
 
-
-
 /* Social Links */
 .social-links {
     display: flex;
@@ -418,8 +270,6 @@ strong {
         }
     }
 }
-
-
 
 /* Picker & Details */
 .picker-container,
@@ -503,7 +353,6 @@ strong {
 /* NgbTypeAhead */
 .app-window {
     overflow: visible !important;
-    /* Allow content to overflow the window */
 }
 
 .window-content {
@@ -551,7 +400,6 @@ ngb-typeahead-window {
 
     .ngb-highlight {
         font-weight: normal !important;
-        // color: var(--seagull-midnight) !important;
         background-color: transparent !important;
         padding: 0 !important;
         text-shadow:

@@ -1,6 +1,6 @@
-<div class="card animate__animated animate__slideInDown animate__repeat-1 animate__faster">
+<div class="app-window card animate__animated animate__slideInDown animate__repeat-1 animate__faster h-100">
     <app-status-bar [window]="window"></app-status-bar>
-    <div class="card-content">
+    <div class="card-content flex-fill">
         <ng-container [ngComponentOutlet]="window.component ?? null" [ngComponentOutletInjector]="componentInjector">
         </ng-container>
     </div>

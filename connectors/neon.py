@@ -311,3 +311,64 @@ class NeonConnect:
         cur.close()
         conn.close()
         print(f"Deleted {len(ids)} materials from Neon.")
+
+    def fetch_materials_by_cluster(self, cluster_name: str):
+        """
+        Fetch all materials that belong to a specific material cluster.
+        """
+        conn = self.connect()
+        cur = conn.cursor()
+        
+        # Query materials where material_clusters array contains the cluster
+        query = """
+            SELECT data FROM materials 
+            WHERE data->'meta'->'material_clusters' @> %s
+        """
+        cur.execute(query, (json.dumps([cluster_name.title()]),))
+        rows = cur.fetchall()
+        cur.close()
+        conn.close()
+        
+        return [json.loads(row[0]) if isinstance(row[0], str) else row[0] for row in rows]
+
+    def get_cluster_statistics(self):
+        """
+        Get statistics about material cluster coverage and processing options.
+        """
+        conn = self.connect()
+        cur = conn.cursor()
+        
+        # Get material counts by cluster
+        query = """
+            SELECT 
+                cluster_name,
+                COUNT(*) as material_count
+            FROM materials,
+            jsonb_array_elements_text(data->'meta'->'material_clusters') as cluster_name
+            GROUP BY cluster_name
+            ORDER BY material_count DESC
+        """
+        cur.execute(query)
+        results = cur.fetchall()
+        cur.close()
+        conn.close()
+        
+        return [{"cluster": row[0], "materials": row[1]} for row in results]
+
+    def fetch_materials_by_complexity(self, complexity_level: str):
+        """
+        Fetch materials by processing complexity level.
+        """
+        conn = self.connect()
+        cur = conn.cursor()
+        
+        query = """
+            SELECT data FROM materials 
+            WHERE data->'processing'->>'complexity' = %s
+        """
+        cur.execute(query, (complexity_level,))
+        rows = cur.fetchall()
+        cur.close()
+        conn.close()
+        
+        return [json.loads(row[0]) if isinstance(row[0], str) else row[0] for row in rows]

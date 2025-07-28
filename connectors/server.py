@@ -37,6 +37,39 @@ class HTTPRequestHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         def match(f: str, m, q): return m.get(f, "").lower() == q
 
+        # New route: /materials/cluster/{cluster_name}
+        if self.path.startswith("/materials/cluster/"):
+            cluster_name = self.path.split("/materials/cluster/")[1].lower()
+            try:
+                neon = NeonConnect()
+                materials = neon.fetch_materials_by_cluster(cluster_name)
+                self.send_response(200)
+                self._set_cors_headers(json_response=True)
+                self.end_headers()
+                self.wfile.write(json.dumps(materials).encode())
+            except Exception as e:
+                self.send_response(500)
+                self._set_cors_headers()
+                self.end_headers()
+                self.wfile.write(json.dumps({"error": str(e)}).encode())
+            return
+
+        # New route: /clusters/stats
+        if self.path == "/clusters/stats":
+            try:
+                neon = NeonConnect()
+                stats = neon.get_cluster_statistics()
+                self.send_response(200)
+                self._set_cors_headers(json_response=True)
+                self.end_headers()
+                self.wfile.write(json.dumps(stats).encode())
+            except Exception as e:
+                self.send_response(500)
+                self._set_cors_headers()
+                self.end_headers()
+                self.wfile.write(json.dumps({"error": str(e)}).encode())
+            return
+
         if self.path.startswith("/article/"):
             article_id = self.path.split("/article/")[1]
             neon = NeonConnect()

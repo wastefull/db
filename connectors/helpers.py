@@ -26,6 +26,45 @@ def gf(f, d) -> str:
     return d.get(f, None)
 
 
+def get_secret(env_var_name: str, fallback_line: Optional[int] = None) -> Optional[str]:
+    """
+    Securely get a secret from environment variables.
+    Falls back to reading from a local secrets file if needed (development only).
+
+    :param env_var_name: Name of the environment variable
+    :param fallback_line: Line number in secrets file (for backwards compatibility)
+    :return: The secret value or None if not found
+    """
+    # First try environment variables (secure for production)
+    secret = os.getenv(env_var_name)
+    if secret:
+        return secret
+
+    # Development fallback: try reading from local .env file
+    env_file = os.path.join(os.path.dirname(__file__), '.env')
+    if os.path.exists(env_file):
+        try:
+            with open(env_file, 'r') as f:
+                for line in f:
+                    if line.startswith(f"{env_var_name}="):
+                        return line.split('=', 1)[1].strip().strip('"\'')
+        except Exception as e:
+            print(f"Warning: Could not read .env file: {e}")
+
+    # Final fallback: try reading from secrets file (legacy)
+    secrets_file = os.path.join(os.path.dirname(__file__), 'secrets.txt')
+    if fallback_line is not None and os.path.exists(secrets_file):
+        try:
+            with open(secrets_file, 'r') as f:
+                lines = f.readlines()
+                if fallback_line < len(lines):
+                    return lines[fallback_line].strip()
+        except Exception as e:
+            print(f"Warning: Could not read secrets file: {e}")
+
+    return None
+
+
 def any_missing(required, provided):
     """
     Check if any required keys are missing in the provided dictionary.

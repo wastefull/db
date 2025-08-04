@@ -125,19 +125,21 @@
             "tsConfig": "tsconfig.spec.json",
             "inlineStyleLanguage": "scss",
             "assets": [
-              "app/src/assets/*",
+              "src/assets",
               {
                 "glob": "**/*",
-                "input": "app/src/assets",
+                "input": "src/assets",
                 "output": "./assets"
               }
             ],
             "styles": [
-              "src/styles.scss",
+              "src/styles.scss"
+            ],
+            "scripts": [
               "node_modules/@popperjs/core/dist/umd/popper.min.js",
               "node_modules/bootstrap/dist/js/bootstrap.min.js"
             ],
-            "scripts": []
+            "karmaConfig": "karma.conf.js"
           }
         }
       }

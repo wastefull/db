@@ -64,8 +64,8 @@ class TestGetSecret:
     @patch.dict(os.environ, {}, clear=True)
     def test_get_secret_from_env_file(self):
         """Test getting secret from .env file."""
-        env_content = "AIRTABLE_API_KEY=env_file_key\\nOTHER_VAR=other_value"
-
+        env_content = "AIRTABLE_API_KEY=env_file_key\nOTHER_VAR=other_value"
+        
         with patch("builtins.open", mock_open(read_data=env_content)):
             with patch("os.path.exists", return_value=True):
                 result = get_secret("AIRTABLE_API_KEY")
@@ -74,7 +74,7 @@ class TestGetSecret:
     @patch.dict(os.environ, {}, clear=True)
     def test_get_secret_from_secrets_file(self):
         """Test getting secret from legacy secrets file."""
-        secrets_content = "secret1\\nsecret2\\nsecret3"
+        secrets_content = "secret1\nsecret2\nsecret3"
 
         with patch("builtins.open", mock_open(read_data=secrets_content)):
             with patch("os.path.exists") as mock_exists:
@@ -155,7 +155,8 @@ class TestUnsplashHelper:
         assert "Accept-Version" in helper.headers
 
     @patch.dict(os.environ, {}, clear=True)
-    def test_init_missing_access_key(self):
+    @patch('helpers.get_secret', return_value=None)
+    def test_init_missing_access_key(self, mock_get_secret):
         """Test UnsplashHelper initialization without access key."""
         with pytest.raises(ValueError, match="UNSPLASH_AK environment variable not set"):
             UnsplashHelper()
@@ -193,7 +194,7 @@ class TestUnsplashHelper:
 
         assert helper.clean_query("") == ""
         assert helper.clean_query("   ") == ""
-        assert helper.clean_query("\\t\\n") == ""
+        assert helper.clean_query("\t\n") == ""  # Real tab and newline
         assert helper.clean_query("  spaced  words  ") == "spaced words"
 
     @patch('requests.get')

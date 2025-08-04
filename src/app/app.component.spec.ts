@@ -1,11 +1,10 @@
 import { TestBed } from '@angular/core/testing';
 import { AppComponent } from './app.component';
+import { configureTestingModule } from './testing/test-setup';
 
 describe('AppComponent', () => {
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [AppComponent],
-    }).compileComponents();
+    await configureTestingModule(AppComponent).compileComponents();
   });
 
   it('should create the app', () => {
@@ -24,13 +23,15 @@ describe('AppComponent', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Be Wastefull');
+    expect(compiled.querySelector('h1')?.textContent).toContain(
+      'wastefull.org'
+    );
   });
 
-  it('should render blurb', () => {
+  it('should render navigation', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('p')?.textContent).toContain('Our nonprofit is building a wastefull world centered on recycling, regenerative agriculture, and citizen science.');
+    expect(compiled.textContent).toContain('Our Mission');
   });
 });

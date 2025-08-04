@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { configureTestingModule } from '../../../../testing/test-setup';
 import { ProductPickerComponent } from './product-picker.component';
 
 describe('ProductPickerComponent', () => {
@@ -7,10 +7,7 @@ describe('ProductPickerComponent', () => {
   let fixture: ComponentFixture<ProductPickerComponent>;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [ProductPickerComponent]
-    })
-    .compileComponents();
+    await configureTestingModule(ProductPickerComponent).compileComponents();
 
     fixture = TestBed.createComponent(ProductPickerComponent);
     component = fixture.componentInstance;

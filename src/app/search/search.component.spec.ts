@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { configureTestingModule } from '../testing/test-setup';
 import { SearchComponent } from './search.component';
 
 describe('SearchComponent', () => {
@@ -7,10 +7,7 @@ describe('SearchComponent', () => {
   let fixture: ComponentFixture<SearchComponent>;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [SearchComponent]
-    })
-    .compileComponents();
+    await configureTestingModule(SearchComponent).compileComponents();
 
     fixture = TestBed.createComponent(SearchComponent);
     component = fixture.componentInstance;

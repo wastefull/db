@@ -52,5 +52,12 @@ private.txt
 data_sample.json
 all_data.json
 safekeeping_ignore.py
+
+# Environment variables
 connectors/safekeeping.txt
 connectors/.env
+
+# Python cache files
+connectors/tests/unit/__pycache__/*.pyc
+connectors/tests/*/*.*.pyc
+connectors/tests/*/*/*.*.pyc

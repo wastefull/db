@@ -1,6 +1,6 @@
 import os
 from helpers import gl, gf, any_missing
-from helpers import Unsplash
+from helpers import UnsplashHelper
 
 
 def remove_nulls(raw: list) -> list:
@@ -23,7 +23,7 @@ def cook_data(raw: list, unsplash=False) -> list:
     :param raw: The raw data to cook.
     :return: The cooked data.
     """
-    imgapi = Unsplash()
+    imgapi = UnsplashHelper()
     cooked = []
     for o in raw:
         new = format_row(o)

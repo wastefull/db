@@ -104,7 +104,7 @@ class TestNeonConnect:
         mock_connect.side_effect = psycopg2.Error("Connection failed")
 
         connector = NeonConnect.__new__(NeonConnect)
-        
+
         # The function raises the exception, doesn't return False
         with pytest.raises(psycopg2.Error):
             connector.test_connection("invalid://connection")
@@ -120,8 +120,10 @@ class TestNeonConnect:
 
         # Sample data with required 'id' field
         test_data = [
-            {"id": "1", "item": "plastic bottle", "type": "recycling", "method": "DIY"},
-            {"id": "2", "item": "aluminum can", "type": "recycling", "method": "Industrial"}
+            {"id": "1", "item": "plastic bottle",
+                "type": "recycling", "method": "DIY"},
+            {"id": "2", "item": "aluminum can",
+                "type": "recycling", "method": "Industrial"}
         ]
 
         connector = NeonConnect.__new__(NeonConnect)
@@ -241,7 +243,7 @@ class TestNeonConnect:
             (3, '{"name": "glass jar", "type": "recycling"}')
         ]
         mock_cursor.fetchall.return_value = mock_results
-        
+
         # Mock cursor.description for column names
         mock_cursor.description = [
             ("id", None), ("data", None)

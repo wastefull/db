@@ -65,7 +65,7 @@ class TestGetSecret:
     def test_get_secret_from_env_file(self):
         """Test getting secret from .env file."""
         env_content = "AIRTABLE_API_KEY=env_file_key\nOTHER_VAR=other_value"
-        
+
         with patch("builtins.open", mock_open(read_data=env_content)):
             with patch("os.path.exists", return_value=True):
                 result = get_secret("AIRTABLE_API_KEY")

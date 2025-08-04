@@ -2,6 +2,10 @@ from typing import Optional
 import os
 import requests
 import re
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 
 def gl(l, n):
@@ -81,39 +85,24 @@ def any_missing(required, provided):
     return result
 
 
-def get_secret(name: str, fallback_line: Optional[int] = None, file_path: str = "../private.txt"):
+class UnsplashHelper:
     """
-    Try to get a secret from the environment, otherwise from a line in private.txt.
-    :param name: The environment variable name.
-    :param fallback_line: The line number (0-based) in private.txt to use if env var is not set.
-    :param file_path: Path to private.txt.
-    :return: The secret value as a string.
-    TODO: Replace private.txt fallback with /connectors/.env
-    """
-    value = os.environ.get(name)
-    if value:
-        return value
-    if fallback_line is not None:
-        try:
-            with open(file_path) as f:
-                lines = [line.strip() for line in f.readlines()]
-                return lines[fallback_line]
-        except Exception as e:
-            raise RuntimeError(
-                f"Could not read {name} from env or {file_path}: {e}")
-    raise RuntimeError(f"Secret {name} not found in env or {file_path}")
-
-
-class Unsplash:
-    """
-    A class to interact with the Unsplash API.
+    Helper class for interacting with the Unsplash API.
     """
 
     def __init__(self):
+        """
+        Initialize the Unsplash API client.
+        """
         self.access_key = get_secret("UNSPLASH_AK")
+        self.secret_key = get_secret("UNSPLASH_SK")
+
+        if not self.access_key:
+            raise ValueError("UNSPLASH_AK environment variable not set")
+
         self.headers = {
+            "Accept": "application/json",
             "Accept-Version": "v1",
-            "Accept": "application/json"
         }
 
     def clean_query(self, query: str) -> str:

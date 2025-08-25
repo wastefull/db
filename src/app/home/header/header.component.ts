@@ -1,14 +1,21 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
+import { NgbCollapseModule } from '@ng-bootstrap/ng-bootstrap';
 import { SearchService } from '../../search.service';
 import { LogoComponent } from '../../shared/logo/logo.component';
-import { WindowService } from '../../theming/window/window.service';
+import { NoticeComponent } from '../../shared/notice/notice.component';
 import { SocialsComponent } from '../../shared/socials/socials.component';
-import { NgbCollapseModule } from '@ng-bootstrap/ng-bootstrap';
+import { WindowService } from '../../theming/window/window.service';
 
 @Component({
   selector: 'app-header',
-  imports: [LogoComponent, RouterModule, SocialsComponent, NgbCollapseModule],
+  imports: [
+    LogoComponent,
+    RouterModule,
+    SocialsComponent,
+    NgbCollapseModule,
+    NoticeComponent,
+  ],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
 })

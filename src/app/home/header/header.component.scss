@@ -58,3 +58,18 @@ nav-link {
         transform: rotate3d(0, 0, 1, 15deg);
     }
 }
+
+app-notice {
+    position: absolute;
+    float: top;
+    z-index: 1000;
+    left: auto;
+    right: auto;
+    width: 100%;
+    top: 0;
+    background-color: rgba(255, 0, 0, 0.262);
+    animation: headShake 15s ease-in-out 0s infinite both;
+    animation-delay: 0s, 15s;
+    animation-iteration-count: infinite;
+
+}
